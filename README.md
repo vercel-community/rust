@@ -6,6 +6,12 @@ This is a now builder which allows you to run your rust code as lambdas on the n
 
 This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builders](https://github.com/zeit/now-builders) monorepo, but has since been moved to a community-maintained project.
 
+- [Usage](#usage) - [Entry point](#entry-point) - [Rust version](#rust-version) - [Dependencies](#dependencies)
+- [FAQ](#faq)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contributors](#contributors)
+
 ## Usage
 
 If you're unfamiliar with now builders, please read the [builder docs](https://zeit.co/docs/v2/advanced/builders/overview/) first. To use this builder, you can use it as you would use any other builder.
@@ -41,7 +47,7 @@ Defining a `Cargo.toml` file as an entry point requires a Rust file at `src/main
 
 An example `src/main.rs` Rust file within a project including a `Cargo.toml` file acting as the entry point:
 
-```rs
+```rust
 use http::{StatusCode, header};
 use now_lambda::{error::NowError, lambda, IntoResponse, Request, Response};
 use std::error::Error;
@@ -118,11 +124,15 @@ It's also recommended to have a Cargo.lock alongside your lambda Cargo.toml file
 
 If you have a compelling case for workspaces to be supported by now-rust which are too cumbersome with this workaround, please submit an issue! We're always looking for feedback.
 
-### Development
+### How do I use this during local development?
 
 The `now dev` command allows you to develop lambdas locally on your machine. With `now dev` and `now-rust` you can develop your rust-based lamdas on your own machine.
 
 During local development with `now dev`, the assumption is that `rust` and `cargo` are already installed and available in your `PATH` since they will not be installed automatically. The recommended way to install `rust` and `cargo` on your machine is with [rustup](https://rustup.rs).
+
+### Why does this project use tabs over spaces?
+
+Please refer to [this tweet](https://twitter.com/devdevcharlie/status/1146571021564043264).
 
 ## Contibuting
 
