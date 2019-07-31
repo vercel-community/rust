@@ -1,0 +1,50 @@
+{
+  "name": "now-rust",
+  "version": "0.2.5",
+  "license": "MIT",
+  "main": "./dist/index",
+  "homepage": "https://zeit.co/docs/v2/deployments/official-builders/now-rust",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mike-engel/now-rust.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && jest",
+    "prepublishOnly": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "dist",
+    "launcher.rs"
+  ],
+  "dependencies": {
+    "@iarna/toml": "^2.2.1",
+    "@now/build-utils": "^0.9.6",
+    "execa": "^1.0.0",
+    "fs-extra": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/execa": "^0.9.0",
+    "@types/fs-extra": "^7.0.0",
+    "husky": "^3.0.2",
+    "jest": "^24.8.0",
+    "lint-staged": "^9.2.1",
+    "prettier": "^1.18.2",
+    "typescript": "3.5.2"
+  },
+  "prettier": {
+    "useTabs": true
+  },
+  "husky": {
+    "hooks": {
+      "precommit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,md,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}

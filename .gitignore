@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+
+*.orig
+*.log
+*.tgz
+
+target/
+dist/
+node_modules/
