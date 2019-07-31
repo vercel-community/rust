@@ -28,6 +28,25 @@
         "ideas",
         "content"
       ]
+    },
+    {
+      "login": "anmonteiro",
+      "name": "Antonio Nuno Monteiro",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/661909?v=4",
+      "profile": "https://twitter.com/_anmonteiro",
+      "contributions": [
+        "question",
+        "code",
+        "doc",
+        "example",
+        "test",
+        "review",
+        "maintenance",
+        "design",
+        "infra",
+        "ideas",
+        "content"
+      ]
     }
   ],
   "contributorsPerLine": 7
