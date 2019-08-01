@@ -34,7 +34,12 @@ async function installOpenSSL() {
 	}
 }
 
-export default async (version?: string) => {
+export const installRustAndFriends = async (version?: string) => {
 	await downloadRustToolchain(version);
 	await installOpenSSL();
 };
+
+installRustAndFriends().catch(err => {
+	console.error(err);
+	process.exit(1);
+});

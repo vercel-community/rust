@@ -11,8 +11,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "tsc && jest",
+    "now-postinstall": "node dist/install-rust.js",
     "prepublishOnly": "tsc",
+    "test": "tsc && jest",
     "typecheck": "tsc --noEmit"
   },
   "files": [
