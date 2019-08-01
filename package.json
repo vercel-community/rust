@@ -4,7 +4,7 @@
   "version": "0.2.5",
   "license": "MIT",
   "main": "./dist/index",
-  "homepage": "https://zeit.co/docs/v2/deployments/official-builders/now-rust",
+  "homepage": "https://github.com/mike-engel/now-rust",
   "repository": {
     "type": "git",
     "url": "https://github.com/mike-engel/now-rust.git"
