@@ -6,7 +6,10 @@ This is a now builder which allows you to run your rust code as lambdas on the n
 
 This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builders](https://github.com/zeit/now-builders) monorepo, but has since been moved to a community-maintained project.
 
-- [Usage](#usage) - [Entry point](#entry-point) - [Rust version](#rust-version) - [Dependencies](#dependencies)
+- [Usage](#usage)
+  - [Entry point](#entry-point)
+  - [Rust version](#rust-version)
+  - [Dependencies](#dependencies)
 - [FAQ](#faq)
 - [Contributing](#contributing)
 - [License](#license)
