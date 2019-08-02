@@ -133,6 +133,12 @@ The `now dev` command allows you to develop lambdas locally on your machine. Wit
 
 During local development with `now dev`, the assumption is that `rust` and `cargo` are already installed and available in your `PATH` since they will not be installed automatically. The recommended way to install `rust` and `cargo` on your machine is with [rustup](https://rustup.rs).
 
+### Can I use musl/static linking?
+
+Unfortunately, the AWS lambda runtime for rust relies (tangentially) on `proc_macro`, which won't compile on musl targets. Without `musl`, all linking must be dynamic. If you have a crate that relies on system libraries like `postgres` or `mysql`, you can include those library files with the `includeFiles` config option and set the proper environment variables, config, etc. that you need to get the library to compile.
+
+For more info, please see [issue #2](https://github.com/mike-engel/now-rust/issues/2).
+
 ### Why does this project use tabs over spaces?
 
 Please refer to [this tweet](https://twitter.com/devdevcharlie/status/1146571021564043264).
