@@ -14,6 +14,7 @@ import {
 	DownloadedFiles,
 	Lambda
 } from "@now/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
+import { installRustAndFriends } from './install-rust';
 
 interface PackageManifest {
 	targets: { kind: string; name: string }[];
@@ -269,6 +270,8 @@ async function buildSingleFile(
 }
 
 export async function build(opts: BuildOptions) {
+	await installRustAndFriends();
+
 	const { files, entrypoint, workPath, config, meta = {} } = opts;
 	console.log("downloading files");
 	const downloadedFiles = await download(files, workPath, meta);
