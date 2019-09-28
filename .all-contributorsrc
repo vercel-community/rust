@@ -47,6 +47,15 @@
         "ideas",
         "content"
       ]
+    },
+    {
+      "login": "jacobmischka",
+      "name": "Jacob Mischka",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3939997?v=4",
+      "profile": "https://www.mischka.me",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
