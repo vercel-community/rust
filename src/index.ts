@@ -16,10 +16,6 @@ import {
 } from "@now/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
 import { installRustAndFriends } from './install-rust';
 
-function getRuntimeVersion() {
-	return process.env.RUNTIME_NAME ? 3 : 2;
-}
-
 interface PackageManifest {
 	targets: { kind: string; name: string }[];
 }
@@ -41,7 +37,7 @@ const codegenFlags = [
 	"target-feature=-aes,-avx,+fxsr,-popcnt,+sse,+sse2,-sse3,-sse4.1,-sse4.2,-ssse3,-xsave,-xsaveopt"
 ];
 
-export const version = getRuntimeVersion();
+export const version = process.env.RUNTIME_NAME ? 3 : 1;
 
 async function inferCargoBinaries(config: CargoConfig) {
 	try {
@@ -270,7 +266,7 @@ async function buildSingleFile(
 		runtime: "provided"
 	});
 
-	if (getRuntimeVersion() === 3) {
+	if (version === 3) {
 		return { output: lambda };
 	}
 
@@ -299,7 +295,7 @@ export async function build(opts: BuildOptions) {
 	await runUserScripts(entryPath);
 	const extraFiles = await gatherExtraFiles(config.includeFiles, entryPath);
 
-	if (path.extname(entrypoint) === ".toml" && getRuntimeVersion() !== 3) {
+	if (path.extname(entrypoint) === ".toml" && version !== 3) {
 		return buildWholeProject(opts, downloadedFiles, extraFiles, rustEnv);
 	}
 	return buildSingleFile(opts, downloadedFiles, extraFiles, rustEnv);
