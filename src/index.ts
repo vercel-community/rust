@@ -391,12 +391,11 @@ function findCargoToml(
 export const getDefaultCache = ({ files, entrypoint }: BuildOptions) => {
 	const cargoTomlPath = findCargoToml(files, entrypoint);
 	if (!cargoTomlPath) return undefined;
-	const targetFolderDir = path.dirname(cargoTomlPath);
 	const defaultCacheRef = new FileRef({
 		digest:
 			"sha:204e0c840c43473bbd130d7bc704fe5588b4eab43cda9bc940f10b2a0ae14b16"
 	});
-	return { [targetFolderDir]: defaultCacheRef };
+	return { '.': defaultCacheRef };
 };
 
 export { shouldServe } from "@now/build-utils";
