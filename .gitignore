@@ -4,6 +4,7 @@ Thumbs.db
 *.orig
 *.log
 *.tgz
+*.temp.json
 
 target/
 dist/

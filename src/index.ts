@@ -37,6 +37,8 @@ const codegenFlags = [
 	"target-feature=-aes,-avx,+fxsr,-popcnt,+sse,+sse2,-sse3,-sse4.1,-sse4.2,-ssse3,-xsave,-xsaveopt"
 ];
 
+export const version = process.env.RUNTIME_NAME ? 3 : 1;
+
 async function inferCargoBinaries(config: CargoConfig) {
 	try {
 		const { stdout: manifestStr } = await execa(
@@ -264,6 +266,10 @@ async function buildSingleFile(
 		runtime: "provided"
 	});
 
+	if (version === 3) {
+		return { output: lambda };
+	}
+
 	return {
 		[entrypoint]: lambda
 	};
@@ -289,7 +295,7 @@ export async function build(opts: BuildOptions) {
 	await runUserScripts(entryPath);
 	const extraFiles = await gatherExtraFiles(config.includeFiles, entryPath);
 
-	if (path.extname(entrypoint) === ".toml") {
+	if (path.extname(entrypoint) === ".toml" && version !== 3) {
 		return buildWholeProject(opts, downloadedFiles, extraFiles, rustEnv);
 	}
 	return buildSingleFile(opts, downloadedFiles, extraFiles, rustEnv);
@@ -385,12 +391,11 @@ function findCargoToml(
 export const getDefaultCache = ({ files, entrypoint }: BuildOptions) => {
 	const cargoTomlPath = findCargoToml(files, entrypoint);
 	if (!cargoTomlPath) return undefined;
-	const targetFolderDir = path.dirname(cargoTomlPath);
 	const defaultCacheRef = new FileRef({
 		digest:
 			"sha:204e0c840c43473bbd130d7bc704fe5588b4eab43cda9bc940f10b2a0ae14b16"
 	});
-	return { [targetFolderDir]: defaultCacheRef };
+	return { '.': defaultCacheRef };
 };
 
 export { shouldServe } from "@now/build-utils";
