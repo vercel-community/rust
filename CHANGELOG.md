@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.0.0
+
+### New features
+
+- Support for version 3 of Runtimes [#14](https://github.com/mike-engel/now-rust/pull/14)
+
 ## 0.2.6
 
 ### New features
