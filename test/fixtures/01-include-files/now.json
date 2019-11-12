@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "Cargo.toml",
-      "use": "@now/rust",
+      "use": "now-rust",
       "config": {
         "includeFiles": ["static/**/*.txt", "static/**/*.svg"]
       }
@@ -12,6 +12,7 @@
   "probes": [
     {
       "path": "/",
+      "status": 200,
       "mustContain": "Include me in the lambda fs!"
     }
   ]
