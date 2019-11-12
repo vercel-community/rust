@@ -7,9 +7,9 @@ This is a now builder which allows you to run your rust code as lambdas on the n
 This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builders](https://github.com/zeit/now-builders) monorepo, but has since been moved to a community-maintained project.
 
 - [Usage](#usage)
-  - [Entry point](#entry-point)
-  - [Rust version](#rust-version)
+  - [Entrypoint](#entrypoint)
   - [Dependencies](#dependencies)
+  - [Example](#example)
 - [FAQ](#faq)
 - [Contributing](#contributing)
 - [License](#license)
@@ -17,74 +17,60 @@ This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builde
 
 ## Usage
 
-If you're unfamiliar with now builders, please read the [builder docs](https://zeit.co/docs/v2/advanced/builders/overview/) first. To use this builder, you can use it as you would use any other builder.
+If you're unfamiliar with now runtimes, please read the [runtime docs](https://zeit.co/docs/runtimes) first. This runtime can be used like any other Community Runtime.
 
 ```json
 {
-	"version": 2,
-	"builds": [{ "src": "Cargo.toml", "use": "now-rust" }]
+	"functions": {
+		"api/**/*.rs": {
+			"runtime": "now-rust@1.0.0"
+		}
+	}
 }
 ```
 
-That's the simplest way to use this builder! Below you'll find more complex and advanced patterns.
+That's the simplest way to use this runtime!
 
-### Entry point
+### Entrypoint
 
-The entry point file can either be a `.rs` source file or a `Cargo.toml` file.
+The entrypoint, in this case every file that matches `api/**/*.rs`, is used to create a Serverless Function for you. Note that the `Cargo.toml` file must exist on the same level as the `.rs` files.
 
-#### `.rs` entrypoint
+The requirements for this entrypoint is to expose a `handler` function and not to have a `main` function.
 
-When you use one or multiple `.rs` files as an entry point for this Builder, Now will setup the serverless environment for you.
+### Dependencies
 
-The requirements for this entry point is to expose a `handler` function and not to have a `main` function.
+This Builder supports installing dependencies defined in the `Cargo.toml` file.
 
-If a `Cargo.toml` exists in the project relating to the entry point, the dependencies will be installed for the Rust project.
+Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the same directory as the entrypoint file.
 
-#### `Cargo.toml` entrypoint
+By default, `openssl` is installed by the Builder due to its common usage with Rust projects.
 
-When using a `Cargo.toml` file as an entry point for this Builder, Now will use `cargo read-manifest` to build each binary within the project. As a result, **[cargo workspaces`](https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html) are not supported as an entry point for Now**—you should read the [cargo workspace workaround](#are-cargo-workspaces-supported) for further information.
+#### Example
 
-This entry point method is an advanced method of using this Builder and requires Rust files to assemble their own runtimes.
-
-Defining a `Cargo.toml` file as an entry point requires a Rust file at `src/main.rs` or files defined as a [`[[bin]]`](https://doc.rust-lang.org/cargo/reference/manifest.html#configuring-a-target) target.
-
-An example `src/main.rs` Rust file within a project including a `Cargo.toml` file acting as the entry point:
+This could be our `api/user.rs` file:
 
 ```rust
-use http::{StatusCode, header};
-use now_lambda::{error::NowError, lambda, IntoResponse, Request, Response};
-use std::error::Error;
+use http::{StatusCode};
+use now_lambda::{error::NowError, IntoResponse, Request, Response};
 
-fn handler(request: Request) -> Result<impl IntoResponse, NowError> {
-	let uri = request.uri();
+fn handler(_: Request) -> Result<impl IntoResponse, NowError> {
 	let response = Response::builder()
 		.status(StatusCode::OK)
-		.header(header::CONTENT_TYPE, "text/html")
-		.body(format!(
-				"You made a request to the following URL: {}",
-				uri
-		))
-		.expect("failed to render response");
+		.header("Content-Type", "text/plain")
+		.body("user endpoint")
+		.expect("Internal Server Error");
 
-	Ok(response)
-}
-
-// Start the runtime with the handler
-fn main() -> Result<(), Box<dyn Error>> {
-	Ok(lambda!(handler))
+		Ok(response)
 }
 ```
 
-This requires one dependency, with the example above using another dependency, `http`.
-
-The required dependency is `now_lambda` which provides all of the resources needed to provide the serverless runtime.
-
-The `Cargo.toml` entry point for the example above is the following:
+Our `api/Cargo.toml` could look like this:
 
 ```toml
 [package]
-name = "rust-project"
-version = "0.1.0"
+name = "index"
+version = "1.0.0"
+authors = ["Mike Engel <mike@mike-engel.com>"]
 edition = "2018"
 
 [dependencies]
@@ -92,28 +78,17 @@ http = "0.1"
 now_lambda = "0.1"
 ```
 
-### Rust version
-
-This builder uses [rustup](https://rustup.rs) to install `rust` and `cargo`. By default, the latest stable version of rust will be installed. To see what the current stable version of rust is, please see the [official website](https://www.rust-lang.org).
-
-If you need to use a different version of rust other than the latest stable version, you can specify a version of rust in your build's configuration. Accepted values are the same as [rustup's channel definition](https://github.com/rust-lang/rustup.rs/#toolchain-specification), which is `stable | latest | nightly | <version>`.
+Finally we need a `now.json` file to specify the runtime for `api/user.rs`:
 
 ```json
 {
-	"version": 2,
-	"builds": [
-		{ "src": "Cargo.toml", "use": "now-rust", "config": { "rust": "1.31" } }
-	]
+	"functions": {
+		"api/**/*.rs": {
+			"runtime": "now-rust@1.0.0"
+		}
+	}
 }
 ```
-
-### Dependencies
-
-This Builder supports installing dependencies defined in the `Cargo.toml` file.
-
-Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the same directory as the entry point file.
-
-By default, `openssl` is installed by the Builder due to its common usage with Rust projects.
 
 ## FAQ
 
