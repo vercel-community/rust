@@ -1,7 +1,7 @@
 {
   "name": "now-rust",
   "description": "Community based builder for using rust on the now/zeit platform",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "./dist/index",
   "homepage": "https://github.com/mike-engel/now-rust",
@@ -32,8 +32,6 @@
     "husky": "^3.0.2",
     "jest": "^24.8.0",
     "lint-staged": "^9.2.1",
-    "ms": "^2.1.2",
-    "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
     "typescript": "3.5.2"
   },

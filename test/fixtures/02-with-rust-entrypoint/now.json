@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/user.rs",
+      "use": "now-rust"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/user",
+      "dest": "/api/user.rs"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/api/user",
+      "status": 200,
+      "mustContain": "user endpoint"
+    }
+  ]
+}
