@@ -13,7 +13,7 @@ This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builde
 - [FAQ](#faq)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contributors](#contributors)
+- [Contributors](#contributors-)
 
 ## Usage
 
