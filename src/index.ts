@@ -5,6 +5,7 @@ import toml from "@iarna/toml";
 import {
 	glob,
 	createLambda,
+	debug,
 	download,
 	FileRef,
 	FileFsRef,
@@ -37,7 +38,8 @@ const codegenFlags = [
 	"target-feature=-aes,-avx,+fxsr,-popcnt,+sse,+sse2,-sse3,-sse4.1,-sse4.2,-ssse3,-xsave,-xsaveopt"
 ];
 
-export const version = process.env.RUNTIME_NAME ? 3 : 1;
+export const version = 3;
+const builderDebug = process.env.NOW_BUILDER_DEBUG ? true : false;
 
 async function inferCargoBinaries(config: CargoConfig) {
 	try {
@@ -69,12 +71,11 @@ async function buildWholeProject(
 	rustEnv: Record<string, string>
 ) {
 	const entrypointDirname = path.dirname(downloadedFiles[entrypoint].fsPath);
-	const { debug } = config;
-	console.log("running `cargo build`...");
+	debug("Running `cargo build`...");
 	try {
 		await execa(
 			"cargo",
-			["build", "--verbose"].concat(debug ? [] : ["--release"]),
+			["build", "--verbose"].concat(config.debug ? [] : ["--release"]),
 			{
 				env: rustEnv,
 				cwd: entrypointDirname,
@@ -89,7 +90,7 @@ async function buildWholeProject(
 	const targetPath = path.join(
 		entrypointDirname,
 		"target",
-		debug ? "debug" : "release"
+		config.debug ? "debug" : "release"
 	);
 	const binaries = await inferCargoBinaries({
 		env: rustEnv,
@@ -123,7 +124,7 @@ async function gatherExtraFiles(
 ) {
 	if (!globMatcher) return {};
 
-	console.log("gathering extra files for the fs...");
+	debug("Gathering extra files for the fs...");
 
 	const entryDir = path.dirname(entrypoint);
 
@@ -144,7 +145,7 @@ async function runUserScripts(entrypoint: string) {
 	const buildScriptExists = await fs.pathExists(buildScriptPath);
 
 	if (buildScriptExists) {
-		console.log("running `build.sh`...");
+		debug("Running `build.sh`...");
 		await runShellScript(buildScriptPath);
 	}
 }
@@ -171,12 +172,12 @@ async function cargoLocateProject(config: CargoConfig) {
 }
 
 async function buildSingleFile(
-	{ entrypoint, config }: BuildOptions,
+	{ entrypoint }: BuildOptions,
 	downloadedFiles: DownloadedFiles,
 	extraFiles: DownloadedFiles,
 	rustEnv: Record<string, string>
 ) {
-	console.log("building single file");
+	debug("Building single file");
 	const entrypointPath = downloadedFiles[entrypoint].fsPath;
 	const entrypointDirname = path.dirname(entrypointPath);
 
@@ -214,20 +215,19 @@ async function buildSingleFile(
 			}
 		]
 	});
-	console.log("toml to write:", tomlToWrite);
+	debug("Writing following toml to file:", tomlToWrite);
 
 	// Overwrite the Cargo.toml file with one that includes the `now_lambda`
 	// dependency and our binary. `dependencies` is a map so we don't run the
 	// risk of having 2 `now_lambda`s in there.
 	await fs.writeFile(cargoTomlFile, tomlToWrite);
 
-	const { debug } = config;
-	console.log("running `cargo build`...");
+	debug("Running `cargo build`...");
 	try {
 		await execa(
 			"cargo",
-			["build", "--bin", binName, "--verbose"].concat(
-				debug ? [] : ["--release"]
+			["build", "--bin", binName].concat(
+				builderDebug ? ["--verbose"] : ["--quiet", "--release"]
 			),
 			{
 				env: rustEnv,
@@ -243,7 +243,7 @@ async function buildSingleFile(
 	const bin = path.join(
 		path.dirname(cargoTomlFile),
 		"target",
-		debug ? "debug" : "release",
+		builderDebug ? "debug" : "release",
 		binName
 	);
 
@@ -269,7 +269,7 @@ export async function build(opts: BuildOptions) {
 	await installRustAndFriends();
 
 	const { files, entrypoint, workPath, config, meta = {} } = opts;
-	console.log("downloading files");
+	debug("Downloading files");
 	const downloadedFiles = await download(files, workPath, meta);
 	const entryPath = downloadedFiles[entrypoint].fsPath;
 
@@ -296,7 +296,7 @@ export async function prepareCache({
 	entrypoint,
 	workPath
 }: PrepareCacheOptions) {
-	console.log("preparing cache...");
+	debug("Preparing cache...");
 
 	let targetFolderDir: string;
 

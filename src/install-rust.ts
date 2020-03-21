@@ -1,7 +1,8 @@
 import execa from "execa";
+import { debug } from "@now/build-utils";
 
 async function downloadRustToolchain(version: string = "stable") {
-	console.log("downloading the rust toolchain");
+	debug("Downloading the rust toolchain");
 
 	try {
 		await execa.shell(
