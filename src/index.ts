@@ -171,24 +171,14 @@ async function cargoLocateProject(config: CargoConfig) {
 }
 
 async function buildSingleFile(
-	{ workPath, entrypoint, config }: BuildOptions,
+	{ entrypoint, config }: BuildOptions,
 	downloadedFiles: DownloadedFiles,
 	extraFiles: DownloadedFiles,
 	rustEnv: Record<string, string>
 ) {
 	console.log("building single file");
-	const launcherPath = path.join(__dirname, "..", "launcher.rs");
-	let launcherData = await fs.readFile(launcherPath, "utf8");
-
 	const entrypointPath = downloadedFiles[entrypoint].fsPath;
 	const entrypointDirname = path.dirname(entrypointPath);
-	launcherData = launcherData.replace(
-		"// PLACEHOLDER",
-		await fs.readFile(path.join(workPath, entrypoint), "utf8")
-	);
-	// replace the entrypoint with one that includes the the imports + lambda.start
-	await fs.remove(entrypointPath);
-	await fs.writeFile(entrypointPath, launcherData);
 
 	// Find a Cargo.toml file or TODO: create one
 	const cargoTomlFile = await cargoLocateProject({

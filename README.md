@@ -35,8 +35,6 @@ That's the simplest way to use this runtime!
 
 The entrypoint, in this case every file that matches `api/**/*.rs`, is used to create a Serverless Function for you. Note that the `Cargo.toml` file must exist on the same level as the `.rs` files.
 
-The requirements for this entrypoint is to expose a `handler` function and not to have a `main` function.
-
 ### Dependencies
 
 This Builder supports installing dependencies defined in the `Cargo.toml` file.
@@ -48,8 +46,8 @@ Furthermore, more system dependencies can be installed at build time with the pr
 This could be our `api/user.rs` file:
 
 ```rust
-use http::{StatusCode};
-use now_lambda::{error::NowError, IntoResponse, Request, Response};
+use now_lambda::{lambda, error::NowError, IntoResponse, Request, Response};
+use std::error::Error;
 
 fn handler(_: Request) -> Result<impl IntoResponse, NowError> {
 	let response = Response::builder()
@@ -59,6 +57,11 @@ fn handler(_: Request) -> Result<impl IntoResponse, NowError> {
 		.expect("Internal Server Error");
 
 		Ok(response)
+}
+
+// Start the runtime with the handler
+fn main() -> Result<(), Box<dyn Error>> {
+	Ok(lambda!(handler))
 }
 ```
 
