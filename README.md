@@ -43,8 +43,6 @@ This Builder supports installing dependencies defined in the `Cargo.toml` file.
 
 Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the same directory as the entrypoint file.
 
-By default, `openssl` is installed by the Builder due to its common usage with Rust projects.
-
 #### Example
 
 This could be our `api/user.rs` file:

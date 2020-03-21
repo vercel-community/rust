@@ -13,20 +13,6 @@ async function downloadRustToolchain(version: string = "stable") {
 	}
 }
 
-async function installOpenSSL() {
-	console.log("installing openssl-devel...");
-	try {
-		await execa("yum", ["install", "-y", "openssl-devel"], {
-			stdio: "inherit"
-		});
-	} catch (err) {
-		console.error("failed to `yum install -y openssl-devel`");
-		throw err;
-	}
-}
-
 export const installRustAndFriends = async (version?: string) => {
 	await downloadRustToolchain(version);
-	await installOpenSSL();
 };
-
