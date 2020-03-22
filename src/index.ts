@@ -122,7 +122,10 @@ async function buildSingleFile(
 
 	const binName = path
 		.basename(entrypointPath)
-		.replace(path.extname(entrypointPath), "");
+		.replace(path.extname(entrypointPath), "")
+		.replace("[", "_")
+		.replace("]", "_");
+
 	const { package: pkg, dependencies } = cargoToml;
 	// default to latest now_lambda
 	dependencies.now_lambda = "*";
