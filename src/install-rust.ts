@@ -15,5 +15,10 @@ async function downloadRustToolchain(version: string = "stable") {
 }
 
 export const installRustAndFriends = async (version?: string) => {
-	await downloadRustToolchain(version);
+	try {
+		await execa.shell(`rustup -V`, { stdio: "ignore" });
+		debug("Rust already exists");
+	} catch (err) {
+		await downloadRustToolchain(version);
+	}
 };
