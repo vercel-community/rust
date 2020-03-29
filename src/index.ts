@@ -20,11 +20,6 @@ interface CargoConfig {
 	cwd: string;
 }
 
-interface CargoToml extends toml.JsonMap {
-	package: toml.JsonMap;
-	dependencies: toml.JsonMap;
-}
-
 const codegenFlags = [
 	"-C",
 	"target-cpu=ivybridge",
@@ -93,7 +88,7 @@ async function cargoLocateProject(config: CargoConfig) {
 }
 
 async function buildSingleFile(
-	{ entrypoint }: BuildOptions,
+	{ entrypoint, meta = {} }: BuildOptions,
 	downloadedFiles: DownloadedFiles,
 	extraFiles: DownloadedFiles,
 	rustEnv: Record<string, string>
@@ -110,11 +105,11 @@ async function buildSingleFile(
 
 	// TODO: we're assuming there's a Cargo.toml file. We need to create one
 	// otherwise
-	let cargoToml: CargoToml;
+	let cargoToml: toml.JsonMap;
 	try {
 		cargoToml = (await parseTOMLStream(
 			fs.createReadStream(cargoTomlFile)
-		)) as CargoToml;
+		)) as toml.JsonMap;
 	} catch (err) {
 		console.error("Failed to parse TOML from entrypoint:", entrypoint);
 		throw err;
@@ -126,12 +121,8 @@ async function buildSingleFile(
 		.replace("[", "_")
 		.replace("]", "_");
 
-	const { package: pkg, dependencies } = cargoToml;
-	// default to latest now_lambda
-	dependencies.now_lambda = "*";
 	const tomlToWrite = toml.stringify({
-		package: pkg,
-		dependencies,
+		...cargoToml,
 		bin: [
 			{
 				name: binName,
@@ -139,11 +130,17 @@ async function buildSingleFile(
 			}
 		]
 	});
-	debug("Writing following toml to file:", tomlToWrite);
 
-	// Overwrite the Cargo.toml file with one that includes the `now_lambda`
-	// dependency and our binary. `dependencies` is a map so we don't run the
-	// risk of having 2 `now_lambda`s in there.
+	if (meta.isDev) {
+		debug("Backing up Cargo.toml file");
+		await fs.move(
+			cargoTomlFile,
+			`${cargoTomlFile}.backup`,
+			{ overwrite: true }
+		);
+	}
+
+	debug("Writing following toml to file:", tomlToWrite);
 	await fs.writeFile(cargoTomlFile, tomlToWrite);
 
 	debug("Running `cargo build`...");
@@ -162,6 +159,15 @@ async function buildSingleFile(
 	} catch (err) {
 		console.error("failed to `cargo build`");
 		throw err;
+	}
+
+	if (meta.isDev) {
+		debug("Restoring backed up Cargo.toml file");
+		await fs.move(
+			`${cargoTomlFile}.backup`,
+			cargoTomlFile,
+			{ overwrite: true }
+		);
 	}
 
 	const bin = path.join(
