@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/[user].rs",
+      "use": "now-rust"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/api/[user].rs?user=foo",
+      "status": 200,
+      "mustContain": "user=foo"
+    }
+  ]
+}
