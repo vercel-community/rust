@@ -35,25 +35,28 @@ That's the simplest way to use this runtime!
 
 The entrypoint, in this case every file that matches `api/**/*.rs`, is used to create a Serverless Function for you. Note that the `Cargo.toml` file must exist on the same level as the `.rs` files.
 
-The requirements for this entrypoint is to expose a `handler` function and not to have a `main` function.
-
 ### Dependencies
 
 This Builder supports installing dependencies defined in the `Cargo.toml` file.
 
 Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the same directory as the entrypoint file.
 
-By default, `openssl` is installed by the Builder due to its common usage with Rust projects.
+#### Unlisted Utility Functions
+
+Utility functions could be created as described in [Prevent Endpoint Listing](https://zeit.co/docs/v2/serverless-functions/introduction#prevent-endpoint-listing).
+To make use of them make sure to include them in the `Cargo.toml` under `[lib]`.
 
 #### Example
 
 This could be our `api/user.rs` file:
 
 ```rust
-use http::{StatusCode};
-use now_lambda::{error::NowError, IntoResponse, Request, Response};
+use util::print_foo;
+use now_lambda::{lambda, error::NowError, IntoResponse, Request, Response};
+use std::error::Error;
 
 fn handler(_: Request) -> Result<impl IntoResponse, NowError> {
+	print_foo();
 	let response = Response::builder()
 		.status(StatusCode::OK)
 		.header("Content-Type", "text/plain")
@@ -61,6 +64,19 @@ fn handler(_: Request) -> Result<impl IntoResponse, NowError> {
 		.expect("Internal Server Error");
 
 		Ok(response)
+}
+
+// Start the runtime with the handler
+fn main() -> Result<(), Box<dyn Error>> {
+	Ok(lambda!(handler))
+}
+```
+
+Our helper utilities `api/_util.rs` file:
+
+```rust
+pub fn print_foo() {
+	println!("foo");
 }
 ```
 
@@ -75,7 +91,11 @@ edition = "2018"
 
 [dependencies]
 http = "0.1"
-now_lambda = "0.1"
+now_lambda = "*"
+
+[lib]
+name = "util"
+path = "_util.rs"
 ```
 
 Finally we need a `now.json` file to specify the runtime for `api/user.rs`:

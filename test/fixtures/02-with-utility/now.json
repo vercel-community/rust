@@ -16,7 +16,7 @@
     {
       "path": "/api/user",
       "status": 200,
-      "mustContain": "user endpoint"
+      "mustContain": "foo"
     }
   ]
 }

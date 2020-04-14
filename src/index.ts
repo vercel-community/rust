@@ -5,29 +5,19 @@ import toml from "@iarna/toml";
 import {
 	glob,
 	createLambda,
+	debug,
 	download,
-	FileRef,
 	FileFsRef,
 	runShellScript,
 	BuildOptions,
 	PrepareCacheOptions,
-	DownloadedFiles,
-	Lambda
+	DownloadedFiles
 } from "@now/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
 import { installRustAndFriends } from './install-rust';
-
-interface PackageManifest {
-	targets: { kind: string; name: string }[];
-}
 
 interface CargoConfig {
 	env: Record<string, any>;
 	cwd: string;
-}
-
-interface CargoToml extends toml.JsonMap {
-	package: toml.JsonMap;
-	dependencies: toml.JsonMap;
 }
 
 const codegenFlags = [
@@ -37,84 +27,11 @@ const codegenFlags = [
 	"target-feature=-aes,-avx,+fxsr,-popcnt,+sse,+sse2,-sse3,-sse4.1,-sse4.2,-ssse3,-xsave,-xsaveopt"
 ];
 
-export const version = process.env.RUNTIME_NAME ? 3 : 1;
-
-async function inferCargoBinaries(config: CargoConfig) {
-	try {
-		const { stdout: manifestStr } = await execa(
-			"cargo",
-			["read-manifest"],
-			config
-		);
-
-		const { targets } = JSON.parse(manifestStr) as PackageManifest;
-
-		return targets
-			.filter(({ kind }) => kind.includes("bin"))
-			.map(({ name }) => name);
-	} catch (err) {
-		console.error("failed to run `cargo read-manifest`");
-		throw err;
-	}
-}
+export const version = 3;
+const builderDebug = process.env.NOW_BUILDER_DEBUG ? true : false;
 
 async function parseTOMLStream(stream: NodeJS.ReadableStream) {
 	return toml.parse.stream(stream);
-}
-
-async function buildWholeProject(
-	{ entrypoint, config }: BuildOptions,
-	downloadedFiles: DownloadedFiles,
-	extraFiles: DownloadedFiles,
-	rustEnv: Record<string, string>
-) {
-	const entrypointDirname = path.dirname(downloadedFiles[entrypoint].fsPath);
-	const { debug } = config;
-	console.log("running `cargo build`...");
-	try {
-		await execa(
-			"cargo",
-			["build", "--verbose"].concat(debug ? [] : ["--release"]),
-			{
-				env: rustEnv,
-				cwd: entrypointDirname,
-				stdio: "inherit"
-			}
-		);
-	} catch (err) {
-		console.error("failed to `cargo build`");
-		throw err;
-	}
-
-	const targetPath = path.join(
-		entrypointDirname,
-		"target",
-		debug ? "debug" : "release"
-	);
-	const binaries = await inferCargoBinaries({
-		env: rustEnv,
-		cwd: entrypointDirname
-	});
-
-	const lambdas: Record<string, Lambda> = {};
-	const lambdaPath = path.dirname(entrypoint);
-	await Promise.all(
-		binaries.map(async binary => {
-			const fsPath = path.join(targetPath, binary);
-			const lambda = await createLambda({
-				files: {
-					...extraFiles,
-					bootstrap: new FileFsRef({ mode: 0o755, fsPath })
-				},
-				handler: "bootstrap",
-				runtime: "provided"
-			});
-
-			lambdas[path.join(lambdaPath, binary)] = lambda;
-		})
-	);
-
-	return lambdas;
 }
 
 async function gatherExtraFiles(
@@ -123,7 +40,7 @@ async function gatherExtraFiles(
 ) {
 	if (!globMatcher) return {};
 
-	console.log("gathering extra files for the fs...");
+	debug("Gathering extra files for the fs...");
 
 	const entryDir = path.dirname(entrypoint);
 
@@ -144,7 +61,7 @@ async function runUserScripts(entrypoint: string) {
 	const buildScriptExists = await fs.pathExists(buildScriptPath);
 
 	if (buildScriptExists) {
-		console.log("running `build.sh`...");
+		debug("Running `build.sh`...");
 		await runShellScript(buildScriptPath);
 	}
 }
@@ -171,24 +88,14 @@ async function cargoLocateProject(config: CargoConfig) {
 }
 
 async function buildSingleFile(
-	{ workPath, entrypoint, config }: BuildOptions,
+	{ entrypoint, meta = {} }: BuildOptions,
 	downloadedFiles: DownloadedFiles,
 	extraFiles: DownloadedFiles,
 	rustEnv: Record<string, string>
 ) {
-	console.log("building single file");
-	const launcherPath = path.join(__dirname, "..", "launcher.rs");
-	let launcherData = await fs.readFile(launcherPath, "utf8");
-
+	debug("Building single file");
 	const entrypointPath = downloadedFiles[entrypoint].fsPath;
 	const entrypointDirname = path.dirname(entrypointPath);
-	launcherData = launcherData.replace(
-		"// PLACEHOLDER",
-		await fs.readFile(path.join(workPath, entrypoint), "utf8")
-	);
-	// replace the entrypoint with one that includes the the imports + lambda.start
-	await fs.remove(entrypointPath);
-	await fs.writeFile(entrypointPath, launcherData);
 
 	// Find a Cargo.toml file or TODO: create one
 	const cargoTomlFile = await cargoLocateProject({
@@ -198,11 +105,11 @@ async function buildSingleFile(
 
 	// TODO: we're assuming there's a Cargo.toml file. We need to create one
 	// otherwise
-	let cargoToml: CargoToml;
+	let cargoToml: toml.JsonMap;
 	try {
 		cargoToml = (await parseTOMLStream(
 			fs.createReadStream(cargoTomlFile)
-		)) as CargoToml;
+		)) as toml.JsonMap;
 	} catch (err) {
 		console.error("Failed to parse TOML from entrypoint:", entrypoint);
 		throw err;
@@ -210,13 +117,12 @@ async function buildSingleFile(
 
 	const binName = path
 		.basename(entrypointPath)
-		.replace(path.extname(entrypointPath), "");
-	const { package: pkg, dependencies } = cargoToml;
-	// default to latest now_lambda
-	dependencies.now_lambda = "*";
+		.replace(path.extname(entrypointPath), "")
+		.replace("[", "_")
+		.replace("]", "_");
+
 	const tomlToWrite = toml.stringify({
-		package: pkg,
-		dependencies,
+		...cargoToml,
 		bin: [
 			{
 				name: binName,
@@ -224,20 +130,25 @@ async function buildSingleFile(
 			}
 		]
 	});
-	console.log("toml to write:", tomlToWrite);
 
-	// Overwrite the Cargo.toml file with one that includes the `now_lambda`
-	// dependency and our binary. `dependencies` is a map so we don't run the
-	// risk of having 2 `now_lambda`s in there.
+	if (meta.isDev) {
+		debug("Backing up Cargo.toml file");
+		await fs.move(
+			cargoTomlFile,
+			`${cargoTomlFile}.backup`,
+			{ overwrite: true }
+		);
+	}
+
+	debug("Writing following toml to file:", tomlToWrite);
 	await fs.writeFile(cargoTomlFile, tomlToWrite);
 
-	const { debug } = config;
-	console.log("running `cargo build`...");
+	debug("Running `cargo build`...");
 	try {
 		await execa(
 			"cargo",
-			["build", "--bin", binName, "--verbose"].concat(
-				debug ? [] : ["--release"]
+			["build", "--bin", binName].concat(
+				builderDebug ? ["--verbose"] : ["--quiet", "--release"]
 			),
 			{
 				env: rustEnv,
@@ -250,10 +161,19 @@ async function buildSingleFile(
 		throw err;
 	}
 
+	if (meta.isDev) {
+		debug("Restoring backed up Cargo.toml file");
+		await fs.move(
+			`${cargoTomlFile}.backup`,
+			cargoTomlFile,
+			{ overwrite: true }
+		);
+	}
+
 	const bin = path.join(
 		path.dirname(cargoTomlFile),
 		"target",
-		debug ? "debug" : "release",
+		builderDebug ? "debug" : "release",
 		binName
 	);
 
@@ -266,20 +186,14 @@ async function buildSingleFile(
 		runtime: "provided"
 	});
 
-	if (version === 3) {
-		return { output: lambda };
-	}
-
-	return {
-		[entrypoint]: lambda
-	};
+	return { output: lambda };
 }
 
 export async function build(opts: BuildOptions) {
 	await installRustAndFriends();
 
 	const { files, entrypoint, workPath, config, meta = {} } = opts;
-	console.log("downloading files");
+	debug("Downloading files");
 	const downloadedFiles = await download(files, workPath, meta);
 	const entryPath = downloadedFiles[entrypoint].fsPath;
 
@@ -295,9 +209,6 @@ export async function build(opts: BuildOptions) {
 	await runUserScripts(entryPath);
 	const extraFiles = await gatherExtraFiles(config.includeFiles, entryPath);
 
-	if (path.extname(entrypoint) === ".toml" && version !== 3) {
-		return buildWholeProject(opts, downloadedFiles, extraFiles, rustEnv);
-	}
 	return buildSingleFile(opts, downloadedFiles, extraFiles, rustEnv);
 }
 
@@ -306,7 +217,7 @@ export async function prepareCache({
 	entrypoint,
 	workPath
 }: PrepareCacheOptions) {
-	console.log("preparing cache...");
+	debug("Preparing cache...");
 
 	let targetFolderDir: string;
 
@@ -368,34 +279,5 @@ export async function prepareCache({
 
 	return cacheFiles;
 }
-
-function findCargoToml(
-	files: BuildOptions["files"],
-	entrypoint: BuildOptions["entrypoint"]
-) {
-	let currentPath = path.dirname(entrypoint);
-	let cargoTomlPath;
-
-	// eslint-disable-next-line no-constant-condition
-	while (true) {
-		cargoTomlPath = path.join(currentPath, "Cargo.toml");
-		if (files[cargoTomlPath]) break;
-		const newPath = path.dirname(currentPath);
-		if (currentPath === newPath) break;
-		currentPath = newPath;
-	}
-
-	return cargoTomlPath;
-}
-
-export const getDefaultCache = ({ files, entrypoint }: BuildOptions) => {
-	const cargoTomlPath = findCargoToml(files, entrypoint);
-	if (!cargoTomlPath) return undefined;
-	const defaultCacheRef = new FileRef({
-		digest:
-			"sha:204e0c840c43473bbd130d7bc704fe5588b4eab43cda9bc940f10b2a0ae14b16"
-	});
-	return { '.': defaultCacheRef };
-};
 
 export { shouldServe } from "@now/build-utils";

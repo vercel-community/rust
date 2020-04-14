@@ -85,11 +85,15 @@ describe('now-rust', () => {
 		await testFixture('01-include-files', builder);
 	});
 
-	it('Deploy 02-with-rust-entrypoint', async () => {
-		await testFixture('02-with-rust-entrypoint', builder);
+	it('Deploy 02-with-utility', async () => {
+		await testFixture('02-with-utility', builder);
 	});
 
 	it('Deploy 03-with-function', async () => {
 		await testFixture('03-with-function', builder);
+	});
+
+	it('Deploy 04-with-parameter', async () => {
+		await testFixture('04-with-parameter', builder);
 	});
 });
