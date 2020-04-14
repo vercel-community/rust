@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 2.0.0
+
+Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](https://github.com/mike-engel/now-rust/pull/19)!
+
+### Breaking changes
+
+- OpenSSL is no longer installed by default
+- Platform version 1 is no longer supported
+- `Cargo.toml` is no longer a valid entrypoint
+
+### Bug fixes
+
+- `now dev` is now 100% functional :tada:
+
 ## 1.0.1
 
 ### New features
