@@ -23,7 +23,7 @@ If you're unfamiliar with now runtimes, please read the [runtime docs](https://z
 {
 	"functions": {
 		"api/**/*.rs": {
-			"runtime": "now-rust@1.0.0"
+			"runtime": "now-rust@2.0.0"
 		}
 	}
 }
@@ -85,7 +85,7 @@ Our `api/Cargo.toml` could look like this:
 ```toml
 [package]
 name = "index"
-version = "1.0.0"
+version = "2.0.0"
 authors = ["Mike Engel <mike@mike-engel.com>"]
 edition = "2018"
 
@@ -104,7 +104,7 @@ Finally we need a `now.json` file to specify the runtime for `api/user.rs`:
 {
 	"functions": {
 		"api/**/*.rs": {
-			"runtime": "now-rust@1.0.0"
+			"runtime": "now-rust@2.0.0"
 		}
 	}
 }
