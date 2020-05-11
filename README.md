@@ -52,6 +52,7 @@ This could be our `api/user.rs` file:
 
 ```rust
 use util::print_foo;
+use http::{StatusCode};
 use now_lambda::{lambda, error::NowError, IntoResponse, Request, Response};
 use std::error::Error;
 
