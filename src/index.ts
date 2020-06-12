@@ -170,19 +170,27 @@ async function buildSingleFile(
 		);
 	}
 
+	// The compiled binary in Windows has the `.exe` extension
+	const binExtension = (process.platform === "win32") ? '.exe' : "";
+
 	const bin = path.join(
 		path.dirname(cargoTomlFile),
 		"target",
 		builderDebug ? "debug" : "release",
-		binName
+		binName + binExtension
 	);
 
+	debug("Binary file is: " + bin);
+	console.log("Binary file is: " + bin);
+
+	const bootstrap = "bootstrap" + binExtension;
+	
 	const lambda = await createLambda({
 		files: {
 			...extraFiles,
-			bootstrap: new FileFsRef({ mode: 0o755, fsPath: bin })
+			[bootstrap]: new FileFsRef({ mode: 0o755, fsPath: bin })
 		},
-		handler: "bootstrap",
+		handler: bootstrap,
 		runtime: "provided"
 	});
 
