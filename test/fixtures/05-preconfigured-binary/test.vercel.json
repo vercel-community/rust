@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.rs",
+      "use": "placeholder"
+    }
+  ],
+  "probes": [
+    {
+      "path": "/api/hello.rs",
+      "status": 200,
+      "mustContain": "Hello, world!"
+    }
+  ]
+}
