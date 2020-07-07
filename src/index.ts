@@ -181,7 +181,6 @@ async function buildSingleFile(
 	);
 
 	debug("Binary file is: " + bin);
-	console.log("Binary file is: " + bin);
 
 	const bootstrap = "bootstrap" + binExtension;
 	
