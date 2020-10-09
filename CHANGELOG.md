@@ -2,11 +2,17 @@
 
 ## Unreleased
 
+## 2.0.3
+
+### Bug fixes
+
+- Fix issue with last PR where a variable wasn't defined
+
 ## 2.0.2
 
 ### Bug fixes
 
-- Restore `cargo.toml` when the build fails during dev
+- Restore `cargo.toml` when the build fails during dev #29
 
 ## 2.0.1
 
