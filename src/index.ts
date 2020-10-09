@@ -87,6 +87,15 @@ async function cargoLocateProject(config: CargoConfig) {
 	return null;
 }
 
+async function restoreCargoToml() {
+	debug("Restoring backed up Cargo.toml file");
+	await fs.move(
+		`${cargoTomlFile}.backup`,
+		cargoTomlFile,
+		{ overwrite: true }
+	);
+}
+
 async function buildSingleFile(
 	{ entrypoint, meta = {} }: BuildOptions,
 	downloadedFiles: DownloadedFiles,
@@ -158,16 +167,16 @@ async function buildSingleFile(
 		);
 	} catch (err) {
 		console.error("failed to `cargo build`");
+
+		if (meta.isDev) {
+			restoreCargoToml();
+		}
+		
 		throw err;
 	}
 
 	if (meta.isDev) {
-		debug("Restoring backed up Cargo.toml file");
-		await fs.move(
-			`${cargoTomlFile}.backup`,
-			cargoTomlFile,
-			{ overwrite: true }
-		);
+		restoreCargoToml();
 	}
 
 	// The compiled binary in Windows has the `.exe` extension
