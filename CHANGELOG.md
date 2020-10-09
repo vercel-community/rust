@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 2.0.2
+
+### Bug fixes
+
+- Restore `cargo.toml` when the build fails during dev
+
+## 2.0.1
+
+Update dependencies
+
 ## 2.0.0
 
 Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](https://github.com/mike-engel/now-rust/pull/19)!

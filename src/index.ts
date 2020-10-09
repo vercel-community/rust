@@ -13,7 +13,7 @@ import {
 	PrepareCacheOptions,
 	DownloadedFiles
 } from "@now/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
-import { installRustAndFriends } from './install-rust';
+import { installRustAndFriends } from "./install-rust";
 
 interface CargoConfig {
 	env: Record<string, any>;
@@ -87,13 +87,9 @@ async function cargoLocateProject(config: CargoConfig) {
 	return null;
 }
 
-async function restoreCargoToml() {
+async function restoreCargoToml(cargoTomlFile: any) {
 	debug("Restoring backed up Cargo.toml file");
-	await fs.move(
-		`${cargoTomlFile}.backup`,
-		cargoTomlFile,
-		{ overwrite: true }
-	);
+	await fs.move(`${cargoTomlFile}.backup`, cargoTomlFile, { overwrite: true });
 }
 
 async function buildSingleFile(
@@ -142,11 +138,9 @@ async function buildSingleFile(
 
 	if (meta.isDev) {
 		debug("Backing up Cargo.toml file");
-		await fs.move(
-			cargoTomlFile,
-			`${cargoTomlFile}.backup`,
-			{ overwrite: true }
-		);
+		await fs.move(cargoTomlFile, `${cargoTomlFile}.backup`, {
+			overwrite: true
+		});
 	}
 
 	debug("Writing following toml to file:", tomlToWrite);
@@ -169,18 +163,18 @@ async function buildSingleFile(
 		console.error("failed to `cargo build`");
 
 		if (meta.isDev) {
-			restoreCargoToml();
+			restoreCargoToml(cargoTomlFile);
 		}
-		
+
 		throw err;
 	}
 
 	if (meta.isDev) {
-		restoreCargoToml();
+		restoreCargoToml(cargoTomlFile);
 	}
 
 	// The compiled binary in Windows has the `.exe` extension
-	const binExtension = (process.platform === "win32") ? '.exe' : "";
+	const binExtension = process.platform === "win32" ? ".exe" : "";
 
 	const bin = path.join(
 		path.dirname(cargoTomlFile),
@@ -192,7 +186,7 @@ async function buildSingleFile(
 	debug("Binary file is: " + bin);
 
 	const bootstrap = "bootstrap" + binExtension;
-	
+
 	const lambda = await createLambda({
 		files: {
 			...extraFiles,
