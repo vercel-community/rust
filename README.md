@@ -2,6 +2,14 @@
 
 > Community based builder for using rust on the now/zeit platform
 
+---
+
+## Looking for maintainers
+
+I don't use this project any longer, and the time I can dedicate to maintaining this project is very low. If you'd like to help maintain the project, please contact me via an issue or email.
+
+---
+
 This is a now builder which allows you to run your rust code as lambdas on the now platform!
 
 This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builders](https://github.com/zeit/now-builders) monorepo, but has since been moved to a community-maintained project.
