@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@iarna/toml": "^2.2.5",
-    "@now/build-utils": "^0.9.6",
+    "@vercel/build-utils": "^2.6.0",
     "execa": "^1.0.0",
     "fs-extra": "^7.0.1",
     "now": "^16.4.4"

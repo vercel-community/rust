@@ -1,5 +1,5 @@
 import execa from "execa";
-import { debug } from "@now/build-utils";
+import { debug } from "@vercel/build-utils";
 
 async function downloadRustToolchain(version: string = "stable") {
 	debug("Downloading the rust toolchain");

@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "@iarna/toml": "^2.2.1",
-    "@now/build-utils": "^0.9.6",
     "execa": "^1.0.0",
     "fs-extra": "^7.0.1",
     "now": "^16.4.4"
