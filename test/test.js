@@ -14,7 +14,7 @@ async function deploy(nowArgs = []) {
 		defaultArgs.push(`--token=${process.env.NOW_TOKEN}`);
 	}
 
-	const { stdout } = await execa('now', [...defaultArgs, ...nowArgs]);
+	const { stdout } = await execa('vercel', [...defaultArgs, ...nowArgs]);
 
 	console.log(`[Deployment] ${stdout}`);
 

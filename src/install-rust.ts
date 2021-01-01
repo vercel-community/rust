@@ -1,13 +1,14 @@
 import execa from "execa";
-import { debug } from "@now/build-utils";
+import { debug } from "@vercel/build-utils";
 
 async function downloadRustToolchain(version: string = "stable") {
 	debug("Downloading the rust toolchain");
 
 	try {
-		await execa.shell(
+		await execa(
 			`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${version}`,
-			{ stdio: "inherit" }
+			[],
+			{ shell: true, stdio: "inherit" },
 		);
 	} catch (err) {
 		throw new Error(`Failed to install rust via rustup: ${err.message}`);
@@ -16,7 +17,7 @@ async function downloadRustToolchain(version: string = "stable") {
 
 export const installRustAndFriends = async (version?: string) => {
 	try {
-		await execa.shell(`rustup -V`, { stdio: "ignore" });
+		await execa(`rustup -V`, [], { shell: true, stdio: "ignore" });
 		debug("Rust already exists");
 	} catch (err) {
 		await downloadRustToolchain(version);
