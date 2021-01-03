@@ -12,7 +12,7 @@ import {
 	BuildOptions,
 	PrepareCacheOptions,
 	DownloadedFiles
-} from "@now/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
+} from "@vercel/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
 import { installRustAndFriends } from "./install-rust";
 
 interface CargoConfig {
@@ -290,4 +290,4 @@ export async function prepareCache({
 	return cacheFiles;
 }
 
-export { shouldServe } from "@now/build-utils";
+export { shouldServe } from "@vercel/build-utils";
