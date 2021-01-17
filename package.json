@@ -21,20 +21,20 @@
   ],
   "dependencies": {
     "@iarna/toml": "^2.2.5",
-    "@vercel/build-utils": "^2.6.0",
     "execa": "^5.0.0",
-    "fs-extra": "^7.0.1",
-    "vercel": "^21.0.1"
+    "fs-extra": "^7.0.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^7.0.0",
+    "@vercel/build-utils": "^2.6.0",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
     "lint-staged": "^9.5.0",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
-    "typescript": "3.5.2"
+    "typescript": "3.5.2",
+    "vercel": "^21.0.1"
   },
   "prettier": {
     "useTabs": true
