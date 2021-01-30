@@ -2,7 +2,7 @@
 
 > Majority taken from Sindre Sorhus' [.github](https://github.com/sindresorhus/.github) repo
 
-Be nice and respect the maintainers' time. ❤️
+Be nice and respect the maintainers' time. ❤️ Be sure to read our [Code of Conduct](CODE_OF_CONDUCT.md) if you are new to this project.
 
 Please read this whole thing. Most of this applies to any repo on GitHub. 🙏
 
