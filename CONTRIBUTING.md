@@ -10,12 +10,12 @@ If you already have, or are short on time, [skip to the vercel runtime developme
 
 ## Contribute
 
-Code is not the only thing you can contribute. I truly appreciate contributions in the form of:
+Code is not the only thing you can contribute. We truly appreciate contributions in the form of:
 
 - Fixing typos.
 - Improving docs.
-- Triaging [issues](https://github.com/search?o=desc&q=user:sindresorhus+user:xojs+user:chalk+is:issue+is:open&s=updated&type=Issues).
-- Reviewing [pull requests](https://github.com/search?o=desc&q=user:sindresorhus+user:xojs+user:chalk+is:pr+is:open&s=updated&type=Issues).
+- Triaging [issues](https://github.com/mike-engel/now-rust/issues).
+- Reviewing [pull requests](https://github.com/mike-engel/now-rust/pulls).
 - Sharing your opinion on issues.
 
 ## Issues
@@ -26,7 +26,7 @@ Code is not the only thing you can contribute. I truly appreciate contributions 
 
 ## Pull requests
 
-### Prerequisite
+### Prerequisites
 
 - If the changes are large or breaking, open an issue discussing it first.
 - Don't open a pull request if you don't plan to see it through. Maintainers waste a lot of time giving feedback on pull requests that eventually go stale.
@@ -34,8 +34,6 @@ Code is not the only thing you can contribute. I truly appreciate contributions 
 - Adhere to the existing code style.
 - If relevant, add tests, check for typos, and add docs and types.
 - Don't add editor-specific metafiles. Those should be added to your own [global gitignore](https://gist.github.com/subfuzion/db7f57fff2fb6998a16c).
-- Don't be sloppy. I expect you to do your best.
-- Squash your local commits into one commit before submitting the pull request, unless you have important atomic commits.
 - Double-check your contribution by going over the diff of your changes before submitting a pull request. It's a good way to catch bugs/typos and find ways to improve the code.
 - Do the pull request from a new branch. Never the default branch (`main`/`master`).
 
