@@ -49,7 +49,7 @@ Code is not the only thing you can contribute. We truly appreciate contributions
 - It's better to present solutions than asking questions.
 - Review the pull request diff after each new commit. It's better that you catch mistakes early than the maintainers pointing it out and having to go back and forth.
 - Be patient. Maintainers often have a lot of pull requests to review. Feel free to bump the pull request if you haven't received a reply in a couple of weeks.
-- And most importantly, have fun! 👌🎉
+- And most importantly, have fun! 👍🎉
 
 ## Vercel runtime development
 
