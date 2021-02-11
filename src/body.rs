@@ -1,4 +1,4 @@
-//! Provides a Now Lambda oriented request and response body entity interface
+//! Provides a Vercel Lambda oriented request and response body entity interface
 
 use std::{borrow::Cow, ops::Deref, str};
 
@@ -6,7 +6,7 @@ use base64::display::Base64Display;
 use serde::ser::{Error as SerError, Serialize, Serializer};
 
 /// Representation of http request and response bodies as supported
-/// by Zeit Now v2.
+/// by Vercel.
 ///
 /// These come in three flavors
 /// * `Empty` ( no body )
@@ -25,8 +25,8 @@ use serde::ser::{Error as SerError, Serialize, Serializer};
 /// text produce `Body::Text` variants
 ///
 /// ```
-/// assert!(match now_lambda::Body::from("text") {
-///   now_lambda::Body::Text(_) => true,
+/// assert!(match vercel_lambda::Body::from("text") {
+///   vercel_lambda::Body::Text(_) => true,
 ///   _ => false
 /// })
 /// ```
@@ -36,8 +36,8 @@ use serde::ser::{Error as SerError, Serialize, Serializer};
 /// Types like `Vec<u8>` and `&[u8]` whose types reflect raw bytes produce `Body::Binary` variants
 ///
 /// ```
-/// assert!(match now_lambda::Body::from("text".as_bytes()) {
-///   now_lambda::Body::Binary(_) => true,
+/// assert!(match vercel_lambda::Body::from("text".as_bytes()) {
+///   vercel_lambda::Body::Binary(_) => true,
 ///   _ => false
 /// })
 /// ```
@@ -49,8 +49,8 @@ use serde::ser::{Error as SerError, Serialize, Serializer};
 /// The unit type ( `()` ) whose type represents an empty value produces `Body::Empty` variants
 ///
 /// ```
-/// assert!(match now_lambda::Body::from(()) {
-///   now_lambda::Body::Empty => true,
+/// assert!(match vercel_lambda::Body::from(()) {
+///   vercel_lambda::Body::Empty => true,
 ///   _ => false
 /// })
 /// ```
@@ -77,9 +77,7 @@ impl From<()> for Body {
 }
 
 impl From<Body> for () {
-	fn from(_: Body) -> Self {
-		()
-	}
+	fn from(_: Body) -> Self {}
 }
 
 impl<'a> From<&'a str> for Body {
@@ -148,7 +146,7 @@ impl From<Body> for Vec<u8> {
 		match b {
 			Body::Empty => "".as_bytes().to_owned(),
 			Body::Text(t) => t.into_bytes(),
-			Body::Binary(b) => b.to_owned(),
+			Body::Binary(b) => b,
 		}
 	}
 }

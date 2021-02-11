@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "main.rs",
-      "use": "now-rust",
+      "use": "vercel-rust",
       "config": {
         "includeFiles": ["static/**/*.txt", "static/**/*.svg"]
       }

@@ -1,6 +1,10 @@
-# now-rust changelog
+# vercel-rust changelog
 
 ## Unreleased
+
+## 3.0.0
+
+- Renamed to `vercel-rust` [#34](https://github.com/mike-engel/vercel-rust/pull/34)
 
 ## 2.0.3
 
@@ -20,7 +24,7 @@ Update dependencies
 
 ## 2.0.0
 
-Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](https://github.com/mike-engel/now-rust/pull/19)!
+Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](https://github.com/mike-engel/vercel-rust/pull/19)!
 
 ### Breaking changes
 
@@ -36,13 +40,13 @@ Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](h
 
 ### New features
 
-- Support for version 3 of Runtimes [#14](https://github.com/mike-engel/now-rust/pull/14)
+- Support for version 3 of Runtimes [#14](https://github.com/mike-engel/vercel-rust/pull/14)
 
 ## 0.2.6
 
 ### New features
 
-- Rust will be installed through a now lifecycle hook in `package.json` rather than by the builder [#5](https://github.com/mike-engel/now-rust/pull/5)
+- Rust will be installed through a now lifecycle hook in `package.json` rather than by the builder [#5](https://github.com/mike-engel/vercel-rust/pull/5)
 
 ## 0.2.5
 

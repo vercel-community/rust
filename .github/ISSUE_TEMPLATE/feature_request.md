@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for now-rust
+about: Suggest an idea for vercel-rust
 title: ''
 labels: ''
 assignees: ''

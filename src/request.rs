@@ -6,11 +6,11 @@ use serde_derive::Deserialize;
 
 use crate::body::Body;
 
-/// Representation of a Now Lambda proxy event data
+/// Representation of a Vercel Lambda proxy event data
 #[doc(hidden)]
 #[derive(Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct NowRequest<'a> {
+pub(crate) struct VercelRequest<'a> {
 	pub(crate) host: Cow<'a, str>,
 	pub(crate) path: Cow<'a, str>,
 	#[serde(deserialize_with = "deserialize_method")]
@@ -23,7 +23,7 @@ pub(crate) struct NowRequest<'a> {
 
 #[doc(hidden)]
 #[derive(Deserialize, Debug, Default)]
-pub(crate) struct NowEvent<'a> {
+pub(crate) struct VercelEvent<'a> {
 	#[serde(rename = "Action")]
 	action: Cow<'a, str>,
 	pub(crate) body: Cow<'a, str>,
@@ -87,9 +87,9 @@ where
 	deserializer.deserialize_map(HeaderVisitor)
 }
 
-impl<'a> From<NowRequest<'a>> for HttpRequest<Body> {
-	fn from(value: NowRequest<'_>) -> Self {
-		let NowRequest {
+impl<'a> From<VercelRequest<'a>> for HttpRequest<Body> {
+	fn from(value: VercelRequest<'_>) -> Self {
+		let VercelRequest {
 			host,
 			path,
 			method,
@@ -98,10 +98,10 @@ impl<'a> From<NowRequest<'a>> for HttpRequest<Body> {
 			encoding,
 		} = value;
 
-		// build an http::Request<now_lambda::Body> from a now_lambda::NowRequest
+		// build an http::Request<vercel_lambda::Body> from a vercel_lambda::VercelRequest
 		let mut builder = HttpRequest::builder();
 		builder.method(method);
-		builder.uri({ format!("https://{}{}", host, path) });
+		builder.uri(format!("https://{}{}", host, path));
 
 		let mut req = builder
 			.body(match (body, encoding) {
@@ -115,7 +115,7 @@ impl<'a> From<NowRequest<'a>> for HttpRequest<Body> {
 			.expect("failed to build request");
 
 		// no builder method that sets headers in batch
-		mem::replace(req.headers_mut(), headers);
+		let _ = mem::replace(req.headers_mut(), headers);
 
 		req
 	}

@@ -9,10 +9,10 @@ use serde_derive::Serialize;
 
 use crate::body::Body;
 
-/// Representation of a Now Lambda response
+/// Representation of a Vercel Lambda response
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct NowResponse {
+pub(crate) struct VercelResponse {
 	pub status_code: u16,
 	#[serde(
 		skip_serializing_if = "HeaderMap::is_empty",
@@ -25,7 +25,7 @@ pub(crate) struct NowResponse {
 	pub encoding: Option<String>,
 }
 
-impl Default for NowResponse {
+impl Default for VercelResponse {
 	fn default() -> Self {
 		Self {
 			status_code: 200,
@@ -48,7 +48,7 @@ where
 	map.end()
 }
 
-impl<T> From<Response<T>> for NowResponse
+impl<T> From<Response<T>> for VercelResponse
 where
 	T: Into<Body>,
 {
@@ -59,7 +59,7 @@ where
 			b @ Body::Text(_) => (None, Some(b)),
 			b @ Body::Binary(_) => (Some("base64".to_string()), Some(b)),
 		};
-		NowResponse {
+		VercelResponse {
 			status_code: parts.status.as_u16(),
 			body,
 			headers: parts.headers,
@@ -77,7 +77,7 @@ where
 /// # example
 ///
 /// ```rust
-/// use now_lambda::{Body, IntoResponse, Response};
+/// use vercel_lambda::{Body, IntoResponse, Response};
 ///
 /// assert_eq!(
 ///   "hello".into_response().body(),

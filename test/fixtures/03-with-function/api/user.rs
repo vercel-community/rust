@@ -1,17 +1,17 @@
-use http::{StatusCode};
+use http::StatusCode;
 use std::error::Error;
-use now_lambda::{error::NowError, lambda, IntoResponse, Request, Response};
+use vercel_lambda::{error::VercelError, lambda, IntoResponse, Request, Response};
 
-fn handler(_: Request) -> Result<impl IntoResponse, NowError> {
+fn handler(_: Request) -> Result<impl IntoResponse, VercelError> {
 	let response = Response::builder()
 		.status(StatusCode::OK)
 		.header("Content-Type", "text/plain")
 		.body("user endpoint")
 		.expect("Internal Server Error");
 
-		Ok(response)
+	Ok(response)
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-		Ok(lambda!(handler))
+	Ok(lambda!(handler))
 }

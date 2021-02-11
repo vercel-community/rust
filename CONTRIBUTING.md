@@ -14,8 +14,8 @@ Code is not the only thing you can contribute. We truly appreciate contributions
 
 - Fixing typos.
 - Improving docs.
-- Triaging [issues](https://github.com/mike-engel/now-rust/issues).
-- Reviewing [pull requests](https://github.com/mike-engel/now-rust/pulls).
+- Triaging [issues](https://github.com/mike-engel/vercel-rust/issues).
+- Reviewing [pull requests](https://github.com/mike-engel/vercel-rust/pulls).
 - Sharing your opinion on issues.
 
 ## Issues

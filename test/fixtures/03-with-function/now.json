@@ -3,12 +3,12 @@
   "builds": [
     {
       "src": "api/user.rs",
-      "use": "now-rust",
+      "use": "vercel-rust",
       "config": {
         "functions": {
           "api/**/*.rs": {
             "memory": 128,
-            "runtime": "now-rust"
+            "runtime": "vercel-rust"
           }
         }
       }

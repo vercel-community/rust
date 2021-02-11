@@ -1,20 +1,20 @@
 /* global beforeAll, expect, it, jest */
-const ms = require('ms');
-const path = require('path');
-const execa = require('execa');
-const fs = require('fs-extra');
-const fetch = require('node-fetch');
+const ms = require("ms");
+const path = require("path");
+const execa = require("execa");
+const fs = require("fs-extra");
+const fetch = require("node-fetch");
 
-jest.setTimeout(ms('5m'));
+jest.setTimeout(ms("5m"));
 
-async function deploy(nowArgs = []) {
-	const defaultArgs = ['--public'];
+async function deploy(vercelArgs = []) {
+	const defaultArgs = ["--public"];
 
-	if (process.env.NOW_TOKEN) {
-		defaultArgs.push(`--token=${process.env.NOW_TOKEN}`);
+	if (process.env.VERCEL_TOKEN) {
+		defaultArgs.push(`--token=${process.env.VERCEL_TOKEN}`);
 	}
 
-	const { stdout } = await execa('vercel', [...defaultArgs, ...nowArgs]);
+	const { stdout } = await execa("vercel", [...defaultArgs, ...vercelArgs]);
 
 	console.log(`[Deployment] ${stdout}`);
 
@@ -22,14 +22,14 @@ async function deploy(nowArgs = []) {
 }
 
 async function packAndDeploy() {
-	const pkgRoot = path.join(__dirname, '..');
-	await execa('npm', ['build']);
+	const pkgRoot = path.join(__dirname, "..");
+	await execa("npm", ["build"]);
 
-	const { stdout } = await execa('npm', ['pack', '--json']);
+	const { stdout } = await execa("npm", ["pack", "--json"]);
 	const [{ filename }] = JSON.parse(stdout);
 
 	const builderPath = path.join(pkgRoot, filename);
-	const builder = await deploy([builderPath, '--name=now-rust']);
+	const builder = await deploy([builderPath, "--name=vercel-rust"]);
 
 	return builder;
 }
@@ -52,48 +52,52 @@ async function checkProbes(url, probes) {
 }
 
 async function testFixture(fixture, builder) {
-	const fixturePath = path.join(__dirname, 'fixtures', fixture);
-	const { probes, ...tempConfig } = await fs.readJSON(path.join(fixturePath, 'now.json'));
+	const fixturePath = path.join(__dirname, "fixtures", fixture);
+	const { probes, ...tempConfig } = await fs.readJSON(
+		path.join(fixturePath, "vercel.json")
+	);
 
 	if (tempConfig.builds) {
 		if (!builder) {
 			throw new Error(`Missing builder argument for ${fixture}`);
 		}
 
-		tempConfig.builds = JSON.parse(JSON.stringify(tempConfig.builds).replace(/now-rust/g, builder));
+		tempConfig.builds = JSON.parse(
+			JSON.stringify(tempConfig.builds).replace(/nvercelow-rust/g, builder)
+		);
 	}
 
-	const configPath = path.join(fixturePath, 'now.temp.json');
+	const configPath = path.join(fixturePath, "vercel.temp.json");
 
 	await fs.writeJSON(configPath, tempConfig);
 
-	const url = await deploy([fixturePath, '--local-config', configPath]);
+	const url = await deploy([fixturePath, "--local-config", configPath]);
 
 	await checkProbes(url, probes);
 
 	return url;
 }
 
-describe('now-rust', () => {
+describe("vercel-rust", () => {
 	let builder;
 
 	beforeAll(async () => {
 		builder = await packAndDeploy();
 	});
 
-	it('Deploy 01-include-files', async () => {
-		await testFixture('01-include-files', builder);
+	it("Deploy 01-include-files", async () => {
+		await testFixture("01-include-files", builder);
 	});
 
-	it('Deploy 02-with-utility', async () => {
-		await testFixture('02-with-utility', builder);
+	it("Deploy 02-with-utility", async () => {
+		await testFixture("02-with-utility", builder);
 	});
 
-	it('Deploy 03-with-function', async () => {
-		await testFixture('03-with-function', builder);
+	it("Deploy 03-with-function", async () => {
+		await testFixture("03-with-function", builder);
 	});
 
-	it('Deploy 04-with-parameter', async () => {
-		await testFixture('04-with-parameter', builder);
+	it("Deploy 04-with-parameter", async () => {
+		await testFixture("04-with-parameter", builder);
 	});
 });

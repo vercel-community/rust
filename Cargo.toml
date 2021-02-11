@@ -1,14 +1,14 @@
 [package]
-name = "now_lambda"
-version = "0.1.3"
+name = "vercel_lambda"
+version = "0.2.0"
 authors = ["Antonio Nuno Monteiro <anmonteiro@gmail.com>"]
 edition = "2018"
-description = "Rust bindings for Now.sh Lambdas"
-keywords = ["AWS", "Lambda", "Zeit", "Now", "Rust"]
+description = "Rust bindings for Vercel Lambdas"
+keywords = ["AWS", "Lambda", "Vercel", "Rust"]
 license = "MIT"
-homepage = "https://github.com/zeit/now-builders"
-repository = "https://github.com/zeit/now-builders"
-documentation = "https://docs.rs/now_lambda"
+homepage = "https://github.com/mike-engel/vercel-rust"
+repository = "https://github.com/mike-engel/vercel-rust"
+documentation = "https://docs.rs/vercel_lambda"
 include = [
     "src/*.rs",
     "Cargo.toml"

@@ -1,4 +1,4 @@
-use now_lambda::lambda;
+use vercel_lambda::lambda;
 use std::error::Error;
 
 // PLACEHOLDER

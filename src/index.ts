@@ -28,7 +28,7 @@ const codegenFlags = [
 ];
 
 export const version = 3;
-const builderDebug = process.env.NOW_BUILDER_DEBUG ? true : false;
+const builderDebug = process.env.VERCEL_BUILDER_DEBUG ? true : false;
 
 async function parseTOMLStream(stream: NodeJS.ReadableStream) {
 	return toml.parse.stream(stream);

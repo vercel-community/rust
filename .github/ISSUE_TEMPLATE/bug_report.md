@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve now-rust
+about: Create a report to help us improve vercel-rust
 title: ''
 labels: ''
 assignees: ''
@@ -22,7 +22,7 @@ If applicable, add log output to help explain your problem. If your deployment i
 **Environment (please complete the following information):**
  - rust [e.g. stable]
  - rust edition [e.g. 2018]
- - now-rust [e.g. 1.0.0]
+ - vercel-rust [e.g. 1.0.0]
 
 **Additional context**
 Add any other context about the problem here.

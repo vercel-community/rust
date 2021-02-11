@@ -12,15 +12,15 @@ mod strmap;
 
 pub use crate::{body::Body, response::IntoResponse, strmap::StrMap};
 use crate::{
-	error::NowError,
-	request::{NowEvent, NowRequest},
-	response::NowResponse,
+	error::VercelError,
+	request::{VercelEvent, VercelRequest},
+	response::VercelResponse,
 };
 
-/// Type alias for `http::Request`s with a fixed `now_lambda::Body` body
+/// Type alias for `http::Request`s with a fixed `Vercel_lambda::Body` body
 pub type Request = http::Request<Body>;
 
-/// Functions acting as Now Lambda handlers must conform to this type.
+/// Functions acting as Vercel Lambda handlers must conform to this type.
 pub trait Handler<R, B, E> {
 	/// Method to execute the handler function
 	fn run(&mut self, event: http::Request<B>) -> Result<R, E>;
@@ -35,7 +35,7 @@ where
 	}
 }
 
-/// Creates a new `lambda_runtime::Runtime` and begins polling for Now Lambda events
+/// Creates a new `lambda_runtime::Runtime` and begins polling for Vercel Lambda events
 ///
 /// # Arguments
 ///
@@ -46,26 +46,26 @@ where
 pub fn start<R, B, E>(f: impl Handler<R, B, E>, runtime: Option<TokioRuntime>)
 where
 	B: From<Body>,
-	E: Into<NowError>,
+	E: Into<VercelError>,
 	R: IntoResponse,
 {
 	// handler requires a mutable ref
 	let mut func = f;
 	lambda::start(
-		|e: NowEvent, _ctx: Context| {
+		|e: VercelEvent, _ctx: Context| {
 			let req_str = e.body;
-			let parse_result: Result<NowRequest, Error> = serde_json::from_str(&req_str);
+			let parse_result: Result<VercelRequest, Error> = serde_json::from_str(&req_str);
 			match parse_result {
 				Ok(req) => {
-					debug!("Deserialized Now proxy request successfully");
+					debug!("Deserialized Vercel proxy request successfully");
 					let request: http::Request<Body> = req.into();
 					func.run(request.map(|b| b.into()))
-						.map(|resp| NowResponse::from(resp.into_response()))
+						.map(|resp| VercelResponse::from(resp.into_response()))
 						.map_err(|e| e.into())
 				}
 				Err(e) => {
-					error!("Could not deserialize event body to NowRequest {}", e);
-					panic!("Could not deserialize event body to NowRequest {}", e);
+					error!("Could not deserialize event body to VercelRequest {}", e);
+					panic!("Could not deserialize event body to VercelRequest {}", e);
 				}
 			}
 		},
@@ -73,7 +73,7 @@ where
 	)
 }
 
-/// A macro for starting new handler's poll for Now Lambda events
+/// A macro for starting new handler's poll for Vercel Lambda events
 #[macro_export]
 macro_rules! lambda {
 	($handler:expr) => {
