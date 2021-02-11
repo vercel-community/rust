@@ -1,13 +1,13 @@
 {
-  "name": "now-rust",
-  "description": "Community based builder for using rust on the now/zeit platform",
+  "name": "vercel-rust",
+  "description": "Community based builder for using rust on the Vercel platform",
   "version": "2.0.4",
   "license": "MIT",
   "main": "./dist/index",
-  "homepage": "https://github.com/mike-engel/now-rust",
+  "homepage": "https://github.com/mike-engel/vercel-rust",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mike-engel/now-rust.git"
+    "url": "https://github.com/mike-engel/vercel-rust.git"
   },
   "scripts": {
     "build": "tsc",

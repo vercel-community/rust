@@ -1,6 +1,6 @@
-# now-rust
+# vercel-rust
 
-> Community based builder for using rust on the now/zeit platform
+> Community based builder for using rust on the Vercel platform
 
 ---
 
@@ -12,7 +12,7 @@ I don't use this project any longer, and the time I can dedicate to maintaining 
 
 This is a now builder which allows you to run your rust code as lambdas on the now platform!
 
-This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builders](https://github.com/zeit/now-builders) monorepo, but has since been moved to a community-maintained project.
+This was originally provided officially by [Vercel](https://vercel.com)'s now archived [now-builders](https://github.com/vercel/now-builders) monorepo, but has since been moved to a community-maintained project.
 
 - [Usage](#usage)
   - [Entrypoint](#entrypoint)
@@ -25,7 +25,7 @@ This was originally provided officially by [ZEIT](https://zeit.co)'s [now-builde
 
 ## Usage
 
-If you're unfamiliar with now runtimes, please read the [runtime docs](https://zeit.co/docs/runtimes) first. This runtime can be used like any other Community Runtime.
+If you're unfamiliar with now runtimes, please read the [runtime docs](https://vercel.com/docs/runtimes) first. This runtime can be used like any other Community Runtime.
 
 ```json
 {
@@ -123,13 +123,13 @@ Finally we need a `now.json` file to specify the runtime for `api/user.rs`:
 
 ### Are cargo workspaces supported?
 
-Not quite. Cargo's workspaces feature is a great tool when working on multiple binaries and libraries in a single project. If a cargo workspace is found in the entrypoint, however, now-rust will fail to build.
+Not quite. Cargo's workspaces feature is a great tool when working on multiple binaries and libraries in a single project. If a cargo workspace is found in the entrypoint, however, vercel-rust will fail to build.
 
 To get around this limitation, create build entries in your now.json file for each Cargo.toml that represents a lambda function within your workspace. In your .nowignore, you'll want to add any binary or library project folders that aren't needed for your lambdas to speed up the build process like your Cargo.toml workspace.
 
 It's also recommended to have a Cargo.lock alongside your lambda Cargo.toml files to speed up the build process. You can do this by running cargo check or a similar command within each project folder that contains a lambda.
 
-If you have a compelling case for workspaces to be supported by now-rust which are too cumbersome with this workaround, please submit an issue! We're always looking for feedback.
+If you have a compelling case for workspaces to be supported by vercel-rust which are too cumbersome with this workaround, please submit an issue! We're always looking for feedback.
 
 ### How do I use this during local development?
 
