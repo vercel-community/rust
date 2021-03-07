@@ -1,9 +1,13 @@
 [package]
 name = "index"
 version = "1.0.0"
-authors = ["Mike Engel <mike@mike-engel.com>"]
+authors = [ "Mike Engel <mike@mike-engel.com>" ]
 edition = "2018"
 
 [dependencies]
 http = "0.1"
 vercel_lambda = "*"
+
+[[bin]]
+name = "_user_"
+path = "/now-rust/test/fixtures/04-with-parameter/api/[user].rs"

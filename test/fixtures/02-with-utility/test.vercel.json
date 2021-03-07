@@ -3,15 +3,7 @@
   "builds": [
     {
       "src": "api/user.rs",
-      "use": "vercel-rust",
-      "config": {
-        "functions": {
-          "api/**/*.rs": {
-            "memory": 128,
-            "runtime": "vercel-rust"
-          }
-        }
-      }
+      "use": "placeholder"
     }
   ],
   "routes": [
@@ -24,7 +16,7 @@
     {
       "path": "/api/user",
       "status": 200,
-      "mustContain": "user endpoint"
+      "mustContain": "foo"
     }
   ]
 }

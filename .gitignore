@@ -9,3 +9,6 @@ Thumbs.db
 target/
 dist/
 node_modules/
+.vercel/
+
+fixtures/**/vercel.json
