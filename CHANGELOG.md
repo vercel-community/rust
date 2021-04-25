@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.1.0
+
+- Support pre-configured binaries [#25](https://github.com/mike-engel/vercel-rust/pull/25)
+
 ## 3.0.0
 
 - Renamed to `vercel-rust` [#34](https://github.com/mike-engel/vercel-rust/pull/34)
