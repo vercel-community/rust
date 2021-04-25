@@ -10,6 +10,7 @@ import {
 	FileFsRef,
 	runShellScript,
 	BuildOptions,
+	Meta,
 	PrepareCacheOptions,
 	DownloadedFiles
 } from "@vercel/build-utils"; // eslint-disable-line import/no-extraneous-dependencies
@@ -87,13 +88,77 @@ async function cargoLocateProject(config: CargoConfig) {
 	return null;
 }
 
+async function resolveBinary(
+	meta: Meta,
+	workPath: string,
+	entrypointPath: string,
+	cargoTomlFile: string,
+	cargoToml: toml.JsonMap,
+	buildBinary: (binName: string) => Promise<void>
+) {
+	const entrypointPathRelative = path.relative(workPath, entrypointPath)
+	const bin = cargoToml.bin instanceof Array
+		? (cargoToml.bin as toml.JsonMap[]).find((bin: toml.JsonMap) => bin.path === entrypointPathRelative)
+		: null;
+	let binName = bin && bin.name as string;
+
+	if (bin == null) {
+		binName = path
+			.basename(entrypointPath)
+			.replace(path.extname(entrypointPath), "")
+			.replace("[", "_")
+			.replace("]", "_");
+
+		const tomlToWrite = toml.stringify({
+			...cargoToml,
+			bin: [{
+				name: binName,
+				path: entrypointPath
+			}]
+		});
+
+		if (meta.isDev) {
+			debug("Backing up Cargo.toml file");
+			await fs.move(
+				cargoTomlFile,
+				`${cargoTomlFile}.backup`,
+				{ overwrite: true }
+			);
+		}
+
+		debug("Writing following toml to file:", tomlToWrite);
+		try {
+			await fs.writeFile(cargoTomlFile, tomlToWrite);
+		} catch (error) {
+			if (meta.isDev) {
+				await restoreCargoToml(cargoTomlFile);
+			}
+			throw error;
+		}
+	}
+
+	try {
+		await buildBinary(binName as string);
+	} catch (error) {
+		if (bin == null && meta.isDev) {
+			await restoreCargoToml(cargoTomlFile);
+		}
+	}
+
+	if (bin == null && meta.isDev) {
+		await restoreCargoToml(cargoTomlFile);
+	}
+
+	return binName as string;
+}
+
 async function restoreCargoToml(cargoTomlFile: any) {
 	debug("Restoring backed up Cargo.toml file");
 	await fs.move(`${cargoTomlFile}.backup`, cargoTomlFile, { overwrite: true });
 }
 
 async function buildSingleFile(
-	{ entrypoint, meta = {} }: BuildOptions,
+	{ entrypoint, workPath, meta = {} }: BuildOptions,
 	downloadedFiles: DownloadedFiles,
 	extraFiles: DownloadedFiles,
 	rustEnv: Record<string, string>
@@ -120,58 +185,25 @@ async function buildSingleFile(
 		throw err;
 	}
 
-	const binName = path
-		.basename(entrypointPath)
-		.replace(path.extname(entrypointPath), "")
-		.replace("[", "_")
-		.replace("]", "_");
-
-	const tomlToWrite = toml.stringify({
-		...cargoToml,
-		bin: [
-			{
-				name: binName,
-				path: entrypointPath
-			}
-		]
-	});
-
-	if (meta.isDev) {
-		debug("Backing up Cargo.toml file");
-		await fs.move(cargoTomlFile, `${cargoTomlFile}.backup`, {
-			overwrite: true
-		});
-	}
-
-	debug("Writing following toml to file:", tomlToWrite);
-	await fs.writeFile(cargoTomlFile, tomlToWrite);
-
-	debug("Running `cargo build`...");
-	try {
-		await execa(
-			"cargo",
-			["build", "--bin", binName].concat(
-				builderDebug ? ["--verbose"] : ["--quiet", "--release"]
-			),
-			{
-				env: rustEnv,
-				cwd: entrypointDirname,
-				stdio: "inherit"
-			}
-		);
-	} catch (err) {
-		console.error("failed to `cargo build`");
-
-		if (meta.isDev) {
-			restoreCargoToml(cargoTomlFile);
+	const binName = await resolveBinary(meta, workPath, entrypointPath, cargoTomlFile, cargoToml, async binName => {
+		debug("Running `cargo build`...");
+		try {
+			await execa(
+				"cargo",
+				["build", "--bin", binName].concat(
+					builderDebug ? ["--verbose"] : ["--quiet", "--release"]
+				),
+				{
+					env: rustEnv,
+					cwd: entrypointDirname,
+					stdio: "inherit"
+				}
+			);
+		} catch (err) {
+			console.error("failed to `cargo build`");
+			throw err;
 		}
-
-		throw err;
-	}
-
-	if (meta.isDev) {
-		restoreCargoToml(cargoTomlFile);
-	}
+	});
 
 	// The compiled binary in Windows has the `.exe` extension
 	const binExtension = process.platform === "win32" ? ".exe" : "";

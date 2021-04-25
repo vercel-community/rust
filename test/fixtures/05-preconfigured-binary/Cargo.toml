@@ -1,0 +1,13 @@
+[package]
+name = "preconfigured-binary"
+version = "0.1.0"
+authors = ["Chris Connelly <chris@connec.co.uk>"]
+edition = "2018"
+
+[[bin]]
+name = "hello_index"
+path = "api/hello.rs"
+
+[dependencies]
+http = "0.1"
+vercel_lambda = "*"

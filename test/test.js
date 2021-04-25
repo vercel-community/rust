@@ -100,4 +100,8 @@ describe("vercel-rust", () => {
 	it("Deploy 04-with-parameter", async () => {
 		await testFixture("04-with-parameter", builder);
 	});
+
+	it("Deploy 05-preconfigured-binary", async () => {
+		await testFixture("05-preconfigured-binary", builder);
+	});
 });
