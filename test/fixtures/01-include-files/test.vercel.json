@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "main.rs",
-      "use": "vercel-rust",
+      "use": "placeholder",
       "config": {
         "includeFiles": ["static/**/*.txt", "static/**/*.svg"]
       }

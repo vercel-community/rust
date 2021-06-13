@@ -3,20 +3,20 @@
   "builds": [
     {
       "src": "api/user.rs",
-      "use": "vercel-rust"
+      "use": "placeholder"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/user",
-      "dest": "/api/user.rs"
+      "source": "/api/user",
+      "destination": "/api/user.rs"
     }
   ],
   "probes": [
     {
       "path": "/api/user",
       "status": 200,
-      "mustContain": "foo"
+      "mustContain": "user endpoint"
     }
   ]
 }

@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "tsc",
-    "test": "tsc && jest",
+    "test": "jest",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -28,7 +28,7 @@
     "@types/fs-extra": "^7.0.0",
     "@vercel/build-utils": "^2.6.0",
     "husky": "^3.1.0",
-    "jest": "^24.9.0",
+    "jest": "^25.5.4",
     "lint-staged": "^9.5.0",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.0",

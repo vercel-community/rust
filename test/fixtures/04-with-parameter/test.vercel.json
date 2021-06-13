@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "api/[user].rs",
-      "use": "vercel-rust"
+      "use": "placeholder"
     }
   ],
   "probes": [
