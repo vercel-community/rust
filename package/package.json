@@ -1,53 +1,45 @@
 {
-  "name": "vercel-rust",
-  "description": "Community based builder for using rust on the Vercel platform",
-  "version": "3.0.0",
-  "license": "MIT",
-  "main": "./dist/index",
-  "homepage": "https://github.com/mike-engel/vercel-rust",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mike-engel/vercel-rust.git"
-  },
-  "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "tsc",
-    "test": "tsc && jest",
-    "typecheck": "tsc --noEmit"
-  },
-  "files": [
-    "dist",
-    "launcher.rs"
-  ],
-  "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "execa": "^5.0.0",
-    "fs-extra": "^7.0.1"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^7.0.0",
-    "@vercel/build-utils": "^2.6.0",
-    "husky": "^3.1.0",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.5.0",
-    "ms": "^2.1.2",
-    "node-fetch": "^2.6.0",
-    "prettier": "^1.19.1",
-    "typescript": "3.5.2",
-    "vercel": "^21.0.1"
-  },
-  "prettier": {
-    "useTabs": true
-  },
-  "husky": {
-    "hooks": {
-      "precommit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,js,md,json}": [
-      "prettier --write",
-      "git add"
-    ]
-  }
+	"name": "vercel-rust",
+	"description": "Rust runtime for Vercel Functions.",
+	"version": "3.1.0",
+	"license": "MIT",
+	"main": "./dist/index",
+	"homepage": "https://github.com/vercel-community/rust",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vercel-community/rust.git"
+	},
+	"scripts": {
+		"build": "tsc",
+		"prepublishOnly": "tsc",
+		"test": "jest",
+		"typecheck": "tsc --noEmit"
+	},
+	"files": [
+		"dist",
+		"launcher.rs"
+	],
+	"dependencies": {
+		"@iarna/toml": "^2.2.5",
+		"execa": "^5.0.0",
+		"fs-extra": "^7.0.1"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "^7.0.0",
+		"@vercel/build-utils": "^2.6.0",
+		"husky": "^3.1.0",
+		"jest": "^25.5.4",
+		"lint-staged": "^9.5.0",
+		"ms": "^2.1.2",
+		"node-fetch": "^2.6.0",
+		"prettier": "^2.3.2",
+		"typescript": "3.5.2",
+		"vercel": "^23.1.2"
+	},
+	"prettier": {
+		"arrowParens": "always",
+		"singleQuote": true,
+		"tabWidth": 2,
+		"trailingComma": "none"
+	}
 }
