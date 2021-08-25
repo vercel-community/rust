@@ -1,17 +1,17 @@
 [package]
 name = "vercel_lambda"
 version = "0.2.0"
-authors = ["Antonio Nuno Monteiro <anmonteiro@gmail.com>"]
+authors = ["Vercel <support@vercel.com>"]
 edition = "2018"
-description = "Rust bindings for Vercel Lambdas"
-keywords = ["AWS", "Lambda", "Vercel", "Rust"]
+description = "Rust runtime for Vercel Functions."
+keywords = ["Vercel", "Rust", "Serverless", "Functions"]
 license = "MIT"
-homepage = "https://github.com/mike-engel/vercel-rust"
-repository = "https://github.com/mike-engel/vercel-rust"
+homepage = "https://github.com/vercel-community/rust"
+repository = "https://github.com/vercel-community/rust"
 documentation = "https://docs.rs/vercel_lambda"
 include = [
-    "src/*.rs",
-    "Cargo.toml"
+  "src/*.rs",
+  "Cargo.toml"
 ]
 
 [dependencies]
