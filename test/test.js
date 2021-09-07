@@ -73,6 +73,8 @@ async function testFixture(fixture) {
   const baseUrl = await isReady(vercelProcess);
   await checkProbes(baseUrl, vercelConf.probes);
   vercelProcess.cancel();
+  vercelProcess.stdout.destroy();
+  vercelProcess.stderr.destroy();
 }
 
 describe('vercel-rust', () => {
