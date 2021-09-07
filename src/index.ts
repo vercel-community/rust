@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import execa from 'execa';
+import execa, { ExecaError } from 'execa';
 import toml from '@iarna/toml';
 import {
   glob,
@@ -15,6 +15,9 @@ import {
   DownloadedFiles
 } from '@vercel/build-utils';
 import { installRustAndFriends } from './install-rust';
+
+type RustEnv = Record<'RUSTFLAGS' | 'PATH', string> &
+  Record<string, string | undefined>;
 
 interface CargoConfig {
   env: Record<string, any>;
@@ -67,6 +70,10 @@ async function runUserScripts(entrypoint: string) {
   }
 }
 
+function isExecaError(err: Error): err is ExecaError {
+  return 'stderr' in err;
+}
+
 async function cargoLocateProject(config: CargoConfig) {
   try {
     const { stdout: projectDescriptionStr } = await execa(
@@ -79,10 +86,12 @@ async function cargoLocateProject(config: CargoConfig) {
       return projectDescription.root;
     }
   } catch (e) {
-    if (!/could not find/g.test(e.stderr)) {
-      console.error("Couldn't run `cargo locate-project`");
-      throw e;
+    if (e instanceof Error && isExecaError(e)) {
+      if (!/could not find/g.test(e.stderr)) {
+        console.error("Couldn't run `cargo locate-project`");
+      }
     }
+    throw e;
   }
 
   return null;
@@ -164,7 +173,7 @@ async function buildSingleFile(
   { entrypoint, workPath, meta = {} }: BuildOptions,
   downloadedFiles: DownloadedFiles,
   extraFiles: DownloadedFiles,
-  rustEnv: Record<string, string>
+  rustEnv: RustEnv
 ) {
   debug('Building single file');
   const entrypointPath = downloadedFiles[entrypoint].fsPath;
@@ -250,7 +259,7 @@ export async function build(opts: BuildOptions) {
   const entryPath = downloadedFiles[entrypoint].fsPath;
 
   const { PATH, HOME } = process.env;
-  const rustEnv: Record<string, string> = {
+  const rustEnv: RustEnv = {
     ...process.env,
     PATH: `${path.join(HOME!, '.cargo/bin')}:${PATH}`,
     RUSTFLAGS: [process.env.RUSTFLAGS, ...codegenFlags]
@@ -277,7 +286,7 @@ export async function prepareCache({
     targetFolderDir = path.dirname(path.join(workPath, entrypoint));
   } else {
     const { PATH, HOME } = process.env;
-    const rustEnv: Record<string, string> = {
+    const rustEnv: RustEnv = {
       ...process.env,
       PATH: `${path.join(HOME!, '.cargo/bin')}:${PATH}`,
       RUSTFLAGS: [process.env.RUSTFLAGS, ...codegenFlags]
