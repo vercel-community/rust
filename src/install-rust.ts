@@ -11,7 +11,9 @@ async function downloadRustToolchain(version: string = 'stable') {
       { shell: true, stdio: 'inherit' }
     );
   } catch (err) {
-    throw new Error(`Failed to install rust via rustup: ${err.message}`);
+    if (err instanceof Error)
+      throw new Error(`Failed to install rust via rustup: ${err.message}`);
+    throw err;
   }
 }
 
