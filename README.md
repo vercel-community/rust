@@ -45,6 +45,28 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 ```
 
+Async fn can also be used as handler
+```rust
+use http::{StatusCode};
+use vercel_lambda::{lambda, error::VercelError, IntoResponse, Request, Response};
+use std::error::Error;
+
+async fn handler(_: Request) -> Result<impl IntoResponse, VercelError> {
+	let response = Response::builder()
+		.status(StatusCode::OK)
+		.header("Content-Type", "text/plain")
+		.body("Hello World")
+		.expect("Internal Server Error");
+
+		Ok(response)
+}
+
+// Start the runtime with the handler
+fn main() -> Result<(), Box<dyn Error>> {
+	Ok(lambda_async!(handler))
+}
+```
+
 Finally, we need an `api/Cargo.toml` file:
 
 ```toml
