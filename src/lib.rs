@@ -156,9 +156,11 @@ fn get_runtime(runtime: Option<tokio::runtime::Runtime>) -> tokio::runtime::Runt
     match runtime {
         Some(rt) => rt,
         _ => tokio::runtime::Builder::new_multi_thread()
+            .enable_all()
             .build()
             .unwrap_or_else(|_| {
                 tokio::runtime::Builder::new_current_thread()
+                    .enable_all()
                     .build()
                     .unwrap()
             }),
