@@ -25,7 +25,7 @@ pub(crate) struct VercelRequest<'a> {
 #[derive(Deserialize, Debug, Default)]
 pub(crate) struct VercelEvent {
     #[serde(rename = "Action")]
-    action: String,
+    _action: String,
     pub(crate) body: String,
 }
 

@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 Async fn can also be used as handler
 ```rust
 use http::{StatusCode};
-use vercel_lambda::{lambda, error::VercelError, IntoResponse, Request, Response};
+use vercel_lambda::{lambda_async, error::VercelError, IntoResponse, Request, Response};
 use std::error::Error;
 
 async fn handler(_: Request) -> Result<impl IntoResponse, VercelError> {
