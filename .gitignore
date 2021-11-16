@@ -12,4 +12,4 @@ node_modules/
 .vercel/
 
 fixtures/**/vercel.json
-cargo.lock
+Cargo.lock

@@ -6,9 +6,10 @@
 
 - Add async handler fn support
 - Make tokio an optional dependency behind feature `runtime` (default on)
-- Upgrade tokio to 1.12
+- Upgrade tokio to 1.14
 - Upgrade http to 0.2
 - Upgrade lambda_runtime to 0.4
+- Upgrade to rust 2021
 
 ## 0.2.0
 
