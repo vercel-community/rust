@@ -16,7 +16,7 @@ First, you'll need a `vercel.json` file in your project:
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@latest"
+      "runtime": "vercel-rust@3.1.2"
     }
   }
 }
