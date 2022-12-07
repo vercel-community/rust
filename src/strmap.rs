@@ -7,7 +7,7 @@ use std::{
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 
 /// A read-only view into a map of string data
-#[derive(Default, Debug, PartialEq)]
+#[derive(Default, Debug, PartialEq, Eq)]
 pub struct StrMap(pub(crate) Arc<HashMap<String, String>>);
 
 impl StrMap {

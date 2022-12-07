@@ -54,7 +54,7 @@ use serde::ser::{Error as SerError, Serialize, Serializer};
 ///   _ => false
 /// })
 /// ```
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Body {
     /// An empty body
     Empty,
@@ -177,7 +177,7 @@ impl AsRef<[u8]> for Body {
     }
 }
 
-impl<'a> Serialize for Body {
+impl Serialize for Body {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,

@@ -1,5 +1,5 @@
 pub use http::{self, Response};
-use lambda_runtime::{self as lambda, handler_fn, Context};
+use lambda_runtime::{self, service_fn, LambdaEvent};
 use log::{self, debug, error};
 use serde_json::Error;
 use std::future::Future;
@@ -51,22 +51,21 @@ where
     E: Into<VercelError>,
     R: IntoResponse,
 {
-    let func = |e: VercelEvent, ctx: Context| process_vercel_request(f, e, ctx);
-    let func = handler_fn(func);
-    lambda::run(func).await
+    let func = |request: LambdaEvent<VercelEvent>| process_vercel_request(request, f);
+    let service = service_fn(func);
+    lambda_runtime::run(service).await
 }
 
 async fn process_vercel_request<R, B, E>(
+    request: LambdaEvent<VercelEvent>,
     f: fn(http::Request<B>) -> Result<R, E>,
-    e: VercelEvent,
-    _ctx: Context,
 ) -> Result<VercelResponse, VercelError>
 where
     B: From<Body>,
     E: Into<VercelError>,
     R: IntoResponse,
 {
-    let parse_result: Result<VercelRequest, Error> = serde_json::from_str(&e.body);
+    let parse_result: Result<VercelRequest, Error> = serde_json::from_str(&request.payload.body);
     match parse_result {
         Ok(req) => {
             debug!("Deserialized Vercel proxy request successfully");
@@ -116,15 +115,15 @@ where
     E: Into<VercelError>,
     R: IntoResponse,
 {
-    let func = |e: VercelEvent, ctx: Context| process_vercel_request_with_async_handler(f, e, ctx);
-    let func = handler_fn(func);
-    lambda::run(func).await
+    let func =
+        |request: LambdaEvent<VercelEvent>| process_vercel_request_with_async_handler(request, f);
+    let service = service_fn(func);
+    lambda_runtime::run(service).await
 }
 
 async fn process_vercel_request_with_async_handler<R, B, E, F>(
+    request: LambdaEvent<VercelEvent>,
     f: fn(http::Request<B>) -> F,
-    e: VercelEvent,
-    _ctx: Context,
 ) -> Result<VercelResponse, VercelError>
 where
     F: Future<Output = Result<R, E>>,
@@ -132,7 +131,7 @@ where
     E: Into<VercelError>,
     R: IntoResponse,
 {
-    let parse_result: Result<VercelRequest, Error> = serde_json::from_str(&e.body);
+    let parse_result: Result<VercelRequest, Error> = serde_json::from_str(&request.payload.body);
     match parse_result {
         Ok(req) => {
             debug!("Deserialized Vercel proxy request successfully");
