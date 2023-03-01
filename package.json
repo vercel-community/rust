@@ -16,8 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "files": [
-    "dist",
-    "launcher.rs"
+    "dist"
   ],
   "dependencies": {
     "execa": "5",

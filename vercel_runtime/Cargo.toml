@@ -2,8 +2,17 @@
 name = "vercel_runtime"
 version = "0.1.2"
 edition = "2021"
-description = "Vercel Function Runtime"
+authors = ["Vercel <support@vercel.com>"]
+description = "Vercel Rust Function Runtime"
+keywords = ["Vercel", "Rust", "Serverless", "Functions"]
 license = "MIT"
+homepage = "https://github.com/vercel-community/rust"
+repository = "https://github.com/vercel-community/rust"
+documentation = "https://docs.rs/vercel_lambda"
+include = [
+  "src/*.rs",
+  "Cargo.toml"
+]
 exclude = [
   "tests/*",
 ]
@@ -22,4 +31,3 @@ tower-service = "0.3.2"
 base64 = "0.10"
 bytes = "1.3.0"
 async-trait = "0.1.63"
-
