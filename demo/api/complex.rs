@@ -4,22 +4,18 @@ use vercel_runtime::{
     lambda_http::{
         http::StatusCode, service_fn, tower::ServiceBuilder, Error as LambdaError, Response,
     },
-    lambda_runtime, process_error, process_request, process_response, IntoResponse, ProxyError,
-    ProxyRequest,
+    lambda_runtime, process_error, process_request, process_response, Error, IntoResponse, Request,
 };
 
 #[tokio::main]
 async fn main() -> Result<(), LambdaError> {
     tracing_subscriber::fmt()
-        // .with_max_level(tracing::Level::INFO)
         .with_max_level(tracing::Level::ERROR)
         // disable printing the name of the module in every log line.
         .with_target(false)
-        // disabling time is handy because CloudWatch will add the ingestion time.
-        .without_time()
         .init();
 
-    // Complex, using the ServiceBuilder to add middleware/layers
+    // This allows to extend the tower service with more layers
     let handler = ServiceBuilder::new()
         .map_request(process_request)
         .map_response(process_response)
@@ -30,7 +26,8 @@ async fn main() -> Result<(), LambdaError> {
     Ok(())
 }
 
-pub async fn handler(_req: ProxyRequest) -> Result<impl IntoResponse, ProxyError> {
+pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
+    tracing::info!("Choosing a starter Pokemon");
     let starter = choose_starter();
 
     let response = Response::builder()

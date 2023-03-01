@@ -5,6 +5,7 @@ specifiers:
   '@vercel/build-utils': ^6.2.1
   '@vercel/routing-utils': ^2.1.8
   execa: '5'
+  prettier: ^2.8.4
   rimraf: ^4.1.1
   typescript: ^4.9.4
 
@@ -16,6 +17,7 @@ devDependencies:
   '@types/node': 18.14.2
   '@vercel/build-utils': 6.3.2
   '@vercel/routing-utils': 2.1.10
+  prettier: 2.8.4
   rimraf: 4.1.2
 
 packages:
@@ -135,6 +137,12 @@ packages:
 
   /path-to-regexp/6.1.0:
     resolution: {integrity: sha512-h9DqehX3zZZDCEm+xbfU0ZmwCGFCAAraPJWMXJ4+v32NjZJilVg3k1TcKsRgIb8IQ/izZSaydDc1OhJCZvs2Dw==}
+    dev: true
+
+  /prettier/2.8.4:
+    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /punycode/2.3.0:
