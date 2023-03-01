@@ -23,4 +23,3 @@ path = "api/simple.rs"
 [[bin]]
 name = "complex"
 path = "api/complex.rs"
-

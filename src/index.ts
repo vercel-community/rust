@@ -1,44 +1,51 @@
-import fs from "fs";
-import path from "path";
+import fs from 'node:fs';
+import path from 'node:path';
+import type { BuildOptions, BuildResultV3 } from '@vercel/build-utils';
 import {
-  BuildOptions,
-  BuildResultV3,
   FileFsRef,
   debug,
   download,
   glob,
   runShellScript,
   createLambda,
-} from "@vercel/build-utils";
-import execa from "execa";
-import { installRustToolchain } from "./lib/rust-toolchain";
-import { Runtime } from "./lib/runtime";
+} from '@vercel/build-utils';
+import execa from 'execa';
+import { installRustToolchain } from './lib/rust-toolchain';
+import type { Runtime } from './lib/runtime';
 
-type RustEnv = Record<"RUSTFLAGS" | "PATH", string>;
+type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
-async function runUserScripts(dir: string) {
-  const buildScriptPath = path.join(dir, "build.sh");
+function assertEnv(name: string): string {
+  if (!process.env[name]) {
+    throw new Error(`Missing ENV variable process.env.${name}`);
+  }
+
+  return process.env[name] as unknown as string;
+}
+
+async function runUserScripts(dir: string): Promise<void> {
+  const buildScriptPath = path.join(dir, 'build.sh');
   const buildScriptExists = fs.existsSync(buildScriptPath);
 
   if (buildScriptExists) {
-    debug("Running `build.sh`");
+    debug('Running `build.sh`');
     await runShellScript(buildScriptPath);
   }
 }
 
 async function gatherExtraFiles(
   globMatcher: string | string[] | undefined,
-  entrypoint: string
-) {
+  entrypoint: string,
+): Promise<Record<string, FileFsRef>> {
   if (!globMatcher) return {};
 
-  debug("Gathering extra files for the fs");
+  debug('Gathering extra files for the fs');
 
   const entryDir = path.dirname(entrypoint);
 
   if (Array.isArray(globMatcher)) {
     const allMatches = await Promise.all(
-      globMatcher.map((pattern) => glob(pattern, entryDir))
+      globMatcher.map((pattern) => glob(pattern, entryDir)),
     );
 
     return allMatches.reduce((acc, matches) => ({ ...acc, ...matches }), {});
@@ -48,26 +55,26 @@ async function gatherExtraFiles(
 }
 
 async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
-  const BUILDER_DEBUG = Boolean(process.env.VERCEL_BUILDER_DEBUG) ?? false;
+  const BUILDER_DEBUG = Boolean(process.env.VERCEL_BUILDER_DEBUG ?? false);
   const { files, entrypoint, workPath, config, meta } = options;
 
   await installRustToolchain();
 
-  debug("Creating file system");
+  debug('Creating file system');
   const downloadedFiles = await download(files, workPath, meta);
   const entryPath = downloadedFiles[entrypoint].fsPath;
-  debug(workPath);
-  debug(JSON.stringify(fs.readdirSync(workPath)));
 
-  const { PATH, HOME } = process.env;
+  const HOME = assertEnv('HOME');
+  const PATH = assertEnv('PATH');
+
   const rustEnv: RustEnv = {
-    PATH: `${path.join(HOME!, ".cargo/bin")}:${PATH}`,
-    RUSTFLAGS: [process.env.RUSTFLAGS].filter(Boolean).join(" "),
+    PATH: `${path.join(HOME, '.cargo/bin')}:${PATH}`,
+    RUSTFLAGS: [process.env.RUSTFLAGS].filter(Boolean).join(' '),
   };
 
   // The binary name is the name of the entrypoint file
   // We assume each binary is specified correctly with `[[bin]]` in `Cargo.toml`
-  const binaryName = path.basename(entryPath, ".rs");
+  const binaryName = path.basename(entryPath, '.rs');
 
   await runUserScripts(workPath);
   const extraFiles = await gatherExtraFiles(config.includeFiles, entryPath);
@@ -75,15 +82,15 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   debug(`Running \`cargo build\` for \`${binaryName}\``);
   try {
     await execa(
-      "cargo",
-      ["build", "--bin", binaryName].concat(
-        BUILDER_DEBUG ? ["--verbose"] : ["--quiet", "--release"]
+      'cargo',
+      ['build', '--bin', binaryName].concat(
+        BUILDER_DEBUG ? ['--verbose'] : ['--quiet', '--release'],
       ),
       {
         cwd: process.cwd(),
         env: rustEnv,
-        stdio: "inherit",
-      }
+        stdio: 'inherit',
+      },
     );
   } catch (err) {
     debug(`Running \`cargo build\` for \`${binaryName}\` failed`);
@@ -93,10 +100,10 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   debug(`Building \`${binaryName}\` completed`);
 
   // The compiled binary in Windows has the `.exe` extension
-  const binExtension = process.platform === "win32" ? ".exe" : "";
-  const bootstrap = "bootstrap" + binExtension;
+  const binExtension = process.platform === 'win32' ? '.exe' : '';
+  const bootstrap = `bootstrap${binExtension}`;
 
-  const targetPath = `target/${BUILDER_DEBUG ? "debug" : "release"}`;
+  const targetPath = `target/${BUILDER_DEBUG ? 'debug' : 'release'}`;
   const bin = path.join(process.cwd(), `${targetPath}/${binaryName}`);
 
   const lambda = await createLambda({
@@ -105,7 +112,7 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
       [bootstrap]: new FileFsRef({ mode: 0o755, fsPath: bin }),
     },
     handler: bootstrap,
-    runtime: "provided",
+    runtime: 'provided',
   });
 
   return {
@@ -119,8 +126,9 @@ const runtime: Runtime = {
   build: buildHandler,
   prepareCache: async ({ workPath }) => {
     debug(`Caching \`${workPath}\``);
-    const cacheFiles = await glob("target/**", workPath);
+    const cacheFiles = await glob('target/**', workPath);
 
+    // Convert this into a reduce
     for (const f of Object.keys(cacheFiles)) {
       const accept =
         /(?:^|\/)target\/release\/\.fingerprint\//.test(f) ||
@@ -136,8 +144,8 @@ const runtime: Runtime = {
 
     return cacheFiles;
   },
-  shouldServe: async (options) => {
-    return options.requestPath === options.entrypoint;
+  shouldServe: async (options): Promise<boolean> => {
+    return Promise.resolve(options.requestPath === options.entrypoint);
   },
 };
 

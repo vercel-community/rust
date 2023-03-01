@@ -4,10 +4,7 @@
       "src": "main.rs",
       "use": "file:/Users/ecklf/Projects/vercel/rust-community",
       "config": {
-        "includeFiles": [
-          "static/**/*.txt",
-          "static/**/*.svg"
-        ]
+        "includeFiles": ["static/**/*.txt", "static/**/*.svg"]
       }
     }
   ],

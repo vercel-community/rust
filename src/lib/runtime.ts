@@ -1,4 +1,4 @@
-import {
+import type {
   BuildOptions,
   BuildResultV3,
   Files,
@@ -6,7 +6,7 @@ import {
   ShouldServeOptions,
   StartDevServerOptions,
   StartDevServerResult,
-} from "@vercel/build-utils/dist";
+} from '@vercel/build-utils';
 
 export interface Runtime {
   version: number;
@@ -14,6 +14,6 @@ export interface Runtime {
   prepareCache?: (options: PrepareCacheOptions) => Promise<Files>;
   shouldServe?: (options: ShouldServeOptions) => Promise<boolean>;
   startDevServer?: (
-    options: StartDevServerOptions
+    options: StartDevServerOptions,
   ) => Promise<StartDevServerResult>;
 }

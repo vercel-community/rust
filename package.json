@@ -1,23 +1,24 @@
 {
   "name": "vercel-rust",
-  "description": "Rust runtime for Vercel Functions.",
   "version": "4.0.0-canary.0",
-  "license": "MIT",
-  "main": "./dist/index",
+  "description": "Rust runtime for Vercel Functions.",
   "homepage": "https://github.com/vercel-community/rust",
   "repository": {
     "type": "git",
     "url": "https://github.com/vercel-community/rust.git"
   },
+  "license": "MIT",
+  "main": "./dist/index",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --removeComments",
     "prepublishOnly": "tsc",
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
-  "files": [
-    "dist"
-  ],
+  "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "execa": "5",
     "typescript": "^4.9.4"
@@ -26,6 +27,8 @@
     "@types/node": "^18.11.18",
     "@vercel/build-utils": "^6.2.1",
     "@vercel/routing-utils": "^2.1.8",
+    "@vercel/style-guide": "^4.0.2",
+    "eslint": "^8.35.0",
     "prettier": "^2.8.4",
     "rimraf": "^4.1.1"
   }

@@ -17,7 +17,7 @@ async function injectConf(confPath) {
 
   await fs.writeJSON(path.join(confPath, 'vercel.json'), conf, {
     spaces: 2,
-    EOL: '\n'
+    EOL: '\n',
   });
 
   return conf;
@@ -65,10 +65,10 @@ function isReady(vercelServ) {
 
 async function testFixture(fixture) {
   const vercelConf = await injectConf(
-    path.join(__dirname, 'fixtures', fixture)
+    path.join(__dirname, 'fixtures', fixture),
   );
   const vercelProcess = getVercelProcess(
-    path.join(__dirname, 'fixtures', fixture)
+    path.join(__dirname, 'fixtures', fixture),
   );
   const baseUrl = await isReady(vercelProcess);
   await checkProbes(baseUrl, vercelConf.probes);
