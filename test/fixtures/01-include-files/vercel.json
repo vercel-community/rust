@@ -1,0 +1,21 @@
+{
+  "builds": [
+    {
+      "src": "main.rs",
+      "use": "file:/Users/ecklf/Projects/vercel/rust-community",
+      "config": {
+        "includeFiles": [
+          "static/**/*.txt",
+          "static/**/*.svg"
+        ]
+      }
+    }
+  ],
+  "probes": [
+    {
+      "path": "/main.rs",
+      "status": 200,
+      "mustContain": "Include me in the lambda fs!"
+    }
+  ]
+}

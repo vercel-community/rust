@@ -16,54 +16,58 @@ First, you'll need a `vercel.json` file in your project:
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@3.1.2"
+      "runtime": "vercel-rust@4.0.0"
     }
   }
 }
 ```
 
-A Vercel Function will be created for every file that matches `api/**/*.rs`. Next, you can create a new Function `api/user.rs`:
+A Vercel Function will be created for every file that matches `api/**/*.rs`.
+
+<!-- todo annotation for filename? -->
+
+`api/handler.rs`:
 
 ```rust
-use http::{StatusCode};
-use vercel_lambda::{lambda, error::VercelError, IntoResponse, Request, Response};
-use std::error::Error;
+use serde_json::json;
+use vercel_runtime::{
+    lambda_http::{http::StatusCode, Error as LambdaError, Response},
+    run, IntoResponse, ProxyError, ProxyRequest,
+};
 
-fn handler(_: Request) -> Result<impl IntoResponse, VercelError> {
-	let response = Response::builder()
-		.status(StatusCode::OK)
-		.header("Content-Type", "text/plain")
-		.body("Hello World")
-		.expect("Internal Server Error");
-
-		Ok(response)
+#[tokio::main]
+async fn main() -> Result<(), LambdaError> {
+    run(handler).await?;
+    Ok(())
 }
 
-// Start the runtime with the handler
-fn main() -> Result<(), Box<dyn Error>> {
-	Ok(lambda!(handler))
+pub async fn handler(_req: ProxyRequest) -> Result<impl IntoResponse, ProxyError> {
+    let response = Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .body(
+            json!({
+              "message": "你好，世界"
+            })
+            .to_string(),
+        )?;
+
+    Ok(response)
 }
 ```
 
-Finally, we need an `api/Cargo.toml` file:
+Finally we need a `Cargo.toml` file at the root of your repository.
 
 ```toml
-[package]
-name = "index"
-version = "1.0.0"
-authors = ["Your Name <your@site.com>"]
-edition = "2018"
+# You can specify a library for shared logic here (optional)
+# [lib]
+# path = "src-rs/lib.rs"
 
-[dependencies]
-http = "0.1"
-vercel_lambda = "*"
-
-[lib]
-name = "util"
-path = "_util.rs"
+# Each handler has to be specified as [[bin]]
+[[bin]]
+name = "handler"
+path = "api/handler.rs"
 ```
-
-**Note:** `Cargo.toml` must exist on the same level as the `.rs` files.
 
 ### Dependencies
 
@@ -73,15 +77,15 @@ Furthermore, more system dependencies can be installed at build time with the pr
 
 ## Local Development
 
-With `vercel dev` and `vercel-rust`, you can develop your Rust-based lamdas on your own machine.
+With `vercel dev` and `vercel-rust`, you can develop your Rust-based lambdas on your own machine.
 
-During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install `rust` and `cargo` on your machine is with [rustup](https://rustup.rs).
+During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
 
 ## Contributing
 
 Since this project contains both Rust and Node.js code, you need to install the relevant dependencies. If you're only working on the JavaScript side, you only need to install those dependencies (and vice-versa).
 
-```sh
+```
 # install node dependencies
 npm install
 
