@@ -1,7 +1,7 @@
 {
   "name": "vercel-rust",
   "description": "Rust runtime for Vercel Functions.",
-  "version": "4.0.0",
+  "version": "4.0.1-canary.0",
   "license": "MIT",
   "main": "./dist/index",
   "homepage": "https://github.com/vercel-community/rust",
