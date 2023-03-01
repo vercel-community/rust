@@ -30,7 +30,7 @@ Example:
 use serde_json::json;
 use vercel_runtime::{
     lambda_http::{http::StatusCode, Error as LambdaError, Response},
-    run, IntoResponse, ProxyError, ProxyRequest,
+    run, IntoResponse, Error, Request,
 };
 
 #[tokio::main]
@@ -39,7 +39,7 @@ async fn main() -> Result<(), LambdaError> {
     Ok(())
 }
 
-pub async fn handler(_req: ProxyRequest) -> Result<impl IntoResponse, ProxyError> {
+pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
     let response = Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
@@ -83,17 +83,47 @@ During local development with `vercel dev`, ensure `rust` and `cargo` are alread
 
 Since this project contains both Rust and Node.js code, you need to install the relevant dependencies. If you're only working on the JavaScript side, you only need to install those dependencies (and vice-versa).
 
-```
+```shell
 # install node dependencies
 npm install
+
 
 # install cargo dependencies
 cargo fetch
 ```
 
+## Notes
+
+```mermaid
+graph TD
+    A["Lambda Invocation"] --> |"process_request(event: LambdaEvent&lt;VercelEvent&gt;) → ProxyRequest"| B[ProxyRequest]
+    B --> |"handler_fn(req: ProxyRequest) → Future&lt;Output = Result&lt;impl IntoResponse, ProxyError&gt;&gt;"| C["Runtime calls handler_fn"]
+    C --> |"Ok(r) => process_response(r)"| D["ProxyResponse"]
+    C --> |"Err(e) => process_error(e)"| E["ProxyError"]
+```
+
+Upon a request a `LambdaEvent` containing a `VercelEvent` is mapped to a `ProxyRequest` which can be consumed in the handler function. The `Result` of the handler function will be mapped into a `ProxyResponse` or `ProxyError`.
+
+<!-- ## Workspaces
+
+```shell
+.
+├── api
+│  ├── endpoint_1
+│  │  ├── Cargo.toml
+│  │  └── src
+│  │     └── main.rs
+│  └── endpoint_2
+│     ├── Cargo.toml
+│     └── src
+│        └── main.rs
+├── Cargo.lock
+└── Cargo.toml
+``` -->
+
 ## FAQ
 
-<details>
+<!-- <details>
   <summary>Are cargo workspaces supported?</summary>
   
 Not quite. Cargo's workspaces feature is a great tool when working on multiple binaries and libraries in a single project. If a cargo workspace is found in the entrypoint, however, `vercel-rust` will fail to build.
@@ -104,7 +134,7 @@ It's also recommended to have a `Cargo.lock` alongside your lambda `Cargo.toml` 
 
 If you have a compelling case for workspaces to be supported by `vercel-rust` which are too cumbersome with this workaround, please submit an issue! We're always looking for feedback.
 
-</details>
+</details> -->
 
 <details>
   <summary>Can I use musl/static linking?</summary>
