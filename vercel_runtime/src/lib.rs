@@ -12,13 +12,10 @@ use response::VercelResponse;
 use std::future::Future;
 use tracing::{debug, error};
 
-pub type ProxyRequest = lambda_http::http::Request<Body>;
-pub type ProxyError = lambda_http::http::Error;
+pub type Request = lambda_http::http::Request<Body>;
+pub type Error = lambda_http::http::Error;
 
-pub async fn run<
-    T: FnMut(ProxyRequest) -> F,
-    F: Future<Output = Result<impl IntoResponse, ProxyError>>,
->(
+pub async fn run<T: FnMut(Request) -> F, F: Future<Output = Result<impl IntoResponse, Error>>>(
     f: T,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let handler = ServiceBuilder::new()
