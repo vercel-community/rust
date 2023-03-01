@@ -24,9 +24,7 @@ First, you'll need a `vercel.json` file in your project:
 
 A Vercel Function will be created for every file that matches `api/**/*.rs`.
 
-<!-- todo annotation for filename? -->
-
-`api/handler.rs`:
+Example:
 
 ```rust
 use serde_json::json;
