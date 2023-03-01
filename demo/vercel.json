@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/**/*.rs": {
+      "runtime": "ecklf-tmp-runtime-test@1.0.83"
+    }
+  }
+}
