@@ -18,7 +18,7 @@ export default function handler(
   random.use(shishua('seed'));
 
   const radius = 424242;
-  const loops = 10_000_000;
+  const loops = 1_000_000;
   let counter = 0;
 
   for (let i = 0; i < loops; i++) {
@@ -31,12 +31,11 @@ export default function handler(
   }
 
   const pi = (4.0 * counter) / loops;
-
   const t1 = performance.now();
 
   res.status(200).json({
     runtime: 'node',
-    message: `${counter}/${loops}`,
+    message: `${counter} / ${loops}`,
     time: `${(t1 - t0).toFixed(2)} milliseconds`,
     pi,
   });

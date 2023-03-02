@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import Head from 'next/head';
-import { Inter } from 'next/font/google';
 import { useState } from 'react';
 import Button from '@/components/button';
 
@@ -10,8 +9,6 @@ interface Data {
   time: string;
   pi: number;
 }
-
-const inter = Inter({ subsets: ['latin'] });
 
 function Card({
   runtime,
@@ -29,14 +26,16 @@ function Card({
       >
         <div className="mt-8 flex flex-col space-y-4 ">
           <span className="text-white font-medium">
-            <span className="font-bold">Time</span>: {data?.time ?? 'N/A'}
+            <span className="font-bold">Time: </span>
+            {data?.time ?? '-'}
           </span>
           <p className="text-white font-medium">
-            <span className="font-bold">Points in circle:</span>{' '}
-            {data?.message ?? 'N/A'}
+            <span className="font-bold">Points in circle: </span>
+            {data?.message ?? '-'}
           </p>
           <p className="text-white font-medium">
-            <span className="font-bold">Pi:</span> {data?.pi ?? 'N/A'}
+            <span className="font-bold">Pi: </span>
+            {data?.pi ?? '-'}
           </p>
         </div>
 
@@ -54,19 +53,28 @@ function Card({
 
 function Home(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
-  const [rustResult, setRustResult] = useState<Data | null>(null);
-  const [nodeResult, setNodeResult] = useState<Data | null>(null);
+
+  const [resultRust, setResultRust] = useState<Data | null>(null);
+  const [resultNode, setResultNode] = useState<Data | null>(null);
 
   async function fetchRust() {
-    const res = await fetch('/api/rust');
-    const data = await res.json();
-    setRustResult(data);
+    try {
+      const res = await fetch('/api/rust');
+      const data = await res.json();
+      setResultRust(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function fetchTS() {
-    const res = await fetch('/api/typescript');
-    const data = await res.json();
-    setNodeResult(data);
+    try {
+      const res = await fetch('/api/nodejs');
+      const data = await res.json();
+      setResultNode(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -78,18 +86,21 @@ function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="w-full mx-auto max-w-screen-xl px-8 xl:px-0 h-screen flex items-center justify-center">
+      <main className="w-full mx-auto max-w-screen-xl px-8 xl:px-4 h-screen flex items-center justify-center">
         <div className="w-full grid grid-cols-5 lg:grid-cols-10 gap-6">
-          <Card runtime="Rust" data={rustResult} />
-          <Card runtime="Node" data={nodeResult} />
+          <Card runtime="Rust" data={resultRust} />
+          <Card runtime="Node" data={resultNode} />
           <div className="col-span-5 order-4 md:order-3 md:col-span-1 lg:col-span-5">
             <Button
               loading={loading}
               onClick={async () => {
                 try {
+                  setResultNode(null);
+                  setResultRust(null);
                   setLoading(true);
                   await Promise.all([fetchTS(), fetchRust()]);
                 } catch (error) {
+                  console.log(error);
                 } finally {
                   setLoading(false);
                 }

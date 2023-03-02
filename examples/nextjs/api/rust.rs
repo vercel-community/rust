@@ -18,7 +18,7 @@ pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
     let mut rng = oorandom::Rand32::new(seed);
 
     const RADIUS: u64 = 424242;
-    const LOOPS: u64 = 10_000_000;
+    const LOOPS: u64 = 1_000_000;
 
     let mut counter = 0;
 
@@ -41,7 +41,7 @@ pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
         .body(
             json!({
                 "runtime": "rust",
-                "message": format!("{}/{}", counter, LOOPS),
+                "message": format!("{} / {}", counter, LOOPS),
                 "time": format!("{:.2?}", duration),
                 "pi": pi
             })
