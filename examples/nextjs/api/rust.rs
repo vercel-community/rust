@@ -41,7 +41,7 @@ pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
         .body(
             json!({
                 "runtime": "rust",
-                "message": format!("{} of {} points within circle district", counter, LOOPS),
+                "message": format!("{}/{}", counter, LOOPS),
                 "time": format!("{:.2?}", duration),
                 "pi": pi
             })

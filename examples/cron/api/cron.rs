@@ -13,7 +13,7 @@ pub struct SlackMessage {}
 impl SlackMessageTemplate for SlackMessage {
     fn render_template(&self) -> SlackMessageContent {
         SlackMessageContent::new().with_blocks(slack_blocks![some_into(SlackContextBlock::new(
-            slack_blocks![some(md!("Test message"))]
+            slack_blocks![some(md!("你好， 世界！"))]
         ))])
     }
 }
@@ -37,9 +37,7 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
     pub async fn handler(&self, _req: Request) -> Result<impl IntoResponse, Error> {
         let message = SlackMessage {};
 
-        self.post_message(&message, "#team-observability")
-            .await
-            .unwrap();
+        self.post_message(&message, "#general").await.unwrap();
 
         let response = Response::builder().status(StatusCode::OK).body(())?;
         Ok(response)

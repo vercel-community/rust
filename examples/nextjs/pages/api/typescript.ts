@@ -36,7 +36,7 @@ export default function handler(
 
   res.status(200).json({
     runtime: 'node',
-    message: `${counter} of ${loops} points within circle district`,
+    message: `${counter}/${loops}`,
     time: `${(t1 - t0).toFixed(2)} milliseconds`,
     pi,
   });
