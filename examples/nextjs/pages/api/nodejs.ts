@@ -15,7 +15,9 @@ export default function handler(
   res: NextApiResponse<Data>,
 ): void {
   const t0 = performance.now();
-  random.use(shishua('seed'));
+
+  const seed = 42;
+  random.use(shishua(seed));
 
   const radius = 424242;
   const loops = 1_000_000;
@@ -29,8 +31,8 @@ export default function handler(
       counter++;
     }
   }
-
   const pi = (4.0 * counter) / loops;
+
   const t1 = performance.now();
 
   res.status(200).json({

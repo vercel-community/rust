@@ -59,7 +59,12 @@ function Home(): JSX.Element {
 
   async function fetchRust() {
     try {
-      const res = await fetch('/api/rust');
+      const res = await fetch('/api/rust', {
+        method: 'POST',
+        body: JSON.stringify({
+          count: 1000,
+        }),
+      });
       const data = await res.json();
       setResultRust(data);
     } catch (error) {
@@ -69,7 +74,12 @@ function Home(): JSX.Element {
 
   async function fetchTS() {
     try {
-      const res = await fetch('/api/nodejs');
+      const res = await fetch('/api/nodejs', {
+        method: 'POST',
+        body: JSON.stringify({
+          count: 1000,
+        }),
+      });
       const data = await res.json();
       setResultNode(data);
     } catch (error) {
@@ -106,13 +116,13 @@ function Home(): JSX.Element {
                 }
               }}
             >
-              Calculate Pi
+              Run - PRNG Algorithm
             </Button>
           </div>
 
           <div className="order-3 col-span-5 md:order-4 md:col-span-4 lg:col-span-5 px-4 py-2 flex items-center text-white font-medium text-sm bg-gray-800 rounded-md">
             <span className="font-bold">Note:</span>&nbsp;Calculate Pi with
-            random numbers - PRNG algorithm
+            random numbers
           </div>
         </div>
       </main>
