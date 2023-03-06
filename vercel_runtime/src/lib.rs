@@ -5,7 +5,7 @@ use body::Body;
 pub use lambda_http;
 use lambda_http::{service_fn, tower::ServiceBuilder};
 pub use lambda_runtime;
-use lambda_runtime::{Error as RuntimeError, LambdaEvent};
+use lambda_runtime::LambdaEvent;
 use request::{VercelEvent, VercelRequest};
 pub use response::IntoResponse;
 use response::VercelResponse;
@@ -13,15 +13,14 @@ use std::future::Future;
 use tracing::{debug, error};
 
 pub type Request = lambda_http::http::Request<Body>;
-pub type Error = lambda_http::http::Error;
+pub type Error = lambda_http::Error;
 
 pub async fn run<T: FnMut(Request) -> F, F: Future<Output = Result<impl IntoResponse, Error>>>(
     f: T,
-) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+) -> Result<(), Error> {
     let handler = ServiceBuilder::new()
         .map_request(process_request)
         .map_response(process_response)
-        .map_err(process_error)
         .service(service_fn(f));
 
     lambda_runtime::run(handler).await
@@ -47,8 +46,4 @@ pub fn process_request(lambda_event: LambdaEvent<VercelEvent>) -> lambda_http::h
 
 pub fn process_response(response: impl IntoResponse) -> VercelResponse {
     VercelResponse::from(response.into_response())
-}
-
-pub fn process_error(error: lambda_http::http::Error) -> RuntimeError {
-    error.into()
 }
