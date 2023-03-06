@@ -1,14 +1,13 @@
 use runtime_demo::choose_starter;
 use serde_json::json;
 use vercel_runtime::{
-    lambda_http::{http::StatusCode, Error as LambdaError, Response},
+    lambda_http::{http::StatusCode, Response},
     run, Error, IntoResponse, Request,
 };
 
 #[tokio::main]
-async fn main() -> Result<(), LambdaError> {
-    run(handler).await?;
-    Ok(())
+async fn main() -> Result<(), Error> {
+    run(handler).await
 }
 
 pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {

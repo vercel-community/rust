@@ -866,8 +866,6 @@ dependencies = [
 [[package]]
 name = "vercel_runtime"
 version = "0.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7fa94c22eab28e06f89363b1c3acb654c9084a62ac6d376e8eed1f20b470419"
 dependencies = [
  "async-trait",
  "base64 0.10.1",

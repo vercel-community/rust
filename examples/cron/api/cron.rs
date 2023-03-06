@@ -1,10 +1,7 @@
 use slack_morphism::{errors::SlackClientError, prelude::*};
 use vercel_runtime::{
-    lambda_http::{
-        http::{Error, StatusCode},
-        Error as LambdaError, Response,
-    },
-    run, IntoResponse, Request,
+    lambda_http::{http::StatusCode, Response},
+    run, Error, IntoResponse, Request,
 };
 
 #[derive(Debug, Clone)]
@@ -12,9 +9,9 @@ pub struct SlackMessage {}
 
 impl SlackMessageTemplate for SlackMessage {
     fn render_template(&self) -> SlackMessageContent {
-        SlackMessageContent::new().with_blocks(slack_blocks![some_into(SlackContextBlock::new(
-            slack_blocks![some(md!("你好， 世界！"))]
-        ))])
+        SlackMessageContent::new().with_blocks(slack_blocks![some_into(
+            SlackSectionBlock::new().with_text(md!("你好， 世界！".to_owned()))
+        )])
     }
 }
 
@@ -37,7 +34,7 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
     pub async fn handler(&self, _req: Request) -> Result<impl IntoResponse, Error> {
         let message = SlackMessage {};
 
-        self.post_message(&message, "#general").await.unwrap();
+        self.post_message(&message, "#general").await?;
 
         let response = Response::builder().status(StatusCode::OK).body(())?;
         Ok(response)
@@ -45,7 +42,7 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), LambdaError> {
+async fn main() -> Result<(), Error> {
     let slack_client = SlackClient::new(SlackClientHyperConnector::new());
     let token_value: SlackApiTokenValue = std::env::var("SLACK_API_TOKEN")?.into();
     let token: SlackApiToken = SlackApiToken::new(token_value);
@@ -53,6 +50,5 @@ async fn main() -> Result<(), LambdaError> {
 
     let lambda = Lambda { slack };
 
-    run(|e| lambda.handler(e)).await?;
-    Ok(())
+    run(|e| lambda.handler(e)).await
 }

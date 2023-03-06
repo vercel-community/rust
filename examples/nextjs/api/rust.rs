@@ -7,8 +7,7 @@ use vercel_runtime::{
 
 #[tokio::main]
 async fn main() -> Result<(), LambdaError> {
-    run(handler).await?;
-    Ok(())
+    run(handler).await
 }
 
 pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
