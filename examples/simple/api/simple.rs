@@ -10,15 +10,14 @@ async fn main() -> Result<(), Error> {
 pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
     let starter = choose_starter();
 
-    let response = Response::builder()
+    Ok(Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
         .body(
             json!({
               "message": format!("I choose you, {}!", starter),
             })
+            .to_string()
             .into(),
-        )?;
-
-    Ok(response)
+        )?)
 }

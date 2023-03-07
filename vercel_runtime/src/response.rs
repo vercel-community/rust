@@ -1,8 +1,8 @@
-use crate::body::Body;
 use lambda_http::http::{
     header::{HeaderMap, HeaderValue},
     Response,
 };
+use lambda_http::Body;
 use serde::ser::{Error as SerError, SerializeMap, Serializer};
 use serde_derive::Serialize;
 

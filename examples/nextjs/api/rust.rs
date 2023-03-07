@@ -31,7 +31,7 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
 
     let duration = start.elapsed();
 
-    let response = Response::builder()
+    Ok(Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
         .body(
@@ -41,8 +41,7 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
                 "time": format!("{:.2?}", duration),
                 "pi": pi
             })
+            .to_string()
             .into(),
-        )?;
-
-    Ok(response)
+        )?)
 }

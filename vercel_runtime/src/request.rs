@@ -1,5 +1,5 @@
-use crate::body::Body;
 use lambda_http::http::{self, header::HeaderValue, HeaderMap, Method};
+use lambda_http::Body;
 use serde::de::{Deserializer, Error as DeError, MapAccess, Visitor};
 use serde_derive::Deserialize;
 use serde_json::Value;

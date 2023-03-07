@@ -1,8 +1,9 @@
 use runtime_demo::choose_starter;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use vercel_runtime::{
-    process_request, process_response, run_service, service_fn, Body, Error, Request, Response,
-    ServiceBuilder, StatusCode,
+    process_request, process_response, run_service, service_fn, Body, Error, Request, RequestExt,
+    Response, ServiceBuilder, StatusCode,
 };
 
 #[tokio::main]
@@ -22,19 +23,56 @@ async fn main() -> Result<(), Error> {
     run_service(handler).await
 }
 
-pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
-    tracing::info!("Choosing a starter Pokemon");
-    let starter = choose_starter();
+#[derive(Debug, Serialize, Deserialize)]
+struct Payload {
+    trainer_name: String,
+}
 
-    let response = Response::builder()
-        .status(StatusCode::OK)
-        .header("Content-Type", "application/json")
+#[derive(Serialize)]
+pub struct APIError {
+    pub message: &'static str,
+    pub code: &'static str,
+}
+
+impl From<APIError> for Body {
+    fn from(val: APIError) -> Self {
+        Body::Text(serde_json::to_string(&val).unwrap())
+    }
+}
+
+pub fn bad_request(message: &'static str) -> Result<Response<Body>, Error> {
+    Ok(Response::builder()
+        .status(StatusCode::BAD_REQUEST)
+        .header("content-type", "application/json")
         .body(
-            json!({
-              "message": format!("I choose you, {}!", starter),
-            })
+            APIError {
+                message,
+                code: "bad_request",
+            }
             .into(),
-        )?;
+        )?)
+}
 
-    Ok(response)
+pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
+    tracing::info!("Choosing a starter Pokemon");
+    let payload = req.payload::<Payload>();
+
+    match payload {
+        Err(..) => bad_request("Invalid payload"),
+        Ok(None) => bad_request("Invalid payload"),
+        Ok(Some(payload)) => {
+            let starter = choose_starter();
+
+            Ok(Response::builder()
+            .status(StatusCode::OK)
+            .header("Content-Type", "application/json")
+            .body(
+                json!({
+                  "message": format!("{} says: I choose you, {}!", payload.trainer_name, starter),
+                })
+                .to_string()
+                .into(),
+            )?)
+        }
+    }
 }

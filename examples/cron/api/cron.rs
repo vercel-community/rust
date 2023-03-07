@@ -33,8 +33,7 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
 
         self.post_message(&message, "#general").await?;
 
-        let response = Response::builder().status(StatusCode::OK).body(().into())?;
-        Ok(response)
+        Ok(Response::builder().status(StatusCode::OK).body(().into())?)
     }
 }
 
