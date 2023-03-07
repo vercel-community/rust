@@ -35,23 +35,25 @@ async function runUserScripts(dir: string): Promise<void> {
 
 async function gatherExtraFiles(
   globMatcher: string | string[] | undefined,
-  entrypoint: string,
+  workPath: string,
 ): Promise<Record<string, FileFsRef>> {
   if (!globMatcher) return {};
 
-  debug('Gathering extra files for the fs');
-
-  const entryDir = path.dirname(entrypoint);
+  debug(
+    `Gathering extra files for glob \`${JSON.stringify(
+      globMatcher,
+    )}\` in ${workPath}}`,
+  );
 
   if (Array.isArray(globMatcher)) {
     const allMatches = await Promise.all(
-      globMatcher.map((pattern) => glob(pattern, entryDir)),
+      globMatcher.map((pattern) => glob(pattern, workPath)),
     );
 
     return allMatches.reduce((acc, matches) => ({ ...acc, ...matches }), {});
   }
 
-  return glob(globMatcher, entryDir);
+  return glob(globMatcher, workPath);
 }
 
 async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
@@ -77,7 +79,7 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   const binaryName = path.basename(entryPath, '.rs');
 
   await runUserScripts(workPath);
-  const extraFiles = await gatherExtraFiles(config.includeFiles, entryPath);
+  const extraFiles = await gatherExtraFiles(config.includeFiles, workPath);
 
   debug(`Running \`cargo build\` for \`${binaryName}\``);
   try {
