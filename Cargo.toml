@@ -15,4 +15,5 @@ members = [
 
 exclude = [
   "test/fixtures/01-include-files",
+  "test/fixtures/02-with-utility",
 ]

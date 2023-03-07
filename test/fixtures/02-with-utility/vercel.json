@@ -1,0 +1,28 @@
+{
+  "builds": [
+    {
+      "src": "api/user.rs",
+      "use": "file:/Users/ecklf/Projects/vercel/rust-community"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/user",
+      "dest": "/api/user.rs"
+    }
+  ],
+  "default": {
+    "builds": [
+      {
+        "src": "api/user.rs",
+        "use": "file:/Users/ecklf/Projects/vercel/rust-community"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/user",
+        "dest": "/api/user.rs"
+      }
+    ]
+  }
+}
