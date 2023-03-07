@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "api/user.rs",
+      "use": "placeholder"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/user",
+      "destination": "/api/user.rs"
+    }
+  ]
+}

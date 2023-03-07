@@ -111,10 +111,10 @@ describe('vercel-rust', () => {
     await testFixture('02-with-utility');
   });
 
-  /* it('Deploy 03-with-function', async () => { */
-  /*   await testFixture('03-with-function'); */
-  /* }); */
-  /**/
+  it('Deploy 03-with-function', async () => {
+    await testFixture('03-with-function');
+  });
+
   /* it('Deploy 04-with-parameter', async () => { */
   /*   await testFixture('04-with-parameter'); */
   /* }); */
