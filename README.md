@@ -28,35 +28,38 @@ Example:
 
 ```rust
 use serde_json::json;
-use vercel_runtime::{
-    lambda_http::{http::StatusCode, Error as LambdaError, Response},
-    run, IntoResponse, Error, Request,
-};
+use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
 #[tokio::main]
-async fn main() -> Result<(), LambdaError> {
-    run(handler).await?;
-    Ok(())
+async fn main() -> Result<(), Error> {
+    run(handler).await
 }
 
-pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
-    let response = Response::builder()
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
+    let starter = choose_starter();
+
+    Ok(Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
         .body(
             json!({
               "message": "你好，世界"
             })
-            .to_string(),
-        )?;
-
-    Ok(response)
+            .to_string()
+            .into(),
+        )?)
 }
 ```
 
 Finally we need a `Cargo.toml` file at the root of your repository.
 
 ```toml
+# --snip--
+
+[dependencies]
+# --snip--
+vercel_runtime = { version = "0.1.4" }
+
 # You can specify a library for shared logic here (optional)
 # [lib]
 # path = "src-rs/lib.rs"
@@ -65,6 +68,8 @@ Finally we need a `Cargo.toml` file at the root of your repository.
 [[bin]]
 name = "handler"
 path = "api/handler.rs"
+
+# --snip--
 ```
 
 ### Dependencies
@@ -96,13 +101,10 @@ cargo fetch
 
 ```mermaid
 graph TD
-    A["Lambda Invocation"] --> |"process_request(event: LambdaEvent&lt;VercelEvent&gt;) → ProxyRequest"| B[ProxyRequest]
-    B --> |"handler_fn(req: ProxyRequest) → Future&lt;Output = Result&lt;impl IntoResponse, ProxyError&gt;&gt;"| C["Runtime calls handler_fn"]
-    C --> |"Ok(r) => process_response(r)"| D["ProxyResponse"]
-    C --> |"Err(e) => process_error(e)"| E["ProxyError"]
+    A["Lambda Invocation"] --> |"process_request(event: LambdaEvent&lt;VercelEvent&gt;) → Request"| B[Request]
+    B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
+    C --> |"Ok(r) => process_response(r)"| D["Response"]
 ```
-
-Upon a request a `LambdaEvent` containing a `VercelEvent` is mapped to a `ProxyRequest` which can be consumed in the handler function. The `Result` of the handler function will be mapped into a `ProxyResponse` or `ProxyError`.
 
 <!-- ## Workspaces
 
@@ -125,7 +127,7 @@ Upon a request a `LambdaEvent` containing a `VercelEvent` is mapped to a `ProxyR
 
 <!-- <details>
   <summary>Are cargo workspaces supported?</summary>
-  
+
 Not quite. Cargo's workspaces feature is a great tool when working on multiple binaries and libraries in a single project. If a cargo workspace is found in the entrypoint, however, `vercel-rust` will fail to build.
 
 To get around this limitation, create build entries in your `vercel.json` file for each `Cargo.toml` that represents a Function within your workspace. In your `.vercelignore`, you'll want to add any binary or library project folders that aren't needed for your lambdas to speed up the build process like your `Cargo.toml` workspace.

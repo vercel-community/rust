@@ -1,4 +1,4 @@
-use runtime_demo::choose_starter;
+use merged_runtime_demo::choose_starter;
 use serde_json::json;
 use vercel_runtime::{Body, Error, Request, Response, StatusCode};
 

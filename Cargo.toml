@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "vercel_runtime",
+    "examples/cron",
+    "examples/merged",
+    "examples/nextjs",
+    "examples/simple",
+]
