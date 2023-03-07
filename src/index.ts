@@ -42,7 +42,7 @@ async function gatherExtraFiles(
   debug(
     `Gathering extra files for glob \`${JSON.stringify(
       globMatcher,
-    )}\` in ${workPath}}`,
+    )}\` in ${workPath}`,
   );
 
   if (Array.isArray(globMatcher)) {
