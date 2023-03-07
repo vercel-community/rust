@@ -1,3 +1,4 @@
+use base64::Engine;
 use lambda_http::http::{self, header::HeaderValue, HeaderMap, Method};
 use lambda_http::Body;
 use serde::de::{Deserializer, Error as DeError, MapAccess, Visitor};
@@ -154,7 +155,8 @@ impl<'a> From<VercelRequest<'a>> for http::Request<Body> {
             .body(match (body, encoding) {
                 (Some(ref b), Some(ref encoding)) if encoding == "base64" => {
                     // TODO: Document failure behavior
-                    Body::from(::base64::decode(b.as_ref()).unwrap_or_default())
+                    let engine = base64::prelude::BASE64_STANDARD;
+                    Body::from(engine.decode(b.as_ref()).unwrap_or_default())
                 }
                 (Some(b), _) => Body::from(b.into_owned()),
                 _ => Body::from(()),
