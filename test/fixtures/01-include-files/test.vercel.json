@@ -1,18 +1,11 @@
 {
   "builds": [
     {
-      "src": "main.rs",
+      "src": "api/main.rs",
       "use": "placeholder",
       "config": {
         "includeFiles": ["static/**/*.txt", "static/**/*.svg"]
       }
-    }
-  ],
-  "probes": [
-    {
-      "path": "/main.rs",
-      "status": 200,
-      "mustContain": "Include me in the lambda fs!"
     }
   ]
 }

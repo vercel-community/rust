@@ -1,9 +1,16 @@
 [package]
 name = "index"
 version = "1.0.0"
-authors = ["Mike Engel <mike@mike-engel.com>"]
-edition = "2018"
+authors = [
+  "Florentin Eckl <florentin.eckl@vercel.com>",
+  "Doug Parsons <doug@vercel.com>",
+]
+edition = "2021"
 
 [dependencies]
-http = "0.1"
-vercel_lambda = "*"
+tokio = { version = "1", features = ["macros"] }
+vercel_runtime = { version = "0.2.0" }
+
+[[bin]]
+name = "main"
+path = "api/main.rs"
