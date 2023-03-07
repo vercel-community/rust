@@ -1,8 +1,8 @@
 use runtime_demo::choose_starter;
 use serde_json::json;
 use vercel_runtime::{
-    lambda_http::{http::StatusCode, service_fn, tower::ServiceBuilder, Response},
-    lambda_runtime, process_request, process_response, Error, IntoResponse, Request,
+    process_request, process_response, run_service, service_fn, Body, Error, Request, Response,
+    ServiceBuilder, StatusCode,
 };
 
 #[tokio::main]
@@ -19,10 +19,10 @@ async fn main() -> Result<(), Error> {
         .map_response(process_response)
         .service(service_fn(handler));
 
-    lambda_runtime::run(handler).await
+    run_service(handler).await
 }
 
-pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
     tracing::info!("Choosing a starter Pokemon");
     let starter = choose_starter();
 
@@ -33,7 +33,7 @@ pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
             json!({
               "message": format!("I choose you, {}!", starter),
             })
-            .to_string(),
+            .into(),
         )?;
 
     Ok(response)

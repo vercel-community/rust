@@ -1,4 +1,4 @@
-use vercel_runtime::{run, Error, IntoResponse, Request};
+use vercel_runtime::{run, Body, Error, Request, Response};
 
 #[path = "../api/bar/baz.rs"]
 mod api_bar_baz;
@@ -6,7 +6,7 @@ mod api_bar_baz;
 #[path = "../api/foo.rs"]
 mod api_foo;
 
-async fn process_request(request: Request) -> Result<impl IntoResponse, Error> {
+async fn process_request(request: Request) -> Result<Response<Body>, Error> {
     let path = request.uri().path();
 
     match path {

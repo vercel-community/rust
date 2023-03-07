@@ -1,6 +1,5 @@
 use crate::body::Body;
 use lambda_http::http::{
-    self,
     header::{HeaderMap, HeaderValue},
     Response,
 };
@@ -9,20 +8,20 @@ use serde_derive::Serialize;
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct VercelResponse {
-    pub status_code: u16,
+pub struct EventResponse {
+    pub(crate) status_code: u16,
     #[serde(
         skip_serializing_if = "HeaderMap::is_empty",
         serialize_with = "serialize_headers"
     )]
-    pub headers: HeaderMap<HeaderValue>,
+    pub(crate) headers: HeaderMap<HeaderValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub body: Option<Body>,
+    pub(crate) body: Option<Body>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub encoding: Option<String>,
+    pub(crate) encoding: Option<String>,
 }
 
-impl Default for VercelResponse {
+impl Default for EventResponse {
     fn default() -> Self {
         Self {
             status_code: 200,
@@ -45,7 +44,7 @@ where
     map.end()
 }
 
-impl<T> From<Response<T>> for VercelResponse
+impl<T> From<Response<T>> for EventResponse
 where
     T: Into<Body>,
 {
@@ -56,64 +55,11 @@ where
             b @ Body::Text(_) => (None, Some(b)),
             b @ Body::Binary(_) => (Some("base64".to_string()), Some(b)),
         };
-        VercelResponse {
+        EventResponse {
             status_code: parts.status.as_u16(),
             body,
             headers: parts.headers,
             encoding,
         }
-    }
-}
-
-/// A conversion of self into a `Response`
-///
-/// Implementations for `Response<B> where B: Into<Body>`,
-/// `B where B: Into<Body>` and `serde_json::Value` are provided
-/// by default
-///
-/// # example
-///
-/// ```rust
-/// use vercel_runtime::{Body, IntoResponse, Response};
-///
-/// assert_eq!(
-///   "hello".into_response().body(),
-///   Response::new(Body::from("hello")).body()
-/// );
-/// ```
-pub trait IntoResponse {
-    /// Return a translation of `self` into a `Response<Body>`
-    fn into_response(self) -> Response<Body>;
-}
-
-impl<B> IntoResponse for Response<B>
-where
-    B: Into<Body>,
-{
-    fn into_response(self) -> Response<Body> {
-        let (parts, body) = self.into_parts();
-        Response::from_parts(parts, body.into())
-    }
-}
-
-impl<B> IntoResponse for B
-where
-    B: Into<Body>,
-{
-    fn into_response(self) -> Response<Body> {
-        Response::new(self.into())
-    }
-}
-
-impl IntoResponse for serde_json::Value {
-    fn into_response(self) -> Response<Body> {
-        Response::builder()
-            .header(http::header::CONTENT_TYPE, "application/json")
-            .body(
-                serde_json::to_string(&self)
-                    .expect("unable to serialize serde_json::Value")
-                    .into(),
-            )
-            .expect("unable to build http::Response")
     }
 }

@@ -1,16 +1,13 @@
 use serde_json::json;
 use std::time::Instant;
-use vercel_runtime::{
-    lambda_http::{http::StatusCode, Error as LambdaError, Response},
-    run, Error, IntoResponse, Request,
-};
+use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
 #[tokio::main]
-async fn main() -> Result<(), LambdaError> {
+async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
     let start = Instant::now();
 
     let seed = 42;
@@ -44,7 +41,7 @@ pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
                 "time": format!("{:.2?}", duration),
                 "pi": pi
             })
-            .to_string(),
+            .into(),
         )?;
 
     Ok(response)

@@ -11,7 +11,7 @@ serde = { version = "1.0.145", features = ["derive"] }
 serde_json = { version = "1.0.86", features = ["raw_value"] }
 serde_derive = "1.0.9"
 rand = "0.8.5"
-vercel_runtime = "0.1.4"
+vercel_runtime = { version = "0.1.4", path = "../../vercel_runtime" }
 url = "2.3.1"
 
 [lib]

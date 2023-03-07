@@ -1,11 +1,8 @@
 use runtime_demo::choose_starter;
 use serde_json::json;
-use vercel_runtime::{
-    lambda_http::{http::StatusCode, Response},
-    Error, IntoResponse, Request,
-};
+use vercel_runtime::{Body, Error, Request, Response, StatusCode};
 
-pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
     dbg!(_req);
     let starter = choose_starter();
     let response = Response::builder()
@@ -15,7 +12,8 @@ pub async fn handler(_req: Request) -> Result<impl IntoResponse, Error> {
             json!({
               "message": format!("I choose you, {}!", starter),
             })
-            .to_string(),
+            .to_string()
+            .into(),
         )?;
 
     Ok(response)

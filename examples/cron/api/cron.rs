@@ -1,8 +1,5 @@
 use slack_morphism::{errors::SlackClientError, prelude::*};
-use vercel_runtime::{
-    lambda_http::{http::StatusCode, Response},
-    run, Error, IntoResponse, Request,
-};
+use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
 #[derive(Debug, Clone)]
 pub struct SlackMessage {}
@@ -31,12 +28,12 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
         self.slack.chat_post_message(&post_chat_req).await
     }
 
-    pub async fn handler(&self, _req: Request) -> Result<impl IntoResponse, Error> {
+    pub async fn handler(&self, _req: Request) -> Result<Response<Body>, Error> {
         let message = SlackMessage {};
 
         self.post_message(&message, "#general").await?;
 
-        let response = Response::builder().status(StatusCode::OK).body(())?;
+        let response = Response::builder().status(StatusCode::OK).body(().into())?;
         Ok(response)
     }
 }
