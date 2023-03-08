@@ -1,28 +1,7 @@
 {
-  "builds": [
-    {
-      "src": "api/user.rs",
-      "use": "file:/Users/ecklf/Projects/vercel/rust-community"
+  "functions": {
+    "api/**/*.rs": {
+      "runtime": "vercel-rust@4.0.0-canary.2"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/user",
-      "destination": "/api/user.rs"
-    }
-  ],
-  "default": {
-    "builds": [
-      {
-        "src": "api/user.rs",
-        "use": "file:/Users/ecklf/Projects/vercel/rust-community"
-      }
-    ],
-    "rewrites": [
-      {
-        "source": "/api/user",
-        "destination": "/api/user.rs"
-      }
-    ]
   }
 }
