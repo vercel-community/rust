@@ -1,3 +1,4 @@
+pub mod http;
 mod request;
 mod response;
 

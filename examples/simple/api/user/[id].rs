@@ -1,12 +1,7 @@
 use serde::Serialize;
 use std::collections::HashMap;
 use url::Url;
-use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
-
-#[tokio::main]
-async fn main() -> Result<(), Error> {
-    run(handler).await
-}
+use vercel_runtime::{http::bad_request, run, Body, Error, Request, Response, StatusCode};
 
 #[derive(Serialize)]
 pub struct APIError {
@@ -14,23 +9,9 @@ pub struct APIError {
     pub code: &'static str,
 }
 
-impl From<APIError> for Body {
-    fn from(val: APIError) -> Self {
-        Body::Text(serde_json::to_string(&val).unwrap())
-    }
-}
-
-pub fn bad_request(message: &'static str) -> Result<Response<Body>, Error> {
-    Ok(Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .header("content-type", "application/json")
-        .body(
-            APIError {
-                message,
-                code: "bad_request",
-            }
-            .into(),
-        )?)
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    run(handler).await
 }
 
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
@@ -40,7 +21,10 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
 
     match id_key {
         None => {
-            return bad_request("Invalid query string");
+            return bad_request(APIError {
+                message: "Query string is invalid",
+                code: "query_string_invalid",
+            });
         }
         Some(id) => Ok(Response::builder()
             .status(StatusCode::OK)
