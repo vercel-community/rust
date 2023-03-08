@@ -12,6 +12,7 @@ import {
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
 import type { Runtime } from './lib/runtime';
+import { getCargoMetadata } from './lib/cargo';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
@@ -76,9 +77,13 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
 
   // The binary name is the name of the entrypoint file
   // We assume each binary is specified correctly with `[[bin]]` in `Cargo.toml`
-  const binaryName = path.basename(entryPath, '.rs');
+  const binaryName = path
+    .basename(entryPath, '.rs')
+    .replace('[', '_')
+    .replace(']', '_');
 
   await runUserScripts(workPath);
+
   const extraFiles = await gatherExtraFiles(config.includeFiles, workPath);
 
   debug(`Running \`cargo build\` for \`${binaryName}\``);
@@ -105,8 +110,13 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   const binExtension = process.platform === 'win32' ? '.exe' : '';
   const bootstrap = `bootstrap${binExtension}`;
 
-  const targetPath = `target/${BUILDER_DEBUG ? 'debug' : 'release'}`;
-  const bin = path.join(process.cwd(), `${targetPath}/${binaryName}`);
+  const { target_directory: targetDirectory } = await getCargoMetadata();
+
+  const bin = path.join(
+    targetDirectory,
+    BUILDER_DEBUG ? 'debug' : 'release',
+    binaryName,
+  );
 
   const lambda = await createLambda({
     files: {
