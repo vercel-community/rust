@@ -1,6 +1,6 @@
 {
   "name": "vercel-rust",
-  "version": "4.0.0-canary.2",
+  "version": "4.0.0-canary.3",
   "description": "Rust runtime for Vercel Functions.",
   "homepage": "https://github.com/vercel-community/rust",
   "repository": {
@@ -14,10 +14,10 @@
   ],
   "scripts": {
     "build": "rimraf dist/ && tsc --removeComments",
+    "prepare": "husky install",
     "prepublishOnly": "tsc",
     "test": "jest",
-    "typecheck": "tsc --noEmit",
-    "prepare": "husky install"
+    "typecheck": "tsc --noEmit"
   },
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {

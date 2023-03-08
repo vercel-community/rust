@@ -116,12 +116,15 @@ interface Rs2 {
   'all-features': boolean;
 }
 
-export async function getCargoMetadata(): Promise<CargoMetadataRoot> {
-  const { stdout: cargoMetaData } = await execa('cargo', [
-    'metadata',
-    '--format-version',
-    '1',
-  ]);
+export async function getCargoMetadata(
+  options: execa.Options,
+): Promise<CargoMetadataRoot> {
+  const { stdout: cargoMetaData } = await execa(
+    'cargo',
+    ['metadata', '--format-version', '1'],
+
+    options,
+  );
 
   return JSON.parse(cargoMetaData) as CargoMetadataRoot;
 }

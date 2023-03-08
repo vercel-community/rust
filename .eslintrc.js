@@ -24,4 +24,5 @@ module.exports = {
       },
     },
   },
+  ignorePatterns: ['examples'],
 };

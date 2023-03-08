@@ -110,7 +110,10 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   const binExtension = process.platform === 'win32' ? '.exe' : '';
   const bootstrap = `bootstrap${binExtension}`;
 
-  const { target_directory: targetDirectory } = await getCargoMetadata();
+  const { target_directory: targetDirectory } = await getCargoMetadata({
+    cwd: process.cwd(),
+    env: rustEnv,
+  });
 
   const bin = path.join(
     targetDirectory,

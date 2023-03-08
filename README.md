@@ -16,7 +16,7 @@ First, you'll need a `vercel.json` file in your project:
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0-canary.2"
+      "runtime": "vercel-rust@4.0.0-canary.3"
     }
   }
 }

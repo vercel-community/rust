@@ -2,5 +2,8 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "import/prefer-default-export": "off"
+  },
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
   }
 }
