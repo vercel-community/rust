@@ -95,14 +95,14 @@ Since this project contains both Rust and Node.js code, you need to install the 
 
 ```shell
 # install node dependencies
-npm install
+pnpm install
 
 
 # install cargo dependencies
 cargo fetch
 ```
 
-## Notes
+## Invocation Flowchart
 
 ```mermaid
 graph TD
