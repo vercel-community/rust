@@ -1,25 +1,17 @@
-[package]
-name = "vercel_lambda"
-version = "0.2.0"
-authors = ["Vercel <support@vercel.com>"]
-edition = "2018"
-description = "Rust runtime for Vercel Functions."
-keywords = ["Vercel", "Rust", "Serverless", "Functions"]
-license = "MIT"
-homepage = "https://github.com/vercel-community/rust"
-repository = "https://github.com/vercel-community/rust"
-documentation = "https://docs.rs/vercel_lambda"
-include = [
-  "src/*.rs",
-  "Cargo.toml"
+[workspace]
+
+members = [
+    "vercel_runtime",
+    "examples/cron",
+    "examples/merged",
+    "examples/nextjs",
+    "examples/simple",
 ]
 
-[dependencies]
-serde = "^1"
-serde_json = "^1"
-serde_derive = "^1"
-http = "0.1"
-tokio = "^0.1"
-base64 = "0.10"
-log = "^0.4"
-lambda_runtime = "0.2.0"
+exclude = [
+    "test/fixtures/01-include-files",
+    "test/fixtures/02-with-utility",
+    "test/fixtures/03-with-function",
+    "test/fixtures/04-with-parameter",
+    "test/fixtures/05-preconfigured-binary"
+]

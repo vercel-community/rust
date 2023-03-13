@@ -8,6 +8,10 @@
 
 Community-maintained package to support using [Rust](https://www.rust-lang.org/) inside [Vercel Functions](https://vercel.com/docs/serverless-functions/introduction) as a [Runtime](https://vercel.com/docs/runtimes).
 
+## Legacy Runtime
+
+The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+
 ## Usage
 
 First, you'll need a `vercel.json` file in your project:
@@ -16,54 +20,62 @@ First, you'll need a `vercel.json` file in your project:
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@3.1.2"
+      "runtime": "vercel-rust@4.0.0-beta.0"
     }
   }
 }
 ```
 
-A Vercel Function will be created for every file that matches `api/**/*.rs`. Next, you can create a new Function `api/user.rs`:
+A Vercel Function will be created for every file that matches `api/**/*.rs`.
+
+Example:
 
 ```rust
-use http::{StatusCode};
-use vercel_lambda::{lambda, error::VercelError, IntoResponse, Request, Response};
-use std::error::Error;
+use serde_json::json;
+use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
-fn handler(_: Request) -> Result<impl IntoResponse, VercelError> {
-	let response = Response::builder()
-		.status(StatusCode::OK)
-		.header("Content-Type", "text/plain")
-		.body("Hello World")
-		.expect("Internal Server Error");
-
-		Ok(response)
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    run(handler).await
 }
 
-// Start the runtime with the handler
-fn main() -> Result<(), Box<dyn Error>> {
-	Ok(lambda!(handler))
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
+    let starter = choose_starter();
+
+    Ok(Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .body(
+            json!({
+              "message": "你好，世界"
+            })
+            .to_string()
+            .into(),
+        )?)
 }
 ```
 
-Finally, we need an `api/Cargo.toml` file:
+Finally we need a `Cargo.toml` file at the root of your repository.
 
 ```toml
-[package]
-name = "index"
-version = "1.0.0"
-authors = ["Your Name <your@site.com>"]
-edition = "2018"
+# --snip--
 
 [dependencies]
-http = "0.1"
-vercel_lambda = "*"
+# --snip--
+# Documentation: https://docs.rs/vercel_runtime/latest/vercel_runtime
+vercel_runtime = { version = "0.2.1" }
 
-[lib]
-name = "util"
-path = "_util.rs"
+# You can specify a library for shared logic here (optional)
+# [lib]
+# path = "src-rs/lib.rs"
+
+# Each handler has to be specified as [[bin]]
+[[bin]]
+name = "handler"
+path = "api/handler.rs"
+
+# --snip--
 ```
-
-**Note:** `Cargo.toml` must exist on the same level as the `.rs` files.
 
 ### Dependencies
 
@@ -73,36 +85,33 @@ Furthermore, more system dependencies can be installed at build time with the pr
 
 ## Local Development
 
-With `vercel dev` and `vercel-rust`, you can develop your Rust-based lamdas on your own machine.
+With `vercel dev` and `vercel-rust`, you can develop your Rust-based lambdas on your own machine.
 
-During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install `rust` and `cargo` on your machine is with [rustup](https://rustup.rs).
+During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
 
 ## Contributing
 
 Since this project contains both Rust and Node.js code, you need to install the relevant dependencies. If you're only working on the JavaScript side, you only need to install those dependencies (and vice-versa).
 
-```sh
+```shell
 # install node dependencies
 npm install
+
 
 # install cargo dependencies
 cargo fetch
 ```
 
+## Notes
+
+```mermaid
+graph TD
+    A["Lambda Invocation"] --> |"process_request(event: LambdaEvent&lt;VercelEvent&gt;) → Request"| B[Request]
+    B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
+    C --> |"Ok(r) => process_response(r)"| D["Response"]
+```
+
 ## FAQ
-
-<details>
-  <summary>Are cargo workspaces supported?</summary>
-  
-Not quite. Cargo's workspaces feature is a great tool when working on multiple binaries and libraries in a single project. If a cargo workspace is found in the entrypoint, however, `vercel-rust` will fail to build.
-
-To get around this limitation, create build entries in your `vercel.json` file for each `Cargo.toml` that represents a Function within your workspace. In your `.vercelignore`, you'll want to add any binary or library project folders that aren't needed for your lambdas to speed up the build process like your `Cargo.toml` workspace.
-
-It's also recommended to have a `Cargo.lock` alongside your lambda `Cargo.toml` files to speed up the build process. You can do this by running cargo check or a similar command within each project folder that contains a lambda.
-
-If you have a compelling case for workspaces to be supported by `vercel-rust` which are too cumbersome with this workaround, please submit an issue! We're always looking for feedback.
-
-</details>
 
 <details>
   <summary>Can I use musl/static linking?</summary>

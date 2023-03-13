@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/**/*.rs": {
+      "runtime": "vercel-rust@4.0.0-beta.0",
+      "includeFiles": "static/**/*.{txt,svg}"
+    }
+  }
+}

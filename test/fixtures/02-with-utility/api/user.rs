@@ -1,18 +1,17 @@
-use http::StatusCode;
-use std::error::Error;
-use util::return_foo;
-use vercel_lambda::{error::VercelError, lambda, IntoResponse, Request, Response};
+use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
+use integration_test::return_foo;
 
-fn handler(_: Request) -> Result<impl IntoResponse, VercelError> {
-	let response = Response::builder()
-		.status(StatusCode::OK)
-		.header("Content-Type", "text/plain")
-		.body(return_foo())
-		.expect("Internal Server Error");
-
-	Ok(response)
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    run(handler).await
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-	Ok(lambda!(handler))
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
+    let response = Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "text/plain")
+        .body(Body::Text(return_foo()))
+        .expect("Internal Server Error");
+
+    Ok(response)
 }

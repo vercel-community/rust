@@ -1,0 +1,9 @@
+{
+  "probes": [
+    {
+      "path": "/api/main.rs",
+      "status": 200,
+      "mustContain": "Include me in the lambda fs!"
+    }
+  ]
+}
