@@ -125,19 +125,6 @@ graph TD
 
 ## FAQ
 
-<!-- <details>
-  <summary>Are cargo workspaces supported?</summary>
-
-Not quite. Cargo's workspaces feature is a great tool when working on multiple binaries and libraries in a single project. If a cargo workspace is found in the entrypoint, however, `vercel-rust` will fail to build.
-
-To get around this limitation, create build entries in your `vercel.json` file for each `Cargo.toml` that represents a Function within your workspace. In your `.vercelignore`, you'll want to add any binary or library project folders that aren't needed for your lambdas to speed up the build process like your `Cargo.toml` workspace.
-
-It's also recommended to have a `Cargo.lock` alongside your lambda `Cargo.toml` files to speed up the build process. You can do this by running cargo check or a similar command within each project folder that contains a lambda.
-
-If you have a compelling case for workspaces to be supported by `vercel-rust` which are too cumbersome with this workaround, please submit an issue! We're always looking for feedback.
-
-</details> -->
-
 <details>
   <summary>Can I use musl/static linking?</summary>
   
