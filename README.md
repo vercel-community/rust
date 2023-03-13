@@ -8,6 +8,10 @@
 
 Community-maintained package to support using [Rust](https://www.rust-lang.org/) inside [Vercel Functions](https://vercel.com/docs/serverless-functions/introduction) as a [Runtime](https://vercel.com/docs/runtimes).
 
+## Legacy Runtime
+
+The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+
 ## Usage
 
 First, you'll need a `vercel.json` file in your project:
@@ -16,7 +20,7 @@ First, you'll need a `vercel.json` file in your project:
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0-canary.3"
+      "runtime": "vercel-rust@4.0.0-beta.0"
     }
   }
 }
@@ -58,6 +62,7 @@ Finally we need a `Cargo.toml` file at the root of your repository.
 
 [dependencies]
 # --snip--
+# Documentation: https://docs.rs/vercel_runtime/latest/vercel_runtime
 vercel_runtime = { version = "0.2.1" }
 
 # You can specify a library for shared logic here (optional)
