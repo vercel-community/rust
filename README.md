@@ -106,23 +106,6 @@ graph TD
     C --> |"Ok(r) => process_response(r)"| D["Response"]
 ```
 
-<!-- ## Workspaces
-
-```shell
-.
-├── api
-│  ├── endpoint_1
-│  │  ├── Cargo.toml
-│  │  └── src
-│  │     └── main.rs
-│  └── endpoint_2
-│     ├── Cargo.toml
-│     └── src
-│        └── main.rs
-├── Cargo.lock
-└── Cargo.toml
-``` -->
-
 ## FAQ
 
 <details>
