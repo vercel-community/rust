@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 4.0.0.beta.0
+
+- New builder and runtime crate (published as `vercel_runtime`)
+- Reworked tests
+- Added examples
+
 ## 3.1.0
 
 - Support pre-configured binaries [#25](https://github.com/mike-engel/vercel-rust/pull/25)
