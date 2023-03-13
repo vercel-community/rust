@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/index.rs": {
-      "runtime": "vercel-rust@4.0.0-canary.3"
-    }
-  }
-}

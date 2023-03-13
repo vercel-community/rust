@@ -1,6 +1,0 @@
-dist/
-target/
-node_modules/
-.vercel
-api-old-runtime/
-.env
