@@ -1,6 +1,6 @@
 [package]
 name = "vercel_runtime"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Vercel <support@vercel.com>"]
 description = "Vercel Rust Function Runtime"

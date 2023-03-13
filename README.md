@@ -58,7 +58,7 @@ Finally we need a `Cargo.toml` file at the root of your repository.
 
 [dependencies]
 # --snip--
-vercel_runtime = { version = "0.1.4" }
+vercel_runtime = { version = "0.2.1" }
 
 # You can specify a library for shared logic here (optional)
 # [lib]

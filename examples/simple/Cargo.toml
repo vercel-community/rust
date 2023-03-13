@@ -12,8 +12,8 @@ serde_json = { version = "1.0.86", features = ["raw_value"] }
 serde_derive = "1.0.9"
 rand = "0.8.5"
 url = "2.3.1"
-vercel_runtime = "0"
-# vercel_runtime = { version = "0", path = "../../vercel_runtime" }
+vercel_runtime = "0.2.1"
+# vercel_runtime = { version = "0.2.1", path = "../../vercel_runtime" }
 
 [lib]
 path = "src-rs/lib.rs"
