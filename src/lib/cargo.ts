@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import toml from '@iarna/toml';
-import execa, { ExecaError } from 'execa';
+import execa from 'execa';
 
 export interface CargoMetadataRoot {
   packages: CargoPackage[];
@@ -146,7 +146,14 @@ interface CargoToml {
   bin?: CargoBuildTarget[];
 }
 
-export async function parseCargoToml(config: CargoConfig): Promise<CargoToml> {
+interface CargoWorkspace {
+  toml: CargoToml;
+  root: string;
+}
+
+export async function findCargoWorkspace(
+  config: CargoConfig,
+): Promise<CargoWorkspace> {
   const { stdout: projectDescriptionStr } = await execa(
     'cargo',
     ['locate-project'],
@@ -155,16 +162,22 @@ export async function parseCargoToml(config: CargoConfig): Promise<CargoToml> {
   const projectDescription = JSON.parse(projectDescriptionStr) as {
     root: string;
   };
-  return toml.parse.stream(fs.createReadStream(projectDescription.root));
+  return {
+    toml: await toml.parse.stream(
+      fs.createReadStream(projectDescription.root),
+    ),
+    root: projectDescription.root,
+  };
 }
 
 export function findBinaryName(
-  cargoToml: CargoToml,
+  workspace: CargoWorkspace,
   entryPath: string,
 ): string {
-  const { bin } = cargoToml;
+  const { bin } = workspace.toml;
   if (bin) {
-    const entry = bin.find((binEntry) => binEntry.path === entryPath);
+    const relativePath = path.relative(path.dirname(workspace.root), entryPath);
+    const entry = bin.find((binEntry) => binEntry.path === relativePath);
     if (entry?.name) {
       return entry.name;
     }

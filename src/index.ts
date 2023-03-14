@@ -12,7 +12,7 @@ import {
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
 import type { Runtime } from './lib/runtime';
-import { getCargoMetadata, findBinaryName, parseCargoToml } from './lib/cargo';
+import { getCargoMetadata, findBinaryName, findCargoWorkspace } from './lib/cargo';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
@@ -75,11 +75,11 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
     RUSTFLAGS: [process.env.RUSTFLAGS].filter(Boolean).join(' '),
   };
 
-  const cargoToml = await parseCargoToml({
+  const cargoWorkspace = await findCargoWorkspace({
     env: rustEnv,
     cwd: path.dirname(entryPath),
   });
-  const binaryName = findBinaryName(cargoToml, entryPath);
+  const binaryName = findBinaryName(cargoWorkspace, entryPath);
 
   await runUserScripts(workPath);
 
