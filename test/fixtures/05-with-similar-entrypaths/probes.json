@@ -4,6 +4,10 @@
       "path": "/api/user/foo",
       "status": 200,
       "mustContain": "id=foo"
+    },
+    {
+      "path": "/api/group/foo",
+      "status": 418
     }
   ]
 }

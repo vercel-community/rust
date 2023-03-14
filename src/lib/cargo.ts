@@ -163,9 +163,7 @@ export async function findCargoWorkspace(
     root: string;
   };
   return {
-    toml: await toml.parse.stream(
-      fs.createReadStream(projectDescription.root),
-    ),
+    toml: await toml.parse.stream(fs.createReadStream(projectDescription.root)),
     root: projectDescription.root,
   };
 }

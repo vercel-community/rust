@@ -17,9 +17,9 @@ interface Config {
 }
 
 interface Probe {
-  status: number;
   path: string;
-  mustContain: string;
+  status?: number;
+  mustContain?: string;
 }
 
 interface ProbesConf {
