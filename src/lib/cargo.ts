@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import toml from '@iarna/toml';
 import execa from 'execa';
 
 export interface CargoMetadataRoot {
@@ -127,4 +130,55 @@ export async function getCargoMetadata(
   );
 
   return JSON.parse(cargoMetaData) as CargoMetadataRoot;
+}
+
+interface CargoConfig {
+  env: Record<string, any>;
+  cwd: string;
+}
+
+interface CargoBuildTarget {
+  name?: string;
+  path?: string;
+}
+
+interface CargoToml {
+  bin?: CargoBuildTarget[];
+}
+
+interface CargoWorkspace {
+  toml: CargoToml;
+  root: string;
+}
+
+export async function findCargoWorkspace(
+  config: CargoConfig,
+): Promise<CargoWorkspace> {
+  const { stdout: projectDescriptionStr } = await execa(
+    'cargo',
+    ['locate-project'],
+    config,
+  );
+  const projectDescription = JSON.parse(projectDescriptionStr) as {
+    root: string;
+  };
+  return {
+    toml: await toml.parse.stream(fs.createReadStream(projectDescription.root)),
+    root: projectDescription.root,
+  };
+}
+
+export function findBinaryName(
+  workspace: CargoWorkspace,
+  entryPath: string,
+): string {
+  const { bin } = workspace.toml;
+  if (bin) {
+    const relativePath = path.relative(path.dirname(workspace.root), entryPath);
+    const entry = bin.find((binEntry) => binEntry.path === relativePath);
+    if (entry?.name) {
+      return entry.name;
+    }
+  }
+  return path.basename(entryPath, '.rs').replace('[', '_').replace(']', '_');
 }

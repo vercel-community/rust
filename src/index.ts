@@ -12,7 +12,7 @@ import {
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
 import type { Runtime } from './lib/runtime';
-import { getCargoMetadata } from './lib/cargo';
+import { getCargoMetadata, findBinaryName, findCargoWorkspace } from './lib/cargo';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
@@ -75,12 +75,11 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
     RUSTFLAGS: [process.env.RUSTFLAGS].filter(Boolean).join(' '),
   };
 
-  // The binary name is the name of the entrypoint file
-  // We assume each binary is specified correctly with `[[bin]]` in `Cargo.toml`
-  const binaryName = path
-    .basename(entryPath, '.rs')
-    .replace('[', '_')
-    .replace(']', '_');
+  const cargoWorkspace = await findCargoWorkspace({
+    env: rustEnv,
+    cwd: path.dirname(entryPath),
+  });
+  const binaryName = findBinaryName(cargoWorkspace, entryPath);
 
   await runUserScripts(workPath);
 
