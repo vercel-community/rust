@@ -20,7 +20,7 @@ First, you'll need a `vercel.json` file in your project:
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0-beta.0"
+      "runtime": "vercel-rust@4.0.0-beta.1"
     }
   }
 }
@@ -71,6 +71,16 @@ vercel_runtime = { version = "0.2.1" }
 [[bin]]
 name = "handler"
 path = "api/handler.rs"
+
+# Note that you need to provide unique names for dynamic paths
+[[bin]]
+name = "user-id"
+path = "api/user/[id].rs"
+
+[[bin]]
+name = "group-id"
+path = "api/group/[id].rs"
+
 
 # --snip--
 ```

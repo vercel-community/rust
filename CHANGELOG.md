@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.0.0.beta.1
+
+- Fix to support build targets with different name than its path filename
+
 ## 4.0.0.beta.0
 
 - New builder and runtime crate (published as `vercel_runtime`)
