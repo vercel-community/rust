@@ -13,5 +13,5 @@ exclude = [
     "test/fixtures/02-with-utility",
     "test/fixtures/03-with-function",
     "test/fixtures/04-with-parameter",
-    "test/fixtures/05-preconfigured-binary"
+    "test/fixtures/05-with-similar-entrypaths"
 ]

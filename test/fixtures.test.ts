@@ -118,4 +118,7 @@ describe('vercel-rust', () => {
   it('deploy 04-with-parameter', async () => {
     await expect(testFixture('04-with-parameter')).resolves.toBe('ok');
   });
+  it('deploy 05-with-similar-entrypaths', async () => {
+    await expect(testFixture('05-with-similar-entrypaths')).resolves.toBe('ok');
+  });
 });
