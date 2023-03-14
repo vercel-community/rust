@@ -1,5 +1,4 @@
 import random from 'random';
-// @ts-expect-error
 import shishua from 'shishua';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

@@ -96,7 +96,7 @@ function Home(): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="w-full mx-auto max-w-screen-xl px-8 xl:px-4 h-screen flex items-center justify-center">
+      <main className="w-full mx-auto max-w-screen-xl px-8 xl:px-4 h-screen-svh flex items-center justify-center">
         <div className="w-full grid grid-cols-5 lg:grid-cols-10 gap-6">
           <Card runtime="Rust" data={resultRust} />
           <Card runtime="Node" data={resultNode} />
@@ -121,8 +121,8 @@ function Home(): JSX.Element {
           </div>
 
           <div className="order-3 col-span-5 md:order-4 md:col-span-4 lg:col-span-5 px-4 py-2 flex items-center text-white font-medium text-sm bg-gray-800 rounded-md">
-            <span className="font-bold">Note:</span>&nbsp;Calculate Pi with
-            random numbers
+            <span className="font-bold">Note:</span>&nbsp;Estimate Pi with Monte
+            Carlo Method
           </div>
         </div>
       </main>

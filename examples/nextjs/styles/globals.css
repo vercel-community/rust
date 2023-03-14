@@ -1,11 +1,10 @@
 @tailwind base;
 
 :root {
-  @apply scroll-smooth font-display antialiased;
+  @apply bg-gray-900 scroll-smooth font-display antialiased;
 }
 
 html {
-  @apply bg-gray-900;
   scrollbar-color: #ffffffb3 transparent;
   scrollbar-width: auto;
 }
@@ -25,6 +24,16 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-black/60 dark:hover:bg-white/80;
+}
+
+.h-screen-svh {
+  height: 100vh;
+}
+
+@supports (height: 100svh) {
+  .h-screen-svh {
+    height: 100svh;
+  }
 }
 
 @tailwind components;
