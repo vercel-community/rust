@@ -15,7 +15,8 @@ export default function handler(
 ): void {
   const t0 = performance.now();
 
-  const seed = 42;
+  const seed = Math.floor(Date.now() / 1000);
+
   random.use(shishua(seed));
 
   const radius = 424242;

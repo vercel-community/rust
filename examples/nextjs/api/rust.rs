@@ -1,5 +1,5 @@
 use serde_json::json;
-use std::time::Instant;
+use std::time::{Instant, SystemTime};
 use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
 #[tokio::main]
@@ -10,7 +10,11 @@ async fn main() -> Result<(), Error> {
 pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
     let start = Instant::now();
 
-    let seed = 42;
+    let seed = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+
     let mut rng = oorandom::Rand32::new(seed);
 
     const RADIUS: u64 = 424242;
