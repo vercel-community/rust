@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import type { BuildOptions, BuildResultV3 } from '@vercel/build-utils';
 import {
@@ -6,56 +5,24 @@ import {
   debug,
   download,
   glob,
-  runShellScript,
   createLambda,
 } from '@vercel/build-utils';
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
 import type { Runtime } from './lib/runtime';
-import { getCargoMetadata, findBinaryName, findCargoWorkspace } from './lib/cargo';
+import {
+  getCargoMetadata,
+  findBinaryName,
+  findCargoWorkspace,
+} from './lib/cargo';
+import {
+  assertEnv,
+  getExecutableName,
+  gatherExtraFiles,
+  runUserScripts,
+} from './lib/utils';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
-
-function assertEnv(name: string): string {
-  if (!process.env[name]) {
-    throw new Error(`Missing ENV variable process.env.${name}`);
-  }
-
-  return process.env[name] as unknown as string;
-}
-
-async function runUserScripts(dir: string): Promise<void> {
-  const buildScriptPath = path.join(dir, 'build.sh');
-  const buildScriptExists = fs.existsSync(buildScriptPath);
-
-  if (buildScriptExists) {
-    debug('Running `build.sh`');
-    await runShellScript(buildScriptPath);
-  }
-}
-
-async function gatherExtraFiles(
-  globMatcher: string | string[] | undefined,
-  workPath: string,
-): Promise<Record<string, FileFsRef>> {
-  if (!globMatcher) return {};
-
-  debug(
-    `Gathering extra files for glob \`${JSON.stringify(
-      globMatcher,
-    )}\` in ${workPath}`,
-  );
-
-  if (Array.isArray(globMatcher)) {
-    const allMatches = await Promise.all(
-      globMatcher.map((pattern) => glob(pattern, workPath)),
-    );
-
-    return allMatches.reduce((acc, matches) => ({ ...acc, ...matches }), {});
-  }
-
-  return glob(globMatcher, workPath);
-}
 
 async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   const BUILDER_DEBUG = Boolean(process.env.VERCEL_BUILDER_DEBUG ?? false);
@@ -103,11 +70,7 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
     throw err;
   }
 
-  debug(`Building \`${binaryName}\` completed`);
-
-  // The compiled binary in Windows has the `.exe` extension
-  const binExtension = process.platform === 'win32' ? '.exe' : '';
-  const bootstrap = `bootstrap${binExtension}`;
+  debug(`Building \`${binaryName}\` for \`${process.platform}\` completed`);
 
   const { target_directory: targetDirectory } = await getCargoMetadata({
     cwd: process.cwd(),
@@ -117,9 +80,10 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   const bin = path.join(
     targetDirectory,
     BUILDER_DEBUG ? 'debug' : 'release',
-    binaryName,
+    getExecutableName(binaryName),
   );
 
+  const bootstrap = getExecutableName('bootstrap');
   const lambda = await createLambda({
     files: {
       ...extraFiles,
@@ -141,7 +105,6 @@ const runtime: Runtime = {
   prepareCache: async ({ workPath }) => {
     debug(`Caching \`${workPath}\``);
     const cacheFiles = await glob('target/**', workPath);
-
     // Convert this into a reduce
     for (const f of Object.keys(cacheFiles)) {
       const accept =
@@ -155,7 +118,6 @@ const runtime: Runtime = {
         delete cacheFiles[f];
       }
     }
-
     return cacheFiles;
   },
   shouldServe: async (options): Promise<boolean> => {
