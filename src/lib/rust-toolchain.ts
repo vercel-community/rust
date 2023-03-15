@@ -5,7 +5,7 @@ async function downloadRustToolchain({
   version = 'stable',
 }: {
   version?: string;
-}) {
+}): Promise<void> {
   try {
     await execa(
       `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${version}`,
@@ -21,7 +21,7 @@ async function downloadRustToolchain({
   }
 }
 
-export const installRustToolchain = async (version?: string) => {
+export const installRustToolchain = async (version?: string): Promise<void> => {
   try {
     await execa(`rustup -V`, [], { shell: true, stdio: 'ignore' });
     debug('Rust Toolchain is already installed, skipping download');
