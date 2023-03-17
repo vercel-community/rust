@@ -6,7 +6,6 @@ async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-// #[include_api(path = "api/**/*.rs")]
 #[include_api]
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
     Ok(Response::builder()

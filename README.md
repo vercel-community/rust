@@ -110,6 +110,85 @@ pnpm install
 cargo fetch
 ```
 
+## Experimental Route Merge
+
+This feature allows you to bundle all of your routes into _a single_ deployed Vercel function. This has the additional benefit of you only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
+
+Enable this feature via environment variable in your Vercel project.
+
+```shell
+VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE=true
+```
+
+In case you are using workspaces (like `examples/route-merge` in this repo) an additional macro prefix has to be provided as an environment variable both locally and in your Vercel project.
+
+```shell
+# Example for `vercel dev`
+VERCEL_RUST_EXPERIMENTAL_MACRO_PREFIX=examples/route-merge/ VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE=true vc dev
+```
+
+Create a `api/vercel/index.rs`.
+
+```rust
+use serde_json::json;
+use vercel_runtime::{include_api, run, Body, Error, Request, Response, StatusCode};
+
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    run(handler).await
+}
+
+// Proc macro which injects a router for files matching the glob `api/**/[!index]*.rs`.
+#[include_api]
+pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
+    Ok(Response::builder()
+        .status(StatusCode::NOT_FOUND)
+        .header("Content-Type", "application/json")
+        .body(
+            json!({
+              "code": "not_found",
+              "message": "not_found"
+            })
+            .to_string()
+            .into(),
+        )?)
+}
+```
+
+Adjust your `vercel.json` and only specify your `api/vercel/index.rs` file.
+
+```json
+{
+  "functions": {
+    "api/vercel/index.rs": {
+      "runtime": "vercel-rust@4.0.0-canary.4"
+    }
+  }
+}
+```
+
+Adjust your `Cargo.toml` to only specify the binary for `index.rs`.
+
+```toml
+[[bin]]
+name = "index"
+path = "api/vercel/index.rs"
+```
+
+Each new route in `api/**` must contain a `handler` function for the router to work.
+
+```rust
+// Example api/foo.rs
+use vercel_runtime::{Body, Error, Request, Response, StatusCode};
+
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
+    Ok(Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .body(Body::Text("Route is /api/foo".into()))?)
+}
+```
+
 ## Invocation Flowchart
 
 ```mermaid
