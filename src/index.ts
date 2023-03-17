@@ -60,7 +60,7 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
         BUILDER_DEBUG ? ['--verbose'] : ['--quiet', '--release'],
       ),
       {
-        cwd: process.cwd(),
+        cwd: workPath,
         env: rustEnv,
         stdio: 'inherit',
       },
