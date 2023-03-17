@@ -1,0 +1,21 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/optional\")"
+---
+Some(
+    Route {
+        kind: OptionalCatchAll,
+        module_file: "api/optional/[[...id]].rs",
+        module_name: Ident(
+            api_optional______id__,
+        ),
+        path: "api/optional/[[...id]]",
+        segments: Some(
+            [
+                "api",
+                "optional",
+                "[[...id]]",
+            ],
+        ),
+    },
+)

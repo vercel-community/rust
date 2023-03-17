@@ -1,0 +1,24 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/foo/[d]/bar/baz/[f]\")"
+---
+Some(
+    Route {
+        kind: Dynamic,
+        module_file: "api/foo/[d]/bar/baz/[f].rs",
+        module_name: Ident(
+            api_foo__d__bar_baz__f_,
+        ),
+        path: "api/foo/[d]/bar/baz/[f]",
+        segments: Some(
+            [
+                "api",
+                "foo",
+                "[d]",
+                "bar",
+                "baz",
+                "[f]",
+            ],
+        ),
+    },
+)

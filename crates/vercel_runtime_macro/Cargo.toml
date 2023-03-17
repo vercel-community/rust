@@ -1,0 +1,21 @@
+[package]
+name = "vercel_runtime_macro"
+version = "0.3.3"
+edition = "2021"
+authors = ["Vercel <support@vercel.com>"]
+description = "Vercel Rust Function Runtime Macro"
+keywords = ["Vercel", "Rust", "Serverless", "Functions", "Macro"]
+license = "MIT"
+homepage = "https://github.com/vercel-community/rust"
+repository = "https://github.com/vercel-community/rust"
+documentation = "https://docs.rs/vercel_lambda"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+glob = "0.3.1"
+quote = "1.0"
+syn = { version = "1.0", features = ["full"] }
+# vercel_runtime_router = { version = "0.3.3", path = "../vercel_runtime_router" }
+vercel_runtime_router = "0.3.3"

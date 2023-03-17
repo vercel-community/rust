@@ -1,6 +1,6 @@
 {
   "name": "vercel-rust",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-canary.4",
   "description": "Rust runtime for Vercel Functions.",
   "homepage": "https://github.com/vercel-community/rust",
   "repository": {
@@ -23,11 +23,13 @@
   "dependencies": {
     "@iarna/toml": "^2.2.5",
     "execa": "5",
+    "lodash": "^4.17.21",
     "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.4.0",
+    "@types/lodash": "^4.14.191",
     "@types/ms": "^0.7.31",
     "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.2",

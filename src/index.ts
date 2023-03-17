@@ -21,6 +21,7 @@ import {
   gatherExtraFiles,
   runUserScripts,
 } from './lib/utils';
+import { generateRoutes } from './lib/routes';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
@@ -36,6 +37,9 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
 
   const HOME = assertEnv('HOME');
   const PATH = assertEnv('PATH');
+
+  const VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE =
+    process.env.VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE === 'true';
 
   const rustEnv: RustEnv = {
     PATH: `${path.join(HOME, '.cargo/bin')}:${PATH}`,
@@ -93,6 +97,17 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
     runtime: 'provided',
   });
 
+  if (VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE) {
+    debug(`\`VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE\` enabled`);
+    const handlerFiles = await glob('api/**/*.rs', workPath);
+    const routes = generateRoutes(Object.keys(handlerFiles));
+
+    return {
+      output: lambda,
+      routes,
+    };
+  }
+
   return {
     output: lambda,
   };
@@ -121,6 +136,15 @@ const runtime: Runtime = {
     return cacheFiles;
   },
   shouldServe: async (options): Promise<boolean> => {
+    debug(`Requested ${options.requestPath} for ${options.entrypoint}`);
+
+    const VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE =
+      process.env.VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE === 'true';
+
+    if (VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE) {
+      return Promise.resolve(options.entrypoint === 'api/vercel/index');
+    }
+
     return Promise.resolve(options.requestPath === options.entrypoint);
   },
 };

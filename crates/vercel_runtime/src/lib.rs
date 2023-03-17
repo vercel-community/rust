@@ -8,6 +8,9 @@ use response::EventResponse;
 use std::future::Future;
 use tracing::{debug, error};
 
+pub use vercel_runtime_macro::include_api;
+pub use vercel_runtime_router::{Route, Router};
+
 pub type Event<'a> = LambdaEvent<VercelEvent<'a>>;
 
 pub use lambda_http::{

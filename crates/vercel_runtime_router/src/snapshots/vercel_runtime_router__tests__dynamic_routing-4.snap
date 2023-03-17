@@ -1,0 +1,5 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api\")"
+---
+None

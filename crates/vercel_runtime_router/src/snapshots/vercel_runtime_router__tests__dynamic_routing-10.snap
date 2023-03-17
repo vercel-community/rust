@@ -1,0 +1,21 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/nested/catch/all/route\")"
+---
+Some(
+    Route {
+        kind: CatchAll,
+        module_file: "api/nested/[...id].rs",
+        module_name: Ident(
+            api_nested_____id_,
+        ),
+        path: "api/nested/[...id]",
+        segments: Some(
+            [
+                "api",
+                "nested",
+                "[...id]",
+            ],
+        ),
+    },
+)

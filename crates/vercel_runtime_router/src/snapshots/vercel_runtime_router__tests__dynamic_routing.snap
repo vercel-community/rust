@@ -1,0 +1,15 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/posts\")"
+---
+Some(
+    Route {
+        kind: Static,
+        module_file: "api/posts.rs",
+        module_name: Ident(
+            api_posts,
+        ),
+        path: "api/posts",
+        segments: None,
+    },
+)

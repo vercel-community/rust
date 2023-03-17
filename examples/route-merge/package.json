@@ -1,0 +1,12 @@
+{
+  "name": "vercel-rust-demo",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "../../dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  }
+}

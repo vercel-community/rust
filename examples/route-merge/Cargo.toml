@@ -1,5 +1,5 @@
 [package]
-name = "simple_runtime_demo"
+name = "merged_runtime_demo"
 version = "0.1.0"
 edition = "2021"
 
@@ -12,20 +12,12 @@ serde_json = { version = "1.0.86", features = ["raw_value"] }
 serde_derive = "1.0.9"
 rand = "0.8.5"
 url = "2.3.1"
-# vercel_runtime = { version = "0.3.3", path = "../../crates/vercel_runtime" }
-vercel_runtime = "0.3.3"
+vercel_runtime = { version = "0.3.3", path = "../../crates/vercel_runtime" }
+# vercel_runtime = "0.3.3"
 
 [lib]
 path = "src-rs/lib.rs"
 
 [[bin]]
-name = "simple"
-path = "api/simple.rs"
-
-[[bin]]
-name = "complex"
-path = "api/complex.rs"
-
-[[bin]]
-name = "_id_"
-path = "api/user/[id].rs"
+name = "index"
+path = "api/vercel/index.rs"
