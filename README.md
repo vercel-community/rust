@@ -112,15 +112,15 @@ cargo fetch
 
 ## Experimental Route Merge
 
-This feature allows you to bundle all of your routes into _a single_ deployed Vercel function. This has the additional benefit of you only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
+This feature allows you to bundle all of your routes into _a single_ deployed Vercel function. Besides optimizing for cold starts, this has the additional benefit of you only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
 
-Enable this feature via environment variable in your Vercel project.
+Enable this feature by setting the following environment variable in your Vercel project.
 
 ```shell
 VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE=true
 ```
 
-In case you are using workspaces (like `examples/route-merge` in this repo) an additional macro prefix has to be provided as an environment variable both locally and in your Vercel project.
+In case you are using workspaces (like `examples/route-merge` in this repository), an additional macro prefix has to be provided as an environment variable both locally and in your Vercel project.
 
 ```shell
 # Example for `vercel dev`
@@ -155,7 +155,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
 }
 ```
 
-Adjust your `vercel.json` and only specify your `api/vercel/index.rs` file.
+Change your `vercel.json` to only specify your `api/vercel/index.rs` file.
 
 ```json
 {
@@ -167,7 +167,7 @@ Adjust your `vercel.json` and only specify your `api/vercel/index.rs` file.
 }
 ```
 
-Adjust your `Cargo.toml` to only specify the binary for `index.rs`.
+Change your `Cargo.toml` to only specify the binary for `index.rs`.
 
 ```toml
 [[bin]]
@@ -175,7 +175,7 @@ name = "index"
 path = "api/vercel/index.rs"
 ```
 
-Each new route in `api/**` must contain a `handler` function for the router to work.
+Every route in `api/**` must contain a `handler` function for the router to work.
 
 ```rust
 // Example api/foo.rs
