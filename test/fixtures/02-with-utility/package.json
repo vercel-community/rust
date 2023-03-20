@@ -1,11 +1,11 @@
 {
-  "name": "vercel-rust-demo",
+  "name": "02-with-utility",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "license": "MIT",
   "author": "",
-  "main": "index.js",
+  "main": "../../../dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }

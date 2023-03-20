@@ -16,7 +16,7 @@
     "build": "rimraf dist/ && tsc --removeComments",
     "prepare": "husky install",
     "prepublishOnly": "tsc",
-    "test": "jest",
+    "test": "pnpm run build && jest",
     "typecheck": "tsc --noEmit"
   },
   "prettier": "@vercel/style-guide/prettier",
