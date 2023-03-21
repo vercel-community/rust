@@ -1,12 +1,23 @@
 <p align="center">
-  <a href="https://vercel.com">
+  <a align="center" href="https://vercel.com">
     <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
     <h3 align="center">Rust</h3>
   </a>
-  <p align="center">Rust runtime for Vercel Functions.</p>
+  <p align="center">Rust Runtime for Vercel Functions.</p>
 </p>
 
+<div align="center">
+
+<a href="https://www.npmjs.com/package/vercel-rust">![npm version](https://img.shields.io/npm/v/vercel-rust.svg)</a>
+<a href="https://www.npmjs.com/package/vercel-rust">![npm downloads](https://img.shields.io/npm/dm/vercel-rust.svg?label=npm%20downloads)</a>
+<a href="https://crates.io/crates/vercel_runtime">![crates.io downloads](https://img.shields.io/crates/d/vercel_runtime?color=yellow&label=crates.io)</a>
+</div>
+
+<div align="center">
+
 Community-maintained package to support using [Rust](https://www.rust-lang.org/) inside [Vercel Functions](https://vercel.com/docs/serverless-functions/introduction) as a [Runtime](https://vercel.com/docs/runtimes).
+
+</div>
 
 ## Legacy Runtime
 
@@ -59,7 +70,8 @@ Finally we need a `Cargo.toml` file at the root of your repository.
 # --snip--
 
 [dependencies]
-# --snip--
+tokio = { version = "1", features = ["macros"] }
+serde_json = { version = "1", features = ["raw_value"] }
 # Documentation: https://docs.rs/vercel_runtime/latest/vercel_runtime
 vercel_runtime = { version = "0.2.1" }
 
@@ -81,7 +93,6 @@ path = "api/user/[id].rs"
 name = "group-id"
 path = "api/group/[id].rs"
 
-
 # --snip--
 ```
 
@@ -99,12 +110,11 @@ During local development with `vercel dev`, ensure `rust` and `cargo` are alread
 
 ## Contributing
 
-Since this project contains both Rust and Node.js code, you need to install the relevant dependencies. If you're only working on the JavaScript side, you only need to install those dependencies (and vice-versa).
+Since this project contains both Rust and Node.js code, you need to install the relevant dependencies. If you're only working on the TypeScript side, you only need to install those dependencies (and vice-versa).
 
 ```shell
 # install node dependencies
 pnpm install
-
 
 # install cargo dependencies
 cargo fetch
@@ -120,6 +130,13 @@ graph TD
 ```
 
 ## FAQ
+
+<details>
+  <summary>How to specify toolchain overrides</summary>
+
+An example on how this can be achieved is using a `rust-toolchain` file adjacent to your `Cargo.toml`. Please refer to [Rust Documentation](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) for more details.
+
+</details>
 
 <details>
   <summary>Can I use musl/static linking?</summary>
