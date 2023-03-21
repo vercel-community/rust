@@ -81,7 +81,7 @@ vercel_runtime = { version = "0.2.1" }
 name = "handler"
 path = "api/handler.rs"
 
-# Note that you need to provide unique names for dynamic paths
+# Note that you need to provide unique names for each binary
 [[bin]]
 name = "user-id"
 path = "api/user/[id].rs"
