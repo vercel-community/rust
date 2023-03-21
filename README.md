@@ -11,9 +11,6 @@
 <a href="https://www.npmjs.com/package/vercel-rust">![npm version](https://img.shields.io/npm/v/vercel-rust.svg)</a>
 <a href="https://www.npmjs.com/package/vercel-rust">![npm downloads](https://img.shields.io/npm/dm/vercel-rust.svg?label=npm%20downloads)</a>
 <a href="https://crates.io/crates/vercel_runtime">![crates.io downloads](https://img.shields.io/crates/d/vercel_runtime?color=yellow&label=crates.io)</a>
-</div>
-
-<div align="center">
 
 Community-maintained package to support using [Rust](https://www.rust-lang.org/) inside [Vercel Functions](https://vercel.com/docs/serverless-functions/introduction) as a [Runtime](https://vercel.com/docs/runtimes).
 
