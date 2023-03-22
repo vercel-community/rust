@@ -1,0 +1,9 @@
+{
+  "probes": [
+    {
+      "path": "/api/handler",
+      "status": 200,
+      "mustContain": "nightly"
+    }
+  ]
+}
