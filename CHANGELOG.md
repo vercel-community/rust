@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 4.0.0.beta.3
+
+- Execute cargo build inside `workPath` #85
+
+## 4.0.0.beta.2
+
+- Fix executable resolving when using dev server on Windows
+
 ## 4.0.0.beta.1
 
 - Fix to support build targets with different name than its path filename
