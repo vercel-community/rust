@@ -30,5 +30,8 @@
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7",
     "tailwindcss-radix": "^2.8.0"
+  },
+  "engines": {
+    "node": ">=16 <18"
   }
 }

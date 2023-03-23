@@ -1,4 +1,6 @@
 use slack_morphism::{errors::SlackClientError, prelude::*};
+use std::collections::HashMap;
+use url::Url;
 use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
 #[derive(Debug, Clone)]
@@ -28,7 +30,18 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
         self.slack.chat_post_message(&post_chat_req).await
     }
 
-    pub async fn handler(&self, _req: Request) -> Result<Response<Body>, Error> {
+    pub async fn handler(&self, req: Request) -> Result<Response<Body>, Error> {
+        let parsed_url = Url::parse(&req.uri().to_string()).unwrap();
+        let hash_query: HashMap<String, String> = parsed_url.query_pairs().into_owned().collect();
+        let secret = hash_query.get("secret").map(|x| &**x);
+
+        // https://vercel.com/docs/cron-jobs#how-to-secure-cron-jobs
+        if secret != Some("geheim") {
+            return Ok(Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body(().into())?);
+        }
+
         let message = SlackMessage {};
 
         self.post_message(&message, "#general").await?;
