@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "public",
   "functions": {
     "api/**/*.rs": {
       "runtime": "vercel-rust@4.0.0-beta.3"
@@ -6,7 +7,7 @@
   },
   "crons": [
     {
-      "path": "/api/cron",
+      "path": "/api/cron?secret=geheim",
       "schedule": "30 9 * * *"
     }
   ]
