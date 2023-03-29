@@ -16,3 +16,4 @@ exclude = [
     "test/fixtures/06-with-toolchain-override",
     "test/fixtures/07-with-cargo-configuration",
 ]
+
