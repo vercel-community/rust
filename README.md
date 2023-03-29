@@ -113,7 +113,7 @@ target = "x86_64-unknown-linux-musl"
 # linker = "x86_64-unknown-linux-gnu-gcc"
 ```
 
-You then can build the file and trigger the deployment with the Vercel CLI
+You then can build the file and trigger the deployment with the Vercel CLI.
 
 ```shell
 vercel build && vercel deploy --prebuilt
