@@ -102,4 +102,9 @@ describe('vercel-rust', () => {
   it('deploy 06-with-toolchain-override', async () => {
     await expect(testFixture('06-with-toolchain-override')).resolves.toBe('ok');
   });
+  it('deploy 07-with-cargo-configuration', async () => {
+    await expect(testFixture('07-with-cargo-configuration')).resolves.toBe(
+      'ok',
+    );
+  });
 });

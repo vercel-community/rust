@@ -99,6 +99,26 @@ This Builder supports installing dependencies defined in the `Cargo.toml` file.
 
 Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the same directory as the entrypoint file.
 
+## Prebuilt Deployments
+
+For creating a prebuilt deployment, you can create a Cargo build configuration in `.cargo/config.toml`.
+
+```toml
+[build]
+target = "x86_64-unknown-linux-musl"
+
+# Uncomment below to support Rust cross-compilation from macOS to Linux
+# Follow these installation instructions: https://github.com/chinedufn/cross-compile-rust-from-mac-to-linux
+# [target.x86_64-unknown-linux-musl]
+# linker = "x86_64-unknown-linux-gnu-gcc"
+```
+
+You then can build the file and trigger the deployment with the Vercel CLI
+
+```shell
+vercel build && vercel deploy --prebuilt
+```
+
 ## Local Development
 
 With `vercel dev` and `vercel-rust`, you can develop your Rust-based lambdas on your own machine.

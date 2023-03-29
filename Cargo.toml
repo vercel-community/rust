@@ -2,9 +2,17 @@
 
 members = [
     "vercel_runtime",
-    "examples/*",
+    "examples/simple",
+    "examples/cron",
+    "examples/nextjs",
 ]
 
 exclude = [
-    "test/*",
+    "test/fixtures/01-include-files",
+    "test/fixtures/02-with-utility",
+    "test/fixtures/03-with-function",
+    "test/fixtures/04-with-parameter",
+    "test/fixtures/05-with-similar-entrypaths",
+    "test/fixtures/06-with-toolchain-override",
+    "test/fixtures/07-with-cargo-configuration",
 ]

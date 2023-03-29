@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/**/*.rs": {
+      "runtime": "vercel-dev-builder@0.0.5",
+      "includeFiles": "static/**/*.txt"
+    }
+  }
+}
