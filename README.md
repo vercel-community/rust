@@ -101,7 +101,7 @@ Furthermore, more system dependencies can be installed at build time with the pr
 
 ## Prebuilt Deployments
 
-For creating a prebuilt deployment, you can create a Cargo build configuration in `.cargo/config.toml`.
+When creating a prebuilt deployment, the build output must be for x86_64 linux. To do this, create a Cargo build configuration at `.cargo/config.toml` with the following contents:
 
 ```toml
 [build]
