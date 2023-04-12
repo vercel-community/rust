@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 4.0.0.beta.4
+
+- Update documentation #92
+- Add cargo build config and prebuilt support #91
+- Prevent leaking source code in examples #90
+- Add tests and docs for configurable toolchain overrides #89
+
 ## 4.0.0.beta.3
 
 - Execute cargo build inside `workPath` #85

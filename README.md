@@ -20,9 +20,32 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 
 The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
 
+## Introduction
+
+This section aims to give you a basic understanding about Vercel runtimes.
+
+### Builder module
+
+The _npm_ module `vercel-rust` is implementing an interface which is primarily taking care of spawning a development server, caching between consecutive builds, and running the compilation. You can read more about the in-depths of implementing a builder [here](https://github.com/vercel/vercel/blob/main/DEVELOPING_A_RUNTIME.md).
+
+Note that this dependency **does not** have to be installed manually, as it is pulled automatically by the Vercel CLI or the build container during deployments.
+
+### Runtime crate
+
+The crate `vercel_runtime` is what you will consume in your Rust functions. As the name suggests, the runtime crate takes care of everything that happens during run-time. In specific it takes care of creating a [Tower](https://docs.rs/tower/latest/tower/trait.Service.html) service, which expects a specific handler signature. The flow of an invocation can be visualized as the following:
+
+```mermaid
+graph TD
+    A["Function Invocation"] --> |"process_request(event: InvocationEvent&lt;VercelEvent&gt;) → Request"| B[Request]
+    B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
+    C --> |"Ok(r) => process_response(r)"| D["Response"]
+```
+
 ## Usage
 
-First, you'll need a `vercel.json` file in your project:
+First, you'll need a `vercel.json` file in your project and specify the Rust builder module for your Rust functions as a glob. As mentioned above, this dependency is pulled automatically and **does not** have to be installed.
+
+In short this tells the builder that a Vercel Function should be created for every file that matches `api/**/*.rs`.
 
 ```json
 {
@@ -34,9 +57,9 @@ First, you'll need a `vercel.json` file in your project:
 }
 ```
 
-A Vercel Function will be created for every file that matches `api/**/*.rs`.
+Create your first function in `api`.
 
-Example:
+Example `api/handler.rs`
 
 ```rust
 use serde_json::json;
@@ -61,7 +84,7 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
 }
 ```
 
-Finally we need a `Cargo.toml` file at the root of your repository.
+Now add a `Cargo.toml` file at the root of your repository.
 
 ```toml
 # --snip--
@@ -81,27 +104,39 @@ vercel_runtime = { version = "0.2.1" }
 name = "handler"
 path = "api/handler.rs"
 
-# Note that you need to provide unique names for each binary
-[[bin]]
-name = "user-id"
-path = "api/user/[id].rs"
-
-[[bin]]
-name = "group-id"
-path = "api/group/[id].rs"
+# Note that you need to provide unique names for each binary:
+# [[bin]]
+# name = "user-id"
+# path = "api/user/[id].rs"
+#
+# [[bin]]
+# name = "group-id"
+# path = "api/group/[id].rs"
 
 # --snip--
 ```
 
+Finally make sure to ignore the build artifacts of Rust in your `.vercelignore`.
+
+```shell
+target/
+```
+
+### Local Development
+
+With `vercel dev` you can develop your Rust-based lambdas on your own machine.
+
+During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
+
 ### Dependencies
 
-This Builder supports installing dependencies defined in the `Cargo.toml` file.
+The builder module supports installing dependencies defined in the `Cargo.toml` file.
 
-Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the same directory as the entrypoint file.
+Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the root directory of your project.
 
 ## Prebuilt Deployments
 
-When creating a prebuilt deployment, the build output must be for x86_64 linux. To do this, create a Cargo build configuration at `.cargo/config.toml` with the following contents:
+When creating a prebuilt deployment, the build output must be for `x86_64 linux`. To do this, create a Cargo build configuration at `.cargo/config.toml` with the following contents:
 
 ```toml
 [build]
@@ -119,12 +154,6 @@ You then can build the file and trigger the deployment with the Vercel CLI.
 vercel build && vercel deploy --prebuilt
 ```
 
-## Local Development
-
-With `vercel dev` and `vercel-rust`, you can develop your Rust-based lambdas on your own machine.
-
-During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
-
 ## Contributing
 
 Since this project contains both Rust and Node.js code, you need to install the relevant dependencies. If you're only working on the TypeScript side, you only need to install those dependencies (and vice-versa).
@@ -135,15 +164,6 @@ pnpm install
 
 # install cargo dependencies
 cargo fetch
-```
-
-## Invocation Flowchart
-
-```mermaid
-graph TD
-    A["Lambda Invocation"] --> |"process_request(event: LambdaEvent&lt;VercelEvent&gt;) → Request"| B[Request]
-    B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
-    C --> |"Ok(r) => process_response(r)"| D["Response"]
 ```
 
 ## FAQ
