@@ -43,6 +43,8 @@ graph TD
 
 ## Usage
 
+[Take me straight to example code.](https://github.com/vercel-community/rust/tree/main/examples)
+
 First, you'll need a `vercel.json` file in your project and specify the Rust builder module for your Rust functions as a glob. As mentioned above, this dependency is pulled automatically and **does not** have to be installed.
 
 In short this tells the builder that a Vercel Function should be created for every file that matches `api/**/*.rs`.
