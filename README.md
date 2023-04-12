@@ -126,9 +126,9 @@ target/
 
 ### Local Development
 
-With `vercel dev` you can develop your Rust-based lambdas on your own machine.
+You can start local development by installing [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and running `vercel dev`.
 
-During local development with `vercel dev`, ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
+Please ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
 
 ### Dependencies
 
