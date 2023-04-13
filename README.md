@@ -22,7 +22,7 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 
 [Prefer looking at examples?](https://github.com/vercel-community/rust/tree/main/examples)
 
-**Step 1** - Add a `vercel.json` file to you project.
+**Step 1** - Add a `vercel.json` file to your project.
 
 ```json
 {
