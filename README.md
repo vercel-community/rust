@@ -106,7 +106,7 @@ path = "api/handler.rs"
 target/
 ```
 
-**Step 5** - You're all set. Run `vercel dev` to deploy locally or `vercel` to start deploying your project on Vercel.
+**Step 5** - You're all set. Run `vercel dev` to develop your project locally. You can connect a Git repository to Vercel, or use `vercel` to start deploying your project on Vercel.
 
 ## Advanced Usage
 
