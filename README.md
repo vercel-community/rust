@@ -16,6 +16,10 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 
 </div>
 
+## Legacy Runtime
+
+The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+
 ## Getting Started
 
 > Please ensure [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and the Rust toolchain is already installed on your system. We recommended setting up Rust with [rustup](https://rustup.rs/).
@@ -140,10 +144,6 @@ vercel build && vercel deploy --prebuilt
 Unfortunately, the AWS Lambda Runtime for Rust relies (tangentially) on `proc_macro`, which won't compile on musl targets. Without `musl`, all linking must be dynamic. If you have a crate that relies on system libraries like `postgres` or `mysql`, you can include those library files with the `includeFiles` config option and set the proper environment variables, config, etc. that you need to get the library to compile.
 
 For more information, please see [this issue](https://github.com/mike-engel/vercel-rust/issues/2).
-
-## Legacy Runtime
-
-The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
 
 ## Contributing
 
