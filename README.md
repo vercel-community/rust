@@ -70,7 +70,10 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
 **Step 3** - Create a `Cargo.toml` in the root directory of your project.
 
 ```toml
-# --snip--
+[package]
+name = "my-vercel-api"
+version = "0.1.0"
+edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["macros"] }
@@ -95,8 +98,6 @@ path = "api/handler.rs"
 # [[bin]]
 # name = "group-id"
 # path = "api/group/[id].rs"
-
-# --snip--
 ```
 
 **Step 4** - Create a `.vercelignore` in the root directory of your project to ignore build artifacts.
