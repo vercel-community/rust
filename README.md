@@ -42,7 +42,7 @@ This turns every file matching `api/**/*.rs` into a Vercel Function.
 
 > **Note:** The npm dependency `vercel-rust` defined in [functions](https://vercel.com/docs/concepts/projects/project-configuration#functions) **does not** have to be installed manually.
 
-**Step 2** - Create a function. As an example, here is `api/handler.rs`
+**Step 2** - Create a function. As an example, here is `api/handler.rs`.
 
 ```rust
 use serde_json::json;
