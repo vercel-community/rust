@@ -16,38 +16,13 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 
 </div>
 
-## Legacy Runtime
+## Getting Started
 
-The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+> Please ensure [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and the Rust toolchain is already installed on your system. We recommended setting up Rust with [rustup](https://rustup.rs/).
 
-## Introduction
+[Prefer looking at examples?](https://github.com/vercel-community/rust/tree/main/examples)
 
-This section aims to give you a basic understanding about Vercel runtimes.
-
-### Builder module
-
-The _npm_ module `vercel-rust` is implementing an interface which is primarily taking care of spawning a development server, caching between consecutive builds, and running the compilation. You can read more about the in-depths of implementing a builder [here](https://github.com/vercel/vercel/blob/main/DEVELOPING_A_RUNTIME.md).
-
-Note that this dependency **does not** have to be installed manually, as it is pulled automatically by the Vercel CLI or the build container during deployments.
-
-### Runtime crate
-
-The crate `vercel_runtime` is what you will consume in your Rust functions. As the name suggests, the runtime crate takes care of everything that happens during run-time. In specific it takes care of creating a [Tower](https://docs.rs/tower/latest/tower/trait.Service.html) service, which expects a specific handler signature. The flow of an invocation can be visualized as the following:
-
-```mermaid
-graph TD
-    A["Function Invocation"] --> |"process_request(event: InvocationEvent&lt;VercelEvent&gt;) → Request"| B[Request]
-    B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
-    C --> |"Ok(r) => process_response(r)"| D["Response"]
-```
-
-## Usage
-
-[Take me straight to example code.](https://github.com/vercel-community/rust/tree/main/examples)
-
-First, you'll need a `vercel.json` file in your project and specify the Rust builder module for your Rust functions as a glob. As mentioned above, this dependency is pulled automatically and **does not** have to be installed.
-
-In short this tells the builder that a Vercel Function should be created for every file that matches `api/**/*.rs`.
+**Step 1** - Add a `vercel.json` file to you project.
 
 ```json
 {
@@ -59,9 +34,11 @@ In short this tells the builder that a Vercel Function should be created for eve
 }
 ```
 
-Create your first function in `api`.
+This turns every file matching `api/**/*.rs` into a Vercel Function.
 
-Example `api/handler.rs`
+> **Note:** The npm dependency `vercel-rust` defined in [functions](https://vercel.com/docs/concepts/projects/project-configuration#functions) **does not** have to be installed manually.
+
+**Step 2** - Create a function. As an example, here is `api/handler.rs`
 
 ```rust
 use serde_json::json;
@@ -86,7 +63,7 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
 }
 ```
 
-Now add a `Cargo.toml` file at the root of your repository.
+**Step 3** - Create a `Cargo.toml` in the root directory of your project.
 
 ```toml
 # --snip--
@@ -118,25 +95,27 @@ path = "api/handler.rs"
 # --snip--
 ```
 
-Finally make sure to ignore the build artifacts of Rust in your `.vercelignore`.
+**Step 4** - Create a `.vercelignore` in the root directory of your project to ignore build artifacts.
 
 ```shell
 target/
 ```
 
-### Local Development
+**Step 5** - You're all set. Run `vercel dev` to deploy locally or `vercel` to start deploying your project on Vercel.
 
-You can start local development by installing [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and running `vercel dev`.
+## Advanced Usage
 
-Please ensure `rust` and `cargo` are already installed and available in your `PATH`, since they will not be installed automatically. The recommended way to install is with [rustup](https://rustup.rs/).
+### Toolchain Overrides
+
+An example on how this can be achieved is using a `rust-toolchain` file adjacent to your `Cargo.toml`. Please refer to [Rust Documentation](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) for more details.
 
 ### Dependencies
 
-The builder module supports installing dependencies defined in the `Cargo.toml` file.
+By default builder module supports installing dependencies defined in the `Cargo.toml` file.
 
-Furthermore, more system dependencies can be installed at build time with the presence of a shell `build.sh` file in the root directory of your project.
+More system dependencies can be installed at build time with the presence of a shell `build.sh` file in the root directory of your project.
 
-## Prebuilt Deployments
+### Prebuilt Deployments
 
 When creating a prebuilt deployment, the build output must be for `x86_64 linux`. To do this, create a Cargo build configuration at `.cargo/config.toml` with the following contents:
 
@@ -150,11 +129,21 @@ target = "x86_64-unknown-linux-musl"
 # linker = "x86_64-unknown-linux-gnu-gcc"
 ```
 
-You then can build the file and trigger the deployment with the Vercel CLI.
+You then can build the file and trigger the deployment via [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli).
 
 ```shell
 vercel build && vercel deploy --prebuilt
 ```
+
+### Musl/Static linking
+
+Unfortunately, the AWS Lambda Runtime for Rust relies (tangentially) on `proc_macro`, which won't compile on musl targets. Without `musl`, all linking must be dynamic. If you have a crate that relies on system libraries like `postgres` or `mysql`, you can include those library files with the `includeFiles` config option and set the proper environment variables, config, etc. that you need to get the library to compile.
+
+For more information, please see [this issue](https://github.com/mike-engel/vercel-rust/issues/2).
+
+## Legacy Runtime
+
+The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
 
 ## Contributing
 
@@ -168,20 +157,19 @@ pnpm install
 cargo fetch
 ```
 
-## FAQ
+### Builder Module
 
-<details>
-  <summary>How to specify toolchain overrides</summary>
+The _npm_ module `vercel-rust` is implementing an interface which is primarily taking care of spawning a development server, caching between consecutive builds, and running the compilation. You can read more about the in-depths of implementing a builder [here](https://github.com/vercel/vercel/blob/main/DEVELOPING_A_RUNTIME.md).
 
-An example on how this can be achieved is using a `rust-toolchain` file adjacent to your `Cargo.toml`. Please refer to [Rust Documentation](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) for more details.
+Note that this dependency **does not** have to be installed manually as it is pulled automatically.
 
-</details>
+### Runtime Crate
 
-<details>
-  <summary>Can I use musl/static linking?</summary>
-  
-Unfortunately, the AWS Lambda Runtime for Rust relies (tangentially) on `proc_macro`, which won't compile on musl targets. Without `musl`, all linking must be dynamic. If you have a crate that relies on system libraries like `postgres` or `mysql`, you can include those library files with the `includeFiles` config option and set the proper environment variables, config, etc. that you need to get the library to compile.
+The crate `vercel_runtime` is what you will consume in your Rust functions. As the name suggests, the runtime crate takes care of everything that happens during run-time. In specific it takes care of creating a [Tower](https://docs.rs/tower/latest/tower/trait.Service.html) service, which expects a specific handler signature. The flow of an invocation can be visualized as the following:
 
-For more information, please see [this issue](https://github.com/mike-engel/vercel-rust/issues/2).
-
-</details>
+```mermaid
+graph TD
+    A["Function Invocation"] --> |"process_request(event: InvocationEvent&lt;VercelEvent&gt;) → Request"| B[Request]
+    B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
+    C --> |"Ok(r) => process_response(r)"| D["Response"]
+```
