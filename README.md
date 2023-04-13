@@ -32,7 +32,7 @@ The below documentation is for the `vercel_runtime` crate (in beta). If you are 
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0-beta.3"
+      "runtime": "vercel-rust@4.0.0-beta.4"
     }
   }
 }
