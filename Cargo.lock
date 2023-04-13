@@ -224,7 +224,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "url",
- "vercel_runtime 0.3.4",
+ "vercel_runtime 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -831,7 +831,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
- "vercel_runtime 0.3.4",
+ "vercel_runtime 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1270,7 +1270,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "url",
- "vercel_runtime 0.3.4",
+ "vercel_runtime 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1713,8 +1713,18 @@ dependencies = [
  "tower-service",
  "tracing",
  "tracing-subscriber",
- "vercel_runtime_macro",
- "vercel_runtime_router",
+ "vercel_runtime_macro 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vercel_runtime_router 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "vercel_runtime_macro"
+version = "0.3.4"
+dependencies = [
+ "glob",
+ "quote",
+ "syn",
+ "vercel_runtime_router 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1726,7 +1736,19 @@ dependencies = [
  "glob",
  "quote",
  "syn",
- "vercel_runtime_router",
+ "vercel_runtime_router 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "vercel_runtime_router"
+version = "0.3.4"
+dependencies = [
+ "glob",
+ "insta",
+ "lazy_static",
+ "quote",
+ "regex",
+ "syn",
 ]
 
 [[package]]
