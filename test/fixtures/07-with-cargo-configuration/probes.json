@@ -1,0 +1,9 @@
+{
+  "probes": [
+    {
+      "path": "/api/handler",
+      "status": 200,
+      "mustContain": "x86_64-unknown-linux-gnu-gcc"
+    }
+  ]
+}

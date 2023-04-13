@@ -1,20 +1,11 @@
 import { join } from 'node:path';
 import ms from 'ms';
 import execa from 'execa';
-import { writeJSON } from 'fs-extra';
 import fetch from 'node-fetch';
 
-const vercelFileName = 'test.vercel.json';
-const pkgRootFile = `file:${process.cwd()}`;
 const readyRegex = /Ready!\s+Available at (?<url>https?:\/\/\w+:\d+)/;
 
 jest.setTimeout(ms('50m'));
-
-interface Config {
-  builds: {
-    use: string;
-  }[];
-}
 
 interface Probe {
   path: string;
@@ -28,19 +19,6 @@ interface ProbesConf {
 
 async function importJSON<T>(path: string): Promise<T> {
   return (await import(path)) as unknown as Promise<T>;
-}
-
-async function injectConf(confPath: string): Promise<Config> {
-  const conf = await importJSON<Config>(join(confPath, vercelFileName));
-
-  conf.builds[0].use = pkgRootFile;
-
-  await writeJSON(join(confPath, 'vercel.json'), conf, {
-    spaces: 2,
-    EOL: '\n',
-  });
-
-  return conf;
 }
 
 async function checkProbes(baseUrl: string, probes: Probe[]): Promise<void> {
@@ -120,5 +98,13 @@ describe('vercel-rust', () => {
   });
   it('deploy 05-with-similar-entrypaths', async () => {
     await expect(testFixture('05-with-similar-entrypaths')).resolves.toBe('ok');
+  });
+  it('deploy 06-with-toolchain-override', async () => {
+    await expect(testFixture('06-with-toolchain-override')).resolves.toBe('ok');
+  });
+  it('deploy 07-with-cargo-configuration', async () => {
+    await expect(testFixture('07-with-cargo-configuration')).resolves.toBe(
+      'ok',
+    );
   });
 });

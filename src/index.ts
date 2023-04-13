@@ -14,6 +14,7 @@ import {
   getCargoMetadata,
   findBinaryName,
   findCargoWorkspace,
+  findCargoBuildConfiguration,
 } from './lib/cargo';
 import {
   assertEnv,
@@ -50,7 +51,12 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
     env: rustEnv,
     cwd: path.dirname(entryPath),
   });
+
   const binaryName = findBinaryName(cargoWorkspace, entryPath);
+  const cargoBuildConfiguration = await findCargoBuildConfiguration(
+    cargoWorkspace,
+  );
+  const buildTarget = cargoBuildConfiguration?.build.target ?? '';
 
   await runUserScripts(workPath);
 
@@ -64,7 +70,7 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
         BUILDER_DEBUG ? ['--verbose'] : ['--quiet', '--release'],
       ),
       {
-        cwd: process.cwd(),
+        cwd: workPath,
         env: rustEnv,
         stdio: 'inherit',
       },
@@ -76,10 +82,12 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
 
   debug(`Building \`${binaryName}\` for \`${process.platform}\` completed`);
 
-  const { target_directory: targetDirectory } = await getCargoMetadata({
+  let { target_directory: targetDirectory } = await getCargoMetadata({
     cwd: process.cwd(),
     env: rustEnv,
   });
+
+  targetDirectory = path.join(targetDirectory, buildTarget);
 
   const bin = path.join(
     targetDirectory,

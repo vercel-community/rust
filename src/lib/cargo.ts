@@ -168,6 +168,35 @@ export async function findCargoWorkspace(
   };
 }
 
+interface CargoBuildConfiguration {
+  build: {
+    target?: string;
+    'target-dir'?: string;
+  };
+  target: Record<
+    string,
+    {
+      linker?: string;
+    }
+  >;
+}
+
+export async function findCargoBuildConfiguration(
+  workspace: CargoWorkspace,
+): Promise<CargoBuildConfiguration | null> {
+  const configPath = path.join(
+    path.dirname(workspace.root),
+    '.cargo/config.toml',
+  );
+
+  if (!fs.existsSync(configPath)) {
+    return null;
+  }
+
+  const config = await toml.parse.stream(fs.createReadStream(configPath));
+  return config as unknown as CargoBuildConfiguration;
+}
+
 export function findBinaryName(
   workspace: CargoWorkspace,
   entryPath: string,
