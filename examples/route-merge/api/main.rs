@@ -6,7 +6,7 @@ async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-#[bundled_api]
+#[bundled_api(path = "examples/route-merge")]
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
     dbg!(req.uri());
     Ok(Response::builder()

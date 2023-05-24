@@ -1,11 +1,10 @@
 use glob::glob;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::AttributeArgs;
-use vercel_runtime_router::{Route, Router};
-
 use std::collections::HashMap;
 use syn::parse_macro_input;
+use syn::AttributeArgs;
+use vercel_runtime_router::{Route, Router};
 
 #[proc_macro_attribute]
 pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
@@ -25,15 +24,17 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
         }
     });
 
-    let prefix = std::env::var("VERCEL_RUST_EXPERIMENTAL_MACRO_PREFIX").unwrap_or("".to_string());
-
-    let glob_pattern = match args_map.get("path") {
-        Some(val) => format!("{}/{}", prefix, val),
-        _ => {
-            println!("bundled_api: Missing `path` argument, defaulting to `../api/**/*.rs`");
-            format!("{}api/**/[!main]*.rs", &prefix)
-        }
-    };
+    let prefix = args_map
+        .get("path")
+        .map(|s| {
+            if s.ends_with('/') {
+                s.to_owned()
+            } else {
+                format!("{}/", s)
+            }
+        })
+        .unwrap_or("".to_string());
+    let glob_pattern = format!("{}api/**/[!main]*.rs", prefix);
 
     let input: syn::ItemFn = syn::parse(stream).unwrap();
 
@@ -117,8 +118,6 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
                 None => println!("No match"),
             }
 
-            // TODO
-            // println!("Hijacked main");
             #(#stmts)*
         }
     }

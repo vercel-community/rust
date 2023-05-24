@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
 import {
   FileFsRef,
   debug,
@@ -41,9 +42,6 @@ async function buildHandler(
 
   const HOME = assertEnv('HOME');
   const PATH = assertEnv('PATH');
-
-  const VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE =
-    process.env.VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE === 'true';
 
   const rustEnv: RustEnv = {
     PATH: `${path.join(HOME, '.cargo/bin')}:${PATH}`,
@@ -109,8 +107,8 @@ async function buildHandler(
   });
   lambda.zipBuffer = await lambda.createZip();
 
-  if (VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE) {
-    debug(`\`VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE\` enabled`);
+  if (isBundledRoute()) {
+    debug(`\`route-bundling\` detected - generating single entrypoint`);
     const handlerFiles = await glob('api/**/*.rs', workPath);
     const routes = generateRoutes(Object.keys(handlerFiles));
 
@@ -126,6 +124,15 @@ async function buildHandler(
   return {
     output: {}, // lambda,
   };
+}
+
+function isBundledRoute(): boolean {
+  if (existsSync('api/main.rs')) {
+    const content = readFileSync('api/main.rs', 'utf8');
+    return content.includes('bundled_api]') || content.includes('bundled_api(');
+  }
+
+  return false;
 }
 
 // Reference -  https://github.com/vercel/vercel/blob/main/DEVELOPING_A_RUNTIME.md#runtime-developer-reference
@@ -153,10 +160,7 @@ const runtime: Runtime = {
   shouldServe: async (options): Promise<boolean> => {
     debug(`Requested ${options.requestPath} for ${options.entrypoint}`);
 
-    const VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE =
-      process.env.VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE === 'true';
-
-    if (VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE) {
+    if (isBundledRoute()) {
       return Promise.resolve(options.entrypoint === 'api/main');
     }
 

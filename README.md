@@ -148,20 +148,9 @@ For more information, please see [this issue](https://github.com/mike-engel/verc
 
 ### Experimental Route Merge
 
-This feature allows you to bundle all of your routes into _a single_ deployed Vercel function. Besides optimizing for cold starts, this has the additional benefit of you only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
-
-Enable this feature by setting the following environment variable in your Vercel project.
-
-```shell
-VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE=true
-```
-
-In case you are using workspaces (like `examples/route-merge` in this repository), an additional macro prefix has to be provided as an environment variable both locally and in your Vercel project.
-
-```shell
-# Example for `vercel dev`
-VERCEL_RUST_EXPERIMENTAL_MACRO_PREFIX=examples/route-merge/ VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE=true vc dev
-```
+This feature allows you to bundle all of your routes into _a single_ deployed Vercel function.
+This serves to optimize cold starts, as lambda functions are reused as much as possible.
+In addition, this has the additional benefit of only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
 
 Create a `api/main.rs`.
 
@@ -174,9 +163,13 @@ async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-// Proc macro which injects a router for files matching the glob `api/**/[!index]*.rs`.
+// bundled_api is a proc macro which injects a router for all files in your `api` directory.
+// If you are using cargo workspaces (like `examples/route-merge` in this repository),
+// then an additional `path` argument must be passed to the macro. e.g.
+// #[bundled_api( path = "examples/route-merge" )]
 #[bundled_api]
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
+    // You can set a fallback value here.
     Ok(Response::builder()
         .status(StatusCode::NOT_FOUND)
         .header("Content-Type", "application/json")
