@@ -31,22 +31,31 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
     }
 
     pub async fn handler(&self, req: Request) -> Result<Response<Body>, Error> {
-        let parsed_url = Url::parse(&req.uri().to_string()).unwrap();
-        let hash_query: HashMap<String, String> = parsed_url.query_pairs().into_owned().collect();
-        let secret = hash_query.get("secret").map(|x| &**x);
+        let token_value = std::env::var("CRON_SECRET")?;
+        let headers = req.headers();
 
-        // https://vercel.com/docs/cron-jobs#how-to-secure-cron-jobs
-        if secret != Some("geheim") {
-            return Ok(Response::builder()
-                .status(StatusCode::NOT_FOUND)
-                .body(().into())?);
+        match headers.get("authorization") {
+            None => {
+                return Ok(Response::builder()
+                    .status(StatusCode::NOT_FOUND)
+                    .body(().into())?);
+            }
+            Some(authorization_header) => {
+                let authorization_string = authorization_header.to_str().unwrap();
+
+                if authorization_string != format!("Bearer {}", token_value) {
+                    return Ok(Response::builder()
+                        .status(StatusCode::NOT_FOUND)
+                        .body(().into())?);
+                }
+
+                let message = SlackMessage {};
+
+                self.post_message(&message, "#general").await?;
+
+                Ok(Response::builder().status(StatusCode::OK).body(().into())?)
+            }
         }
-
-        let message = SlackMessage {};
-
-        self.post_message(&message, "#general").await?;
-
-        Ok(Response::builder().status(StatusCode::OK).body(().into())?)
     }
 }
 
