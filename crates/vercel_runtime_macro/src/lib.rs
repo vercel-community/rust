@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use syn::parse_macro_input;
 
 #[proc_macro_attribute]
-pub fn include_api(args: TokenStream, stream: TokenStream) -> TokenStream {
+pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
     let args = parse_macro_input!(args as AttributeArgs);
     let mut args_map: HashMap<String, String> = HashMap::new();
 
@@ -30,8 +30,8 @@ pub fn include_api(args: TokenStream, stream: TokenStream) -> TokenStream {
     let glob_pattern = match args_map.get("path") {
         Some(val) => format!("{}/{}", prefix, val),
         _ => {
-            println!("include_api: Missing `path` argument, defaulting to `../api/**/*.rs`");
-            format!("{}api/**/[!index]*.rs", &prefix)
+            println!("bundled_api: Missing `path` argument, defaulting to `../api/**/*.rs`");
+            format!("{}api/**/[!main]*.rs", &prefix)
         }
     };
 
@@ -66,7 +66,7 @@ pub fn include_api(args: TokenStream, stream: TokenStream) -> TokenStream {
         } = r;
 
         // TODO improve import resolution
-        let module_file = format!("../../{}", module_file);
+        let module_file = format!("../{}", module_file);
 
         quote! {
             #[path = #module_file]

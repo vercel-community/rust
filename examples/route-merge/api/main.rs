@@ -1,13 +1,14 @@
 use serde_json::json;
-use vercel_runtime::{include_api, run, Body, Error, Request, Response, StatusCode};
+use vercel_runtime::{bundled_api, run, Body, Error, Request, Response, StatusCode};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-#[include_api]
+#[bundled_api]
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
+    dbg!(req.uri());
     Ok(Response::builder()
         .status(StatusCode::NOT_FOUND)
         .header("Content-Type", "application/json")

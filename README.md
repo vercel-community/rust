@@ -163,11 +163,11 @@ In case you are using workspaces (like `examples/route-merge` in this repository
 VERCEL_RUST_EXPERIMENTAL_MACRO_PREFIX=examples/route-merge/ VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE=true vc dev
 ```
 
-Create a `api/vercel/index.rs`.
+Create a `api/main.rs`.
 
 ```rust
 use serde_json::json;
-use vercel_runtime::{include_api, run, Body, Error, Request, Response, StatusCode};
+use vercel_runtime::{bundled_api, run, Body, Error, Request, Response, StatusCode};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -175,7 +175,7 @@ async fn main() -> Result<(), Error> {
 }
 
 // Proc macro which injects a router for files matching the glob `api/**/[!index]*.rs`.
-#[include_api]
+#[bundled_api]
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
     Ok(Response::builder()
         .status(StatusCode::NOT_FOUND)
@@ -224,7 +224,6 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
         .body(Body::Text("Route is /api/foo".into()))?)
 }
 ```
-
 
 ## Contributing
 

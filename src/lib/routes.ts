@@ -64,7 +64,7 @@ export function generateRoutes(files: string[]): Route[] {
 
     return {
       src: `/${result.src.join('/')}`,
-      dest: `/api/vercel/index${queryString}`,
+      dest: `/api/main${queryString}`,
       depth: segments.length,
       catchType: result.catchType,
     };

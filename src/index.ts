@@ -1,11 +1,12 @@
 import path from 'node:path';
-import type { BuildOptions, BuildResultV3 } from '@vercel/build-utils';
 import {
   FileFsRef,
   debug,
   download,
   glob,
-  createLambda,
+  Lambda,
+  type BuildOptions,
+  type BuildResultV2Typical,
 } from '@vercel/build-utils';
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
@@ -26,7 +27,9 @@ import { generateRoutes } from './lib/routes';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
-async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
+async function buildHandler(
+  options: BuildOptions,
+): Promise<BuildResultV2Typical> {
   const BUILDER_DEBUG = Boolean(process.env.VERCEL_BUILDER_DEBUG ?? false);
   const { files, entrypoint, workPath, config, meta } = options;
 
@@ -96,7 +99,7 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   );
 
   const bootstrap = getExecutableName('bootstrap');
-  const lambda = await createLambda({
+  const lambda = new Lambda({
     files: {
       ...extraFiles,
       [bootstrap]: new FileFsRef({ mode: 0o755, fsPath: bin }),
@@ -104,26 +107,30 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
     handler: bootstrap,
     runtime: 'provided',
   });
+  lambda.zipBuffer = await lambda.createZip();
 
   if (VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE) {
     debug(`\`VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE\` enabled`);
     const handlerFiles = await glob('api/**/*.rs', workPath);
     const routes = generateRoutes(Object.keys(handlerFiles));
 
-    return {
-      output: lambda,
+    const x = {
+      output: {
+        'api/main': lambda,
+      },
       routes,
     };
+    return x;
   }
 
   return {
-    output: lambda,
+    output: {}, // lambda,
   };
 }
 
 // Reference -  https://github.com/vercel/vercel/blob/main/DEVELOPING_A_RUNTIME.md#runtime-developer-reference
 const runtime: Runtime = {
-  version: 3,
+  version: 2,
   build: buildHandler,
   prepareCache: async ({ workPath }) => {
     debug(`Caching \`${workPath}\``);
@@ -150,7 +157,7 @@ const runtime: Runtime = {
       process.env.VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE === 'true';
 
     if (VERCEL_RUST_EXPERIMENTAL_ROUTE_MERGE) {
-      return Promise.resolve(options.entrypoint === 'api/vercel/index');
+      return Promise.resolve(options.entrypoint === 'api/main');
     }
 
     return Promise.resolve(options.requestPath === options.entrypoint);
