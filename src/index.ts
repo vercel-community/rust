@@ -1,3 +1,4 @@
+import { env } from 'node:process';
 import path from 'node:path';
 import type { BuildOptions, BuildResultV3 } from '@vercel/build-utils';
 import {
@@ -35,13 +36,14 @@ async function buildHandler(options: BuildOptions): Promise<BuildResultV3> {
   const downloadedFiles = await download(files, workPath, meta);
   const entryPath = downloadedFiles[entrypoint].fsPath;
 
-  const HOME = assertEnv('HOME');
+  const HOME = assertEnv(env.HOME);
   const PATH = assertEnv('PATH');
 
   const rustEnv: RustEnv = {
-    PATH: `${path.join(HOME, '.cargo/bin')}:${PATH}`,
-    RUSTFLAGS: [process.env.RUSTFLAGS].filter(Boolean).join(' '),
+  PATH: `${path.join(HOME, '.cargo/bin')}:${env.PATH}`,
+  RUSTFLAGS: [env.RUSTFLAGS].filter(Boolean).join(' '),
   };
+
 
   const cargoWorkspace = await findCargoWorkspace({
     env: rustEnv,
