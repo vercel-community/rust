@@ -39,7 +39,7 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
     let input: syn::ItemFn = syn::parse(stream).unwrap();
 
     let raw_routes = glob(&glob_pattern)
-        .expect("Failed to read glob pattern")
+        .expect("a valid glob pattern")
         .filter_map(|e| e.ok())
         .map(|raw_path| raw_path.to_str().unwrap().to_owned())
         .collect::<Vec<_>>();
@@ -66,9 +66,7 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
             ..
         } = r;
 
-        // TODO improve import resolution
         let module_file = format!("../{}", module_file);
-
         quote! {
             #[path = #module_file]
             mod #module_name;
