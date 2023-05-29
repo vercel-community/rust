@@ -24,7 +24,7 @@ import {
   gatherExtraFiles,
   runUserScripts,
 } from './lib/utils';
-import { generateRoutes } from './lib/routes';
+import { generateRoutes, parseRoute } from './lib/routes';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
@@ -108,21 +108,28 @@ async function buildHandler(
   lambda.zipBuffer = await lambda.createZip();
 
   if (isBundledRoute()) {
-    debug(`\`route-bundling\` detected - generating single entrypoint`);
+    debug(
+      `experimental \`route-bundling\` detected - generating single entrypoint`,
+    );
     const handlerFiles = await glob('api/**/*.rs', workPath);
     const routes = generateRoutes(Object.keys(handlerFiles));
 
-    const x = {
-      output: {
-        'api/main': lambda,
-      },
-      routes,
+    return {
+      output: routes.reduce<Record<string, Lambda>>((acc, route) => {
+        acc[route.path] = lambda;
+        return acc;
+      }, {}),
+      routes: routes.map(({ src, dest }) => ({ src, dest })),
     };
-    return x;
   }
 
+  debug(`generating lambda for \`${entrypoint}\``);
+  const route = parseRoute(entrypoint);
   return {
-    output: {}, // lambda,
+    output: {
+      [route.path]: lambda,
+    },
+    routes: [{ src: route.src, dest: route.dest }],
   };
 }
 

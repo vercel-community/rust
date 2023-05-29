@@ -10,64 +10,77 @@ const CatchPriority = {
 interface Route {
   src: string;
   dest: string;
+  path: string;
+}
+
+interface ParsedRoute {
+  src: string;
+  dest: string;
+  path: string;
+  depth: number;
+  catchType: (typeof CatchPriority)[keyof typeof CatchPriority] | null;
+}
+
+export function parseRoute(filepath: string): ParsedRoute {
+  const segments = filepath.split('/');
+  const result = segments.reduce<{
+    catchType: null | number;
+    src: string[];
+    searchParams: URLSearchParams;
+  }>(
+    (acc, segment) => {
+      // Catch all route
+      if (segment.startsWith('[...') && segment.endsWith(']')) {
+        acc.catchType = CatchPriority.CatchAll;
+        acc.src.push('(\\S+)');
+        return acc;
+      }
+
+      // Optional catch all route
+      if (segment.startsWith('[[...') && segment.endsWith(']]')) {
+        acc.catchType = CatchPriority.OptionalCatchAll;
+        acc.src.push('(/\\S+)?');
+        return acc;
+      }
+
+      // Dynamic route
+      if (segment.startsWith('[') && segment.endsWith(']')) {
+        const parameterName = segment.replace('[', '').replace(']', '');
+        acc.catchType = CatchPriority.Dynamic;
+        acc.src.push(`(?<${parameterName}>[^/]+)`);
+        acc.searchParams.set(parameterName, `$${parameterName}`);
+        return acc;
+      }
+
+      // Static route
+      acc.catchType = CatchPriority.Static;
+      acc.src.push(segment);
+
+      return acc;
+    },
+    {
+      catchType: null,
+      src: [],
+      searchParams: new URLSearchParams(),
+    },
+  );
+
+  const searchParams = decodeURIComponent(result.searchParams.toString());
+  const queryString = searchParams !== '' ? `?${searchParams}` : '';
+
+  return {
+    src: `/${result.src.join('/')}`,
+    dest: `${filepath}${queryString}`,
+    path: filepath,
+    depth: segments.length,
+    catchType: result.catchType,
+  };
 }
 
 export function generateRoutes(files: string[]): Route[] {
   const routes = files.map((key) => {
     const route = key.endsWith('.rs') ? key.slice(0, -3) : key;
-    const segments = route.split('/');
-
-    const result = segments.reduce<{
-      catchType: null | number;
-      src: string[];
-      searchParams: URLSearchParams;
-    }>(
-      (acc, segment) => {
-        // Catch all route
-        if (segment.startsWith('[...') && segment.endsWith(']')) {
-          acc.catchType = CatchPriority.CatchAll;
-          acc.src.push('(\\S+)');
-          return acc;
-        }
-
-        // Optional catch all route
-        if (segment.startsWith('[[...') && segment.endsWith(']]')) {
-          acc.catchType = CatchPriority.OptionalCatchAll;
-          acc.src.push('(/\\S+)?');
-          return acc;
-        }
-
-        // Dynamic route
-        if (segment.startsWith('[') && segment.endsWith(']')) {
-          const parameterName = segment.replace('[', '').replace(']', '');
-          acc.catchType = CatchPriority.Dynamic;
-          acc.src.push(`(?<${parameterName}>[^/]+)`);
-          acc.searchParams.set(parameterName, `$${parameterName}`);
-          return acc;
-        }
-
-        // Static route
-        acc.catchType = CatchPriority.Static;
-        acc.src.push(segment);
-
-        return acc;
-      },
-      {
-        catchType: null,
-        src: [],
-        searchParams: new URLSearchParams(),
-      },
-    );
-
-    const searchParams = decodeURIComponent(result.searchParams.toString());
-    const queryString = searchParams !== '' ? `?${searchParams}` : '';
-
-    return {
-      src: `/${result.src.join('/')}`,
-      dest: `/api/main${queryString}`,
-      depth: segments.length,
-      catchType: result.catchType,
-    };
+    return parseRoute(route);
   });
 
   const orderedRoutes = orderBy(
@@ -79,5 +92,6 @@ export function generateRoutes(files: string[]): Route[] {
   return orderedRoutes.map<Route>((r) => ({
     src: r.src,
     dest: r.dest,
+    path: r.path,
   }));
 }

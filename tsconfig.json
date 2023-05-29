@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
-    "types": ["node", "jest"],
-    "target": "es2016",
-    "module": "commonjs",
-    "rootDir": "./src",
-    "moduleResolution": "node",
-    "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "skipLibCheck": true,
     "strict": true,
-    "skipLibCheck": true
+    "target": "es2016",
+    "types": ["node", "jest"]
   },
-
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "examples"]
 }
