@@ -146,13 +146,15 @@ Unfortunately, the AWS Lambda Runtime for Rust relies (tangentially) on `proc_ma
 
 For more information, please see [this issue](https://github.com/mike-engel/vercel-rust/issues/2).
 
-### Experimental Route Merge
+### Experimental Function bundling
 
 This feature allows you to bundle all of your routes into _a single_ deployed Vercel function.
 This serves to optimize cold starts, as lambda functions are reused as much as possible.
 In addition, this has the additional benefit of only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
 
-Create a `api/main.rs`.
+To enable this behaviour, take the following steps:
+
+1. Create a `api/main.rs`.
 
 ```rust
 use serde_json::json;
@@ -169,42 +171,31 @@ async fn main() -> Result<(), Error> {
 // #[bundled_api( path = "examples/route-merge" )]
 #[bundled_api]
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
-    // You can set a fallback value here.
-    Ok(Response::builder()
-        .status(StatusCode::NOT_FOUND)
-        .header("Content-Type", "application/json")
-        .body(
-            json!({
-              "code": "not_found",
-              "message": "not_found"
-            })
-            .to_string()
-            .into(),
-        )?)
+    // Any code you write here will be executed as a one-off on cold starts.
 }
 ```
 
-Change your `vercel.json` to only specify your `api/vercel/index.rs` file.
+2. Change your `vercel.json` to only specify your `api/main.rs` file.
 
 ```json
 {
   "functions": {
-    "api/vercel/index.rs": {
+    "api/main.rs": {
       "runtime": "vercel-rust@4.0.0-canary.4"
     }
   }
 }
 ```
 
-Change your `Cargo.toml` to only specify the binary for `index.rs`.
+3. Change your `Cargo.toml` to specify the binary for `main.rs`.
 
 ```toml
 [[bin]]
-name = "index"
-path = "api/vercel/index.rs"
+name = "main"
+path = "api/main.rs"
 ```
 
-Every route in `api/**` must contain a `handler` function for the router to work.
+4. Add a `handler` function to each route in `api/**`.
 
 ```rust
 // Example api/foo.rs
