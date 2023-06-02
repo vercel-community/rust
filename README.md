@@ -18,7 +18,7 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 
 ## Legacy Runtime
 
-The below documentation is for the `vercel_runtime` crate (in beta). If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+The below documentation is for the `vercel_runtime` crate. If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
 
 ## Getting Started
 
