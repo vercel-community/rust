@@ -106,7 +106,10 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
                 Some(route) => {
                     match route.module_file.as_str() {
                         #(#matches)*
-                        _ => unreachable!()
+                        f => {
+                            println!("reached unreachable endpoint: request - {:?} - module_file - {:?} - route - {:?}", f, request_uri, route);
+                            unreachable!()
+                        }
                     }
                 }
                 None => unreachable!(),
