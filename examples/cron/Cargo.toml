@@ -14,8 +14,8 @@ serde_derive = "1.0.9"
 rand = "0.8.5"
 slack-morphism = { version = "1.2.2", features = ["hyper"] }
 url = "2.3.1"
-# vercel_runtime = { version = "0.3.4", path = "../../crates/vercel_runtime" }
-vercel_runtime = "0.3.4"
+# vercel_runtime = { version = "1.0.0", path = "../../crates/vercel_runtime" }
+vercel_runtime = "1.0.0"
 
 [[bin]]
 name = "cron"
