@@ -24,7 +24,7 @@ import {
   gatherExtraFiles,
   runUserScripts,
 } from './lib/utils';
-import { generateRoutes, parseRoute } from './lib/routes';
+import { CatchPriority, generateRoutes, parseRoute } from './lib/routes';
 
 type RustEnv = Record<'RUSTFLAGS' | 'PATH', string>;
 
@@ -129,7 +129,10 @@ async function buildHandler(
     output: {
       [route.path]: lambda,
     },
-    routes: [{ src: route.src, dest: route.dest }],
+    routes:
+      route.catchType === CatchPriority.Static
+        ? undefined
+        : [{ src: route.path, dest: route.dest }],
   };
 }
 

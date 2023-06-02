@@ -1,6 +1,6 @@
 import { orderBy } from 'lodash';
 
-const CatchPriority = {
+export const CatchPriority = {
   Static: 0,
   Dynamic: 1,
   CatchAll: 2,
@@ -22,7 +22,8 @@ interface ParsedRoute {
 }
 
 export function parseRoute(filepath: string): ParsedRoute {
-  const segments = filepath.split('/');
+  const route = filepath.endsWith('.rs') ? filepath.slice(0, -3) : filepath;
+  const segments = route.split('/');
   const result = segments.reduce<{
     catchType: null | number;
     src: string[];
@@ -52,7 +53,7 @@ export function parseRoute(filepath: string): ParsedRoute {
         return acc;
       }
 
-      // Static route
+      // Static routes do not need adding to `routes`.
       acc.catchType = CatchPriority.Static;
       acc.src.push(segment);
 
@@ -70,17 +71,16 @@ export function parseRoute(filepath: string): ParsedRoute {
 
   return {
     src: `/${result.src.join('/')}`,
-    dest: `${filepath}${queryString}`,
-    path: filepath,
+    dest: `${route}${queryString}`,
+    path: route,
     depth: segments.length,
     catchType: result.catchType,
   };
 }
 
 export function generateRoutes(files: string[]): Route[] {
-  const routes = files.map((key) => {
-    const route = key.endsWith('.rs') ? key.slice(0, -3) : key;
-    return parseRoute(route);
+  const routes = files.map((file) => {
+    return parseRoute(file);
   });
 
   const orderedRoutes = orderBy(
@@ -89,9 +89,11 @@ export function generateRoutes(files: string[]): Route[] {
     ['asc', 'desc'],
   );
 
-  return orderedRoutes.map<Route>((r) => ({
-    src: r.src,
-    dest: r.dest,
-    path: r.path,
-  }));
+  return orderedRoutes
+    .filter((r) => r.catchType !== CatchPriority.Static)
+    .map<Route>((r) => ({
+      src: r.src,
+      dest: r.dest,
+      path: r.path,
+    }));
 }
