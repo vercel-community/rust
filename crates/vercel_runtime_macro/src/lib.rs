@@ -87,12 +87,8 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
     });
 
     let syn::ItemFn {
-        attrs,
-        vis,
-        sig,
-        block,
+        attrs, vis, sig, ..
     } = input;
-    let stmts = &block.stmts;
 
     quote! {
         use vercel_runtime::{Route, Router};
@@ -113,10 +109,8 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
                         _ => unreachable!()
                     }
                 }
-                None => println!("No match"),
+                None => unreachable!(),
             }
-
-            #(#stmts)*
         }
     }
     .into()
