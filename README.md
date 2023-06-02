@@ -32,7 +32,7 @@ The below documentation is for the `vercel_runtime` crate (in beta). If you are 
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0-beta.4"
+      "runtime": "vercel-rust@4.0.0"
     }
   }
 }
@@ -79,7 +79,7 @@ edition = "2021"
 tokio = { version = "1", features = ["macros"] }
 serde_json = { version = "1", features = ["raw_value"] }
 # Documentation: https://docs.rs/vercel_runtime/latest/vercel_runtime
-vercel_runtime = { version = "0.2.1" }
+vercel_runtime = { version = "1.0.0" }
 
 # You can specify a library for shared logic here (optional)
 # [lib]
@@ -145,6 +145,66 @@ vercel build && vercel deploy --prebuilt
 Unfortunately, the AWS Lambda Runtime for Rust relies (tangentially) on `proc_macro`, which won't compile on musl targets. Without `musl`, all linking must be dynamic. If you have a crate that relies on system libraries like `postgres` or `mysql`, you can include those library files with the `includeFiles` config option and set the proper environment variables, config, etc. that you need to get the library to compile.
 
 For more information, please see [this issue](https://github.com/mike-engel/vercel-rust/issues/2).
+
+### Experimental API Bundling
+
+This feature allows you to bundle all of your routes into _a single_ deployed Vercel function.
+This serves to optimize cold starts, as lambda functions are reused as much as possible.
+In addition, this has the benefit of only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
+
+To enable this behaviour, take the following steps:
+
+1. Create a `api/main.rs`.
+
+```rust
+use vercel_runtime::{bundled_api, run, Body, Error, Request, Response};
+
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    run(handler).await
+}
+
+// bundled_api is a proc macro which injects a router for all `*.rs` files in your `api` directory.
+// If you are using cargo workspaces (like `examples/route-merge` in this repository),
+// then an additional `path` argument must be passed to the macro. E.g.
+// #[bundled_api( path = "examples/route-merge" )]
+#[bundled_api]
+pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
+```
+
+2. Change your `vercel.json` to only specify your `api/main.rs` file.
+
+```json
+{
+  "functions": {
+    "api/main.rs": {
+      "runtime": "vercel-rust@4.0.0"
+    }
+  }
+}
+```
+
+3. Change your `Cargo.toml` to specify the binary for `main.rs`.
+
+```toml
+[[bin]]
+name = "main"
+path = "api/main.rs"
+```
+
+4. Add a `handler` function to each route in `api/**`.
+
+```rust
+// Example api/foo.rs
+use vercel_runtime::{Body, Error, Request, Response, StatusCode};
+
+pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
+    Ok(Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .body(Body::Text("Route is /api/foo".into()))?)
+}
+```
 
 ## Contributing
 

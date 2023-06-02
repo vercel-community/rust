@@ -1,0 +1,24 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/deep/nested/[id]/comments/[cid]\")"
+---
+Some(
+    Route {
+        kind: Dynamic,
+        module_file: "api/deep/nested/[id]/comments/[cid].rs",
+        module_name: Ident(
+            api_deep_nested__id__comments__cid_,
+        ),
+        path: "api/deep/nested/[id]/comments/[cid]",
+        segments: Some(
+            [
+                "api",
+                "deep",
+                "nested",
+                "[id]",
+                "comments",
+                "[cid]",
+            ],
+        ),
+    },
+)

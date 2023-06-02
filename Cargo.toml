@@ -1,10 +1,13 @@
 [workspace]
 
 members = [
-    "vercel_runtime",
-    "examples/simple",
+    "crates/vercel_runtime",
+    "crates/vercel_runtime_macro",
+    "crates/vercel_runtime_router",
     "examples/cron",
     "examples/nextjs",
+    "examples/simple",
+    "examples/route-merge",
 ]
 
 exclude = [

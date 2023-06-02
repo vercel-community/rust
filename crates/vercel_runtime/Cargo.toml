@@ -1,6 +1,6 @@
 [package]
 name = "vercel_runtime"
-version = "0.2.1"
+version = "1.0.0"
 edition = "2021"
 authors = ["Vercel <support@vercel.com>"]
 description = "Vercel Rust Function Runtime"
@@ -31,3 +31,7 @@ tower-service = "0.3.2"
 base64 = "0.21.0"
 bytes = "1.4.0"
 async-trait = "0.1.66"
+# vercel_runtime_router = { version = "1.0.0", path = "../vercel_runtime_router" }
+# vercel_runtime_macro = { version = "1.0.0", path = "../vercel_runtime_macro" }
+vercel_runtime_router = "1.0.0"
+vercel_runtime_macro = "1.0.0"

@@ -20,7 +20,7 @@ interface CargoPackage {
   license: string;
   license_file: string;
   description: string;
-  source: any;
+  source: unknown;
   dependencies: CargoDependency[];
   targets: CargoTarget[];
   features: CargoFeatures;
@@ -29,7 +29,7 @@ interface CargoPackage {
   publish: string[];
   authors: string[];
   categories: string[];
-  default_run: any;
+  default_run: unknown;
   rust_version: string;
   keywords: string[];
   readme: string;
@@ -37,21 +37,21 @@ interface CargoPackage {
   homepage: string;
   documentation: string;
   edition: string;
-  links: any;
+  links: unknown;
 }
 
 interface CargoDependency {
   name: string;
   source: string;
   req: string;
-  kind: any;
-  rename: any;
+  kind: unknown;
+  rename: unknown;
   optional: boolean;
   uses_default_features: boolean;
-  features: any[];
+  features: unknown[];
   target: string;
   path: string;
-  registry: any;
+  registry: unknown;
 }
 
 interface CargoTarget {
@@ -68,8 +68,8 @@ interface CargoTarget {
 
 interface CargoFeatures {
   default: string[];
-  feat1: any[];
-  feat2: any[];
+  feat1: unknown[];
+  feat2: unknown[];
 }
 
 interface CargoDocsMetadata {
@@ -103,7 +103,7 @@ interface Dep {
 }
 
 interface DepKind {
-  kind: any;
+  kind: unknown;
   target: string;
 }
 
@@ -209,5 +209,6 @@ export function findBinaryName(
       return entry.name;
     }
   }
+
   return path.basename(entryPath, '.rs').replace('[', '_').replace(']', '_');
 }

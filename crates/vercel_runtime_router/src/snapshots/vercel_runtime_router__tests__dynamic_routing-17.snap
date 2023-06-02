@@ -1,0 +1,20 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/should/be/caught/by/root/catch/all\")"
+---
+Some(
+    Route {
+        kind: CatchAll,
+        module_file: "api/[...id].rs",
+        module_name: Ident(
+            api_____id_,
+        ),
+        path: "api/[...id]",
+        segments: Some(
+            [
+                "api",
+                "[...id]",
+            ],
+        ),
+    },
+)
