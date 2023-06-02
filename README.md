@@ -32,7 +32,7 @@ The below documentation is for the `vercel_runtime` crate (in beta). If you are 
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0-beta.4"
+      "runtime": "vercel-rust@4.0.0"
     }
   }
 }
@@ -79,7 +79,7 @@ edition = "2021"
 tokio = { version = "1", features = ["macros"] }
 serde_json = { version = "1", features = ["raw_value"] }
 # Documentation: https://docs.rs/vercel_runtime/latest/vercel_runtime
-vercel_runtime = { version = "0.2.1" }
+vercel_runtime = { version = "1.0.0" }
 
 # You can specify a library for shared logic here (optional)
 # [lib]
@@ -146,33 +146,30 @@ Unfortunately, the AWS Lambda Runtime for Rust relies (tangentially) on `proc_ma
 
 For more information, please see [this issue](https://github.com/mike-engel/vercel-rust/issues/2).
 
-### Experimental Function bundling
+### Experimental API Bundling
 
 This feature allows you to bundle all of your routes into _a single_ deployed Vercel function.
 This serves to optimize cold starts, as lambda functions are reused as much as possible.
-In addition, this has the additional benefit of only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
+In addition, this has the benefit of only needing to annotate a single `[[bin]]` in your `Cargo.toml`.
 
 To enable this behaviour, take the following steps:
 
 1. Create a `api/main.rs`.
 
 ```rust
-use serde_json::json;
-use vercel_runtime::{bundled_api, run, Body, Error, Request, Response, StatusCode};
+use vercel_runtime::{bundled_api, run, Body, Error, Request, Response};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-// bundled_api is a proc macro which injects a router for all files in your `api` directory.
+// bundled_api is a proc macro which injects a router for all `*.rs` files in your `api` directory.
 // If you are using cargo workspaces (like `examples/route-merge` in this repository),
-// then an additional `path` argument must be passed to the macro. e.g.
+// then an additional `path` argument must be passed to the macro. E.g.
 // #[bundled_api( path = "examples/route-merge" )]
 #[bundled_api]
-pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
-    // Any code you write here will be executed as a one-off on cold starts.
-}
+pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
 ```
 
 2. Change your `vercel.json` to only specify your `api/main.rs` file.
@@ -181,7 +178,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
 {
   "functions": {
     "api/main.rs": {
-      "runtime": "vercel-rust@4.0.0-canary.4"
+      "runtime": "vercel-rust@4.0.0"
     }
   }
 }
