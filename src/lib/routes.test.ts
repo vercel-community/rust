@@ -1,10 +1,23 @@
 import { generateRoutes } from './routes';
 
 describe('generateRoutes', () => {
-  it('should not generate static routes', () => {
+  it('should generate static routes', () => {
     const staticRoutes = ['api/foo.rs', 'api/bar/baz.rs'];
 
-    expect(generateRoutes(staticRoutes)).toEqual([]);
+    expect(generateRoutes(staticRoutes)).toMatchInlineSnapshot(`
+      [
+        {
+          "dest": "/api/bar/baz",
+          "path": "api/bar/baz",
+          "src": "/api/bar/baz",
+        },
+        {
+          "dest": "/api/foo",
+          "path": "api/foo",
+          "src": "/api/foo",
+        },
+      ]
+    `);
   });
 
   it('should generate dynamic routes', () => {
@@ -16,12 +29,12 @@ describe('generateRoutes', () => {
     expect(generateRoutes(dynamicRoutes)).toMatchInlineSnapshot(`
       [
         {
-          "dest": "api/post/[id]/comments/[commentId]?id=$id&commentId=$commentId",
+          "dest": "/api/post/[id]/comments/[commentId]?id=$id&commentId=$commentId",
           "path": "api/post/[id]/comments/[commentId]",
           "src": "/api/post/(?<id>[^/]+)/comments/(?<commentId>[^/]+)",
         },
         {
-          "dest": "api/post/[id]?id=$id",
+          "dest": "/api/post/[id]?id=$id",
           "path": "api/post/[id]",
           "src": "/api/post/(?<id>[^/]+)",
         },
@@ -39,17 +52,17 @@ describe('generateRoutes', () => {
     expect(generateRoutes(catchAllRoutes)).toMatchInlineSnapshot(`
       [
         {
-          "dest": "api/all/[...all]",
+          "dest": "/api/all/[...all]",
           "path": "api/all/[...all]",
           "src": "/api/all/(\\S+)",
         },
         {
-          "dest": "api/optional/[[...id]]",
+          "dest": "/api/optional/[[...id]]",
           "path": "api/optional/[[...id]]",
           "src": "/api/optional/(/\\S+)?",
         },
         {
-          "dest": "api/[...rootAll]",
+          "dest": "/api/[...rootAll]",
           "path": "api/[...rootAll]",
           "src": "/api/(\\S+)",
         },
@@ -69,27 +82,27 @@ describe('generateRoutes', () => {
     expect(generateRoutes(allRoutes)).toMatchInlineSnapshot(`
       [
         {
-          "dest": "api/post/[id]/comments/[commentId]?id=$id&commentId=$commentId",
+          "dest": "/api/post/[id]/comments/[commentId]?id=$id&commentId=$commentId",
           "path": "api/post/[id]/comments/[commentId]",
           "src": "/api/post/(?<id>[^/]+)/comments/(?<commentId>[^/]+)",
         },
         {
-          "dest": "api/post/[id]?id=$id",
+          "dest": "/api/post/[id]?id=$id",
           "path": "api/post/[id]",
           "src": "/api/post/(?<id>[^/]+)",
         },
         {
-          "dest": "api/all/[...all]",
+          "dest": "/api/all/[...all]",
           "path": "api/all/[...all]",
           "src": "/api/all/(\\S+)",
         },
         {
-          "dest": "api/optional/[[...id]]",
+          "dest": "/api/optional/[[...id]]",
           "path": "api/optional/[[...id]]",
           "src": "/api/optional/(/\\S+)?",
         },
         {
-          "dest": "api/[...rootAll]",
+          "dest": "/api/[...rootAll]",
           "path": "api/[...rootAll]",
           "src": "/api/(\\S+)",
         },
