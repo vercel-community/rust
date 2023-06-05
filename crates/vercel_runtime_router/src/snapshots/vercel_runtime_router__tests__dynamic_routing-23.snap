@@ -1,6 +1,6 @@
 ---
 source: crates/vercel_runtime_router/src/lib.rs
-expression: "router.call(\"api/root/catch/all/route\")"
+expression: "router.call(\"api/github/ecklf/rust-at-home/tags/v0.1.0\")"
 ---
 Some(
     Route {

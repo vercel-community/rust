@@ -52,7 +52,25 @@ impl Ord for Route {
                 RouteKind::Static => Ordering::Greater,
                 RouteKind::Dynamic => match self.segments {
                     Some(ref s) => match other.segments {
-                        Some(ref o) => o.len().cmp(&s.len()),
+                        Some(ref o) => {
+                            // If segments have equal length, sort by the position of the first dynamic segment
+                            // This has to be done so `api/[id]/static` is matched before `api/[id]/[dynamic]`
+                            if s.len() == o.len() {
+                                let s_pos = s
+                                    .iter()
+                                    .rev()
+                                    .position(|ss| ss.starts_with('[') && ss.ends_with(']'));
+
+                                let o_pos = o
+                                    .iter()
+                                    .rev()
+                                    .position(|os| os.starts_with('[') && os.ends_with(']'));
+
+                                return o_pos.cmp(&s_pos);
+                            }
+
+                            o.len().cmp(&s.len())
+                        }
                         None => Ordering::Greater,
                     },
                     None => Ordering::Equal,
@@ -256,6 +274,12 @@ mod tests {
             "api/deep/nested/[id]/comments/[cid].rs",
             "api/other/[ab]/[cd]/ef.rs",
             "api/foo/[d]/bar/baz/[f].rs",
+            "api/github/[owner]/[release]/baz/[f].rs",
+            "api/github/[owner]/[name]/releases/[release].rs",
+            "api/github/[owner]/[name]/releases/all.rs",
+            "api/github/[owner]/[name]/releases/latest.rs",
+            "api/github/[owner]/[name]/tags/[...all].rs",
+            "api/github/[owner]/[name]/tags/latest.rs",
         ]);
 
         // Root
@@ -281,6 +305,12 @@ mod tests {
         insta::assert_debug_snapshot!(router.call("api/should/be/caught/by/root/catch/all"));
         insta::assert_debug_snapshot!(router.call("api/other/[ab]/[cd]/ef"));
         insta::assert_debug_snapshot!(router.call("api/foo/[d]/bar/baz/[f]"));
+        // Dynamic Nested Static + Dynamic
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/releases/foo"));
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/releases/latest"));
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/releases/all"));
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/tags/v0.1.0"));
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/tags/latest"));
     }
 }
 
