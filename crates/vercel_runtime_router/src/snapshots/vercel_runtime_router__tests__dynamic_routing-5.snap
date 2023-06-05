@@ -6,9 +6,9 @@ Some(
     Route {
         kind: CatchAll,
         module_file: "api/[...id].rs",
-        module_name: Ident(
-            api_____id_,
-        ),
+        module_name: Ident {
+            sym: api_____id_,
+        },
         path: "api/[...id]",
         segments: Some(
             [
