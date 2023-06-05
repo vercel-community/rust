@@ -1,6 +1,6 @@
 import { orderBy } from 'lodash';
 
-export const CatchPriority = {
+const CatchPriority = {
   Static: 0,
   Dynamic: 1,
   CatchAll: 2,
@@ -71,7 +71,7 @@ export function parseRoute(filepath: string): ParsedRoute {
 
   return {
     src: `/${result.src.join('/')}`,
-    dest: `${route}${queryString}`,
+    dest: `/${route}${queryString}`,
     path: route,
     depth: segments.length,
     catchType: result.catchType,
@@ -89,11 +89,9 @@ export function generateRoutes(files: string[]): Route[] {
     ['asc', 'desc'],
   );
 
-  return orderedRoutes
-    .filter((r) => r.catchType !== CatchPriority.Static)
-    .map<Route>((r) => ({
-      src: r.src,
-      dest: r.dest,
-      path: r.path,
-    }));
+  return orderedRoutes.map<Route>((r) => ({
+    src: r.src,
+    dest: r.dest,
+    path: r.path,
+  }));
 }
