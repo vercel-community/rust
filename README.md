@@ -234,3 +234,11 @@ graph TD
     B --> |"handler_fn(req: Request) → Future&lt;Output = Result&lt;Response&lt;Body&gt;, Error&gt;&gt;"| C["Runtime calls handler_fn"]
     C --> |"Ok(r) => process_response(r)"| D["Response"]
 ```
+
+### Macro Crate
+
+The crate `vercel_runtime_macro` enables supporting our API bundling feature. This procedural macro matches all `**/*.rs` routes in your `api` folder, imports their respective handlers, and injects router logic to call the correct routes.
+
+### Router Crate
+
+The crate `vercel_runtime_router` contains routing logic that is injected for our API bundling feature.
