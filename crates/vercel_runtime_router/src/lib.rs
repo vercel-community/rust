@@ -278,6 +278,8 @@ mod tests {
             "api/github/[owner]/[name]/releases/[release].rs",
             "api/github/[owner]/[name]/releases/all.rs",
             "api/github/[owner]/[name]/releases/latest.rs",
+            "api/github/[owner]/[name]/tags/[...all].rs",
+            "api/github/[owner]/[name]/tags/latest.rs",
         ]);
 
         // Root
@@ -307,6 +309,8 @@ mod tests {
         insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/releases/foo"));
         insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/releases/latest"));
         insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/releases/all"));
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/tags/v0.1.0"));
+        insta::assert_debug_snapshot!(router.call("api/github/ecklf/rust-at-home/tags/latest"));
     }
 }
 

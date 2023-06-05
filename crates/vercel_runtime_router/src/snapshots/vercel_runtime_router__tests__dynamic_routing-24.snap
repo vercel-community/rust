@@ -1,0 +1,24 @@
+---
+source: crates/vercel_runtime_router/src/lib.rs
+expression: "router.call(\"api/github/ecklf/rust-at-home/tags/latest\")"
+---
+Some(
+    Route {
+        kind: Dynamic,
+        module_file: "api/github/[owner]/[name]/tags/latest.rs",
+        module_name: Ident {
+            sym: api_github__owner___name__tags_latest,
+        },
+        path: "api/github/[owner]/[name]/tags/latest",
+        segments: Some(
+            [
+                "api",
+                "github",
+                "[owner]",
+                "[name]",
+                "tags",
+                "latest",
+            ],
+        ),
+    },
+)
