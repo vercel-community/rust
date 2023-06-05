@@ -1,6 +1,4 @@
 use slack_morphism::{errors::SlackClientError, prelude::*};
-use std::collections::HashMap;
-use url::Url;
 use vercel_runtime::{run, Body, Error, Request, Response, StatusCode};
 
 #[derive(Debug, Clone)]
@@ -35,11 +33,9 @@ impl<T: SlackClientHttpConnector + Send + Sync> Lambda<'_, T> {
         let headers = req.headers();
 
         match headers.get("authorization") {
-            None => {
-                return Ok(Response::builder()
-                    .status(StatusCode::NOT_FOUND)
-                    .body(().into())?);
-            }
+            None => Ok(Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body(().into())?),
             Some(authorization_header) => {
                 let authorization_string = authorization_header.to_str().unwrap();
 

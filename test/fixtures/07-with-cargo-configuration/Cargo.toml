@@ -1,6 +1,6 @@
 [package]
 name = "integration_test"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   "Florentin Eckl <florentin.eckl@vercel.com>",
   "Doug Parsons <doug@vercel.com>",
