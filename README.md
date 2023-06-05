@@ -237,7 +237,7 @@ graph TD
 
 ### Macro Crate
 
-The crate `vercel_runtime_macro` enables supporting our API bundling feature. This procedural macro matches all `**/*.rs` routes in your `api` folder, imports their respective handlers, and injects router logic to call the correct routes.
+The crate `vercel_runtime_macro` enables supporting our API bundling feature. This procedural macro matches all `api/**/*.rs` routes, imports their respective handlers, and injects router logic to call the correct handlers during runtime.
 
 ### Router Crate
 
