@@ -2,6 +2,6 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['/crates/'],
-  modulePathIgnorePatterns: ['/crates/'],
+  testPathIgnorePatterns: ['/crates/', '/target/'],
+  modulePathIgnorePatterns: ['/crates/', '/target/'],
 };

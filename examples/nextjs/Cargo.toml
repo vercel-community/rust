@@ -13,8 +13,8 @@ serde_json = { version = "1.0.86", features = ["raw_value"] }
 serde_derive = "1.0.9"
 rand = "0.8.5"
 oorandom = "11.1.3"
-# vercel_runtime = { version = "1.0.0", path = "../../crates/vercel_runtime" }
-vercel_runtime = "1.0.0"
+# vercel_runtime = { version = "1.0.1", path = "../../crates/vercel_runtime" }
+vercel_runtime = "1.0.1"
 
 [[bin]]
 name = "rust"

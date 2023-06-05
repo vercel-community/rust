@@ -1,6 +1,6 @@
 [package]
 name = "vercel_runtime_router"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Vercel <support@vercel.com>"]
 description = "Vercel Rust Function Runtime Router"
