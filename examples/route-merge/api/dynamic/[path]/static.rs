@@ -13,10 +13,10 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
         .header("Content-Type", "application/json")
         .body(Body::Text(match query_parameter {
             Some(query_parameter) => format!(
-                "Route is /dynamic/[path] with query parameter `{}`",
+                "Route is /dynamic/[path]/static with query parameter `{}`",
                 query_parameter
             ),
-            None => "Route is /dynamic/[path], but query parameter for `path` seems to be missing"
+            None => "Route is /dynamic/[path]/static, but query parameter for `path` seems to be missing"
                 .to_string(),
         }))?)
 }
