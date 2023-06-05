@@ -2,6 +2,7 @@ use glob::glob;
 use proc_macro::TokenStream;
 use quote::quote;
 use std::collections::HashMap;
+use std::fs;
 use syn::parse_macro_input;
 use syn::AttributeArgs;
 use vercel_runtime_router::{Route, Router};
@@ -26,14 +27,28 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
 
     let prefix = args_map
         .get("path")
-        .map(|s| {
-            if s.ends_with('/') {
-                s.to_owned()
+        .map(|p| {
+            if p.ends_with('/') {
+                p.to_owned()
             } else {
-                format!("{}/", s)
+                format!("{}/", p)
+            }
+        })
+        .and_then(|p| {
+            if fs::metadata(format!("{}api/main.rs", p)).is_ok() {
+                Some(p)
+            } else {
+                // there is a `path` specified, but it doesn't appear to be in a cargo workspace,
+                // so default to acting as if it is not in a cargo workspace.
+                // This protects us from both
+                // - using `vercel` to deploy via build container, but only uploading part of a
+                // workspace
+                // - path being specified incorrectly
+                None
             }
         })
         .unwrap_or("".to_string());
+
     let glob_pattern = format!("{}api/**/[!main]*.rs", prefix);
 
     let input: syn::ItemFn = syn::parse(stream).unwrap();
