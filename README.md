@@ -32,7 +32,7 @@ The below documentation is for the `vercel_runtime` crate. If you are looking fo
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.0"
+      "runtime": "vercel-rust@4.0.1"
     }
   }
 }
@@ -178,7 +178,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
 {
   "functions": {
     "api/main.rs": {
-      "runtime": "vercel-rust@4.0.0"
+      "runtime": "vercel-rust@4.0.1"
     }
   }
 }

@@ -1,5 +1,38 @@
 # vercel-rust changelog
 
+## 4.0.1
+
+- Address routing issues with invalid dest [#102](https://github.com/vercel-community/rust/pull/102)
+
+## 4.0.0
+
+- First stable release for new Rust runtime crates
+- Includes support for experimental route merging.
+
+## 3.1.0
+
+- Support pre-configured binaries [#25](https://github.com/mike-engel/vercel-rust/pull/25)
+
+## 3.0.0
+
+- Renamed to `vercel-rust` [#34](https://github.com/mike-engel/vercel-rust/pull/34)
+
+## 2.0.3
+
+- Fix issue with last PR where a variable wasn't defined
+
+## 2.0.2
+
+- Restore `cargo.toml` when the build fails during dev #29
+
+## 2.0.1
+
+Update dependencies
+
+## 2.0.0
+
+Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](https://github.com/mike-engel/vercel-rust/pull/19)!
+
 ## Unreleased
 
 ## 4.0.0.beta.4
@@ -27,34 +60,6 @@
 - Reworked tests
 - Added examples
 
-## 3.1.0
-
-- Support pre-configured binaries [#25](https://github.com/mike-engel/vercel-rust/pull/25)
-
-## 3.0.0
-
-- Renamed to `vercel-rust` [#34](https://github.com/mike-engel/vercel-rust/pull/34)
-
-## 2.0.3
-
-### Bug fixes
-
-- Fix issue with last PR where a variable wasn't defined
-
-## 2.0.2
-
-### Bug fixes
-
-- Restore `cargo.toml` when the build fails during dev #29
-
-## 2.0.1
-
-Update dependencies
-
-## 2.0.0
-
-Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](https://github.com/mike-engel/vercel-rust/pull/19)!
-
 ### Breaking changes
 
 - OpenSSL is no longer installed by default
@@ -67,13 +72,9 @@ Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](h
 
 ## 1.0.1
 
-### New features
-
 - Support for version 3 of Runtimes [#14](https://github.com/mike-engel/vercel-rust/pull/14)
 
 ## 0.2.6
-
-### New features
 
 - Rust will be installed through a now lifecycle hook in `package.json` rather than by the builder [#5](https://github.com/mike-engel/vercel-rust/pull/5)
 
