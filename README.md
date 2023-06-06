@@ -16,17 +16,13 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 
 </div>
 
-## Legacy Runtime
-
-The below documentation is for the `vercel_runtime` crate. If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
-
 ## Getting Started
 
 > Please ensure [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and the Rust toolchain is already installed on your system. We recommended setting up Rust with [rustup](https://rustup.rs/).
 
 [Prefer looking at examples?](https://github.com/vercel-community/rust/tree/main/examples)
 
-**Step 1** - Add a `vercel.json` file to your project.
+**Step 1** — Add a `vercel.json` file to your project.
 
 ```json
 {
@@ -42,7 +38,7 @@ This turns every file matching `api/**/*.rs` into a Vercel Function.
 
 > **Note:** The npm dependency `vercel-rust` defined in [functions](https://vercel.com/docs/concepts/projects/project-configuration#functions) **does not** have to be installed manually.
 
-**Step 2** - Create a function. As an example, here is `api/handler.rs`.
+**Step 2** — Create a function. As an example, here is `api/handler.rs`.
 
 ```rust
 use serde_json::json;
@@ -67,7 +63,7 @@ pub async fn handler(_req: Request) -> Result<Response<Body>, Error> {
 }
 ```
 
-**Step 3** - Create a `Cargo.toml` in the root directory of your project.
+**Step 3** — Create a `Cargo.toml` in the root directory of your project.
 
 ```toml
 [package]
@@ -100,13 +96,13 @@ path = "api/handler.rs"
 # path = "api/group/[id].rs"
 ```
 
-**Step 4** - Create a `.vercelignore` in the root directory of your project to ignore build artifacts.
+**Step 4** — Create a `.vercelignore` in the root directory of your project to ignore build artifacts.
 
 ```shell
 target/
 ```
 
-**Step 5** - You're all set. Run `vercel dev` to develop your project locally. You can connect a Git repository to Vercel, or use `vercel` to start deploying your project on Vercel.
+**Step 5** — You're all set. Run `vercel dev` to develop your project locally. You can connect a Git repository to Vercel, or use `vercel` to start deploying your project on Vercel.
 
 ## Advanced Usage
 
@@ -154,7 +150,7 @@ In addition, this has the benefit of only needing to annotate a single `[[bin]]`
 
 To enable this behaviour, take the following steps:
 
-1. Create a `api/main.rs`.
+**Step 1** — Create a `api/main.rs`.
 
 ```rust
 use vercel_runtime::{bundled_api, run, Body, Error, Request, Response};
@@ -164,7 +160,7 @@ async fn main() -> Result<(), Error> {
     run(handler).await
 }
 
-// bundled_api is a proc macro which injects a router for all `*.rs` files in your `api` directory.
+// The proc macro `bundled_api` injects a router for all `api/**/*.rs` handler files .
 // If you are using cargo workspaces (like `examples/route-merge` in this repository),
 // then an additional `path` argument must be passed to the macro. E.g.
 // #[bundled_api( path = "examples/route-merge" )]
@@ -172,7 +168,7 @@ async fn main() -> Result<(), Error> {
 pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
 ```
 
-2. Change your `vercel.json` to only specify your `api/main.rs` file.
+**Step 2** — Change your `vercel.json` to only specify your `api/main.rs` file.
 
 ```json
 {
@@ -184,7 +180,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
 }
 ```
 
-3. Change your `Cargo.toml` to specify the binary for `main.rs`.
+**Step 3** — Change your `Cargo.toml` to specify the binary for `main.rs`.
 
 ```toml
 [[bin]]
@@ -192,7 +188,7 @@ name = "main"
 path = "api/main.rs"
 ```
 
-4. Add a `handler` function to each route in `api/**`.
+**Step 4** — Add a `handler` function to each route in `api/**`.
 
 ```rust
 // Example api/foo.rs
@@ -222,8 +218,6 @@ cargo fetch
 
 The _npm_ module `vercel-rust` is implementing an interface which is primarily taking care of spawning a development server, caching between consecutive builds, and running the compilation. You can read more about the in-depths of implementing a builder [here](https://github.com/vercel/vercel/blob/main/DEVELOPING_A_RUNTIME.md).
 
-Note that this dependency **does not** have to be installed manually as it is pulled automatically.
-
 ### Runtime Crate
 
 The crate `vercel_runtime` is what you will consume in your Rust functions. As the name suggests, the runtime crate takes care of everything that happens during run-time. In specific it takes care of creating a [Tower](https://docs.rs/tower/latest/tower/trait.Service.html) service, which expects a specific handler signature. The flow of an invocation can be visualized as the following:
@@ -242,3 +236,7 @@ The crate `vercel_runtime_macro` enables supporting our API bundling feature. Th
 ### Router Crate
 
 The crate `vercel_runtime_router` contains routing logic that is injected for our API bundling feature.
+
+## Legacy Runtime
+
+If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
