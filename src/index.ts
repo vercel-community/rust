@@ -40,7 +40,7 @@ async function buildHandler(
   const downloadedFiles = await download(files, workPath, meta);
   const entryPath = downloadedFiles[entrypoint].fsPath;
 
-  const HOME = assertEnv('HOME');
+  const HOME = process.platform === 'win32' ? assertEnv('USERPROFILE') : assertEnv('HOME');
   const PATH = assertEnv('PATH');
 
   const rustEnv: RustEnv = {
