@@ -84,7 +84,7 @@ async function buildHandler(
   debug(`Building \`${binaryName}\` for \`${process.platform}\` completed`);
 
   let { target_directory: targetDirectory } = await getCargoMetadata({
-    cwd: process.cwd(),
+    cwd: workPath,
     env: rustEnv,
   });
 
