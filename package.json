@@ -1,6 +1,6 @@
 {
   "name": "vercel-rust",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Rust runtime for Vercel Functions.",
   "homepage": "https://github.com/vercel-community/rust",
   "repository": {
