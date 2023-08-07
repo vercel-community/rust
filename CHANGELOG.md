@@ -1,5 +1,13 @@
 # vercel-rust changelog
 
+## 4.0.3
+
+- Set cargo metadata to run in `workPath` [#111](https://github.com/vercel-community/rust/pull/111)
+
+## 4.0.2
+
+- Fix `HOME` env var not exist on Windows [#107](https://github.com/vercel-community/rust/pull/107)
+
 ## 4.0.1
 
 - Address routing issues with invalid dest [#102](https://github.com/vercel-community/rust/pull/102)
