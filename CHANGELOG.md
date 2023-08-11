@@ -1,5 +1,13 @@
 # vercel-rust changelog
 
+## 4.0.5
+
+- Support function options [#116](https://github.com/vercel-community/rust/pull/116)
+
+## 4.0.4
+
+- Unpublished - Accidental publish
+
 ## 4.0.3
 
 - Set cargo metadata to run in `workPath` [#111](https://github.com/vercel-community/rust/pull/111)
