@@ -8,6 +8,7 @@ import {
   Lambda,
   type BuildOptions,
   type BuildResultV2Typical,
+  getLambdaOptionsFromFunction,
 } from '@vercel/build-utils';
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
@@ -40,7 +41,8 @@ async function buildHandler(
   const downloadedFiles = await download(files, workPath, meta);
   const entryPath = downloadedFiles[entrypoint].fsPath;
 
-  const HOME = process.platform === 'win32' ? assertEnv('USERPROFILE') : assertEnv('HOME');
+  const HOME =
+    process.platform === 'win32' ? assertEnv('USERPROFILE') : assertEnv('HOME');
   const PATH = assertEnv('PATH');
 
   const rustEnv: RustEnv = {
@@ -96,6 +98,11 @@ async function buildHandler(
     getExecutableName(binaryName),
   );
 
+  const lambdaOptions = await getLambdaOptionsFromFunction({
+    sourceFile: entrypoint,
+    config,
+  });
+
   const bootstrap = getExecutableName('bootstrap');
   const lambda = new Lambda({
     files: {
@@ -104,6 +111,7 @@ async function buildHandler(
     },
     handler: bootstrap,
     runtime: 'provided',
+    ...lambdaOptions,
   });
   lambda.zipBuffer = await lambda.createZip();
 
