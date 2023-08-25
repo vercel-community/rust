@@ -79,9 +79,11 @@ export function parseRoute(filepath: string): ParsedRoute {
 }
 
 export function generateRoutes(files: string[]): Route[] {
-  const routes = files.map((file) => {
-    return parseRoute(file);
-  });
+  const routes = files
+    .map((file) => {
+      return parseRoute(file);
+    })
+    .filter((r) => r.src !== '/api/main');
 
   const orderedRoutes = orderBy(
     routes,

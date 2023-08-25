@@ -119,7 +119,7 @@ async function buildHandler(
     debug(
       `experimental \`route-bundling\` detected - generating single entrypoint`,
     );
-    const handlerFiles = await glob('api/**/[!main]*.rs', workPath);
+    const handlerFiles = await glob('api/**/*.rs', workPath);
     const routes = generateRoutes(Object.keys(handlerFiles));
 
     return {
