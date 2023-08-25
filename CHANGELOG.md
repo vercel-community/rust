@@ -1,5 +1,9 @@
 # vercel-rust changelog
 
+## 4.0.6
+
+- Do not include main route when bundling functions [#117](https://github.com/vercel-community/rust/pull/117)
+
 ## 4.0.5
 
 - Support function options [#116](https://github.com/vercel-community/rust/pull/116)
