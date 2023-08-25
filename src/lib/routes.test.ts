@@ -1,6 +1,25 @@
 import { generateRoutes } from './routes';
 
 describe('generateRoutes', () => {
+  it('should filter out entry point route', () => {
+    const staticRoutes = ['api/main.rs', 'api/foo.rs', 'api/bar/baz.rs'];
+
+    expect(generateRoutes(staticRoutes)).toMatchInlineSnapshot(`
+      [
+        {
+          "dest": "/api/bar/baz",
+          "path": "api/bar/baz",
+          "src": "/api/bar/baz",
+        },
+        {
+          "dest": "/api/foo",
+          "path": "api/foo",
+          "src": "/api/foo",
+        },
+      ]
+    `);
+  });
+
   it('should generate static routes', () => {
     const staticRoutes = ['api/foo.rs', 'api/bar/baz.rs'];
 
