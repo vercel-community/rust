@@ -14,7 +14,7 @@ pub use vercel_runtime_router::{Route, Router};
 pub type Event<'a> = LambdaEvent<VercelEvent<'a>>;
 
 pub use lambda_http::{
-    http::StatusCode, service_fn, tower::ServiceBuilder, Body, Error, Request, RequestExt, Response,
+    http::StatusCode, service_fn, tower::ServiceBuilder, Body, Error, Request, Response,
 };
 pub use lambda_runtime::run as run_service;
 
