@@ -1,5 +1,5 @@
 [workspace]
-
+resolver = "2"
 members = [
     "crates/vercel_runtime",
     "crates/vercel_runtime_macro",
