@@ -12,10 +12,10 @@ documentation = "https://docs.rs/vercel_lambda"
 
 [dependencies]
 glob = "0.3.1"
-quote = "1.0"
+quote = "1.0.33"
 regex = "1.9.5"
-syn = { version = "1.0.109", features = ["full", "parsing"] }
+syn = { version = "2.0.32", features = ["full", "parsing"] }
 lazy_static = "1.4.0"
 
 [dev-dependencies]
-insta = { version = "1.28.0" }
+insta = { version = "1.31.0" }

@@ -6,9 +6,9 @@ Some(
     Route {
         kind: Dynamic,
         module_file: "api/[id].rs",
-        module_name: Ident {
-            sym: api__id_,
-        },
+        module_name: Ident(
+            api__id_,
+        ),
         path: "api/[id]",
         segments: Some(
             [
