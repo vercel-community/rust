@@ -6,9 +6,9 @@ Some(
     Route {
         kind: Static,
         module_file: "api/nested/posts.rs",
-        module_name: Ident {
-            sym: api_nested_posts,
-        },
+        module_name: Ident(
+            api_nested_posts,
+        ),
         path: "api/nested/posts",
         segments: None,
     },
