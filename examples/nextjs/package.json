@@ -27,7 +27,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.14",
     "concurrently": "^7.6.0",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.31",
     "tailwindcss": "^3.2.7",
     "tailwindcss-radix": "^2.8.0"
   },
