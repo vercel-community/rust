@@ -3,6 +3,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use std::collections::HashMap;
 use std::fs;
+use std::path::PathBuf;
 use syn::parse_macro_input;
 use syn::AttributeArgs;
 use vercel_runtime_router::{Route, Router};
@@ -49,13 +50,15 @@ pub fn bundled_api(args: TokenStream, stream: TokenStream) -> TokenStream {
         })
         .unwrap_or("".to_string());
 
-    let glob_pattern = format!("{}api/**/[!main]*.rs", prefix);
+    let glob_pattern = format!("{}api/**/*.rs", prefix);
+    let main_path = PathBuf::from(format!("{}api/main.rs", prefix));
 
     let input: syn::ItemFn = syn::parse(stream).unwrap();
 
     let raw_routes = glob(&glob_pattern)
         .expect("a valid glob pattern")
         .filter_map(|e| e.ok())
+        .filter(|raw_path| raw_path != &main_path)
         .map(|raw_path| raw_path.to_str().unwrap().to_owned())
         .collect::<Vec<_>>();
 
