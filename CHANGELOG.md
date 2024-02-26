@@ -90,6 +90,14 @@ Big thanks to [ekadas](https://github.com/ekadas) for [fixing a ton of issues](h
 
 - `now dev` is now 100% functional :tada:
 
+## 1.1.1
+
+- Fix bundled_api glob [#145](https://github.com/vercel-community/rust/pull/145)
+
+## 1.1.0
+
+- Hide requestExt [#120](https://github.com/vercel-community/rust/pull/120)
+
 ## 1.0.1
 
 - Support for version 3 of Runtimes [#14](https://github.com/mike-engel/vercel-rust/pull/14)
