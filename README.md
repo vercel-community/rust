@@ -104,7 +104,7 @@ target/
 
 **Step 5** — You're all set. Run `vercel dev` to develop your project locally. You can connect a Git repository to Vercel, or use `vercel` to start deploying your project on Vercel.
 
-💡If when deploying to Vercel you get an `"invalid "runtime"` error, try downgrading your project's NodeJS version from v20 to v18. This relates to build image compatability which you can read about [here](https://vercel.com/docs/deployments/build-image#runtime-support). The NodeJS version can be changed via a menu in the Vercel admin dashboard under, Projects > _Your Project_ > Settings. Scroll down to header, "Node.js Version". 
+Should you encounter an "invalid runtime" error when deploying to Vercel, it may be rectified by downgrading your project's NodeJS version from v20 to v18. This is due to a compatibility issue with the build image, which can be further understood by visiting this [link](https://vercel.com/docs/deployments/build-image#runtime-support). You can modify the NodeJS version through the Vercel admin dashboard by navigating to Projects > Your Project, then selecting Settings. Scroll down to the "Node.js Version" header to make the necessary changes.
 
 ## Advanced Usage
 
