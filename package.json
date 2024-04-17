@@ -33,7 +33,7 @@
     "@types/ms": "^0.7.31",
     "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.2",
-    "@vercel/build-utils": "^6.2.1",
+    "@vercel/build-utils": "^7.11.0",
     "@vercel/routing-utils": "^2.1.8",
     "@vercel/style-guide": "^4.0.2",
     "eslint": "^8.35.0",
