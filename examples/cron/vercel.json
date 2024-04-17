@@ -2,7 +2,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.6"
+      "runtime": "vercel-rust@4.0.7"
     }
   },
   "crons": [

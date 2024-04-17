@@ -28,7 +28,7 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.6"
+      "runtime": "vercel-rust@4.0.7"
     }
   }
 }
@@ -104,8 +104,6 @@ target/
 
 **Step 5** — You're all set. Run `vercel dev` to develop your project locally. You can connect a Git repository to Vercel, or use `vercel` to start deploying your project on Vercel.
 
-Should you encounter an "invalid runtime" error when deploying to Vercel, it may be rectified by downgrading your project's NodeJS version from v20 to v18. This is due to a compatibility issue with the build image, which can be further understood by visiting this [link](https://vercel.com/docs/deployments/build-image#runtime-support). You can modify the NodeJS version through the Vercel admin dashboard by navigating to Projects > Your Project, then selecting Settings. Scroll down to the "Node.js Version" header to make the necessary changes.
-
 ## Advanced Usage
 
 ### Toolchain Overrides
@@ -176,7 +174,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
 {
   "functions": {
     "api/main.rs": {
-      "runtime": "vercel-rust@4.0.6"
+      "runtime": "vercel-rust@4.0.7"
     }
   }
 }
