@@ -9,6 +9,7 @@ import {
   type BuildOptions,
   type BuildResultV2Typical,
   getLambdaOptionsFromFunction,
+  getProvidedRuntime,
 } from '@vercel/build-utils';
 import execa from 'execa';
 import { installRustToolchain } from './lib/rust-toolchain';
@@ -104,13 +105,14 @@ async function buildHandler(
   });
 
   const bootstrap = getExecutableName('bootstrap');
+  const runtime = meta?.isDev ? 'provided' : await getProvidedRuntime();
   const lambda = new Lambda({
     files: {
       ...extraFiles,
       [bootstrap]: new FileFsRef({ mode: 0o755, fsPath: bin }),
     },
     handler: bootstrap,
-    runtime: 'provided',
+    runtime,
     ...lambdaOptions,
   });
   lambda.zipBuffer = await lambda.createZip();
