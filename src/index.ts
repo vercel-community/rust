@@ -105,7 +105,7 @@ async function buildHandler(
   });
 
   const bootstrap = getExecutableName('bootstrap');
-  const runtime = await getProvidedRuntime();
+  const runtime = meta?.isDev ? 'provided' : await getProvidedRuntime();
   const lambda = new Lambda({
     files: {
       ...extraFiles,
