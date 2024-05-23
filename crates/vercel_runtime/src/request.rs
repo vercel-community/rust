@@ -1,6 +1,7 @@
 use base64::Engine;
 use lambda_http::http::{self, header::HeaderValue, HeaderMap, Method};
 use lambda_http::Body;
+use lambda_runtime::LambdaEvent;
 use serde::de::{Deserializer, Error as DeError, MapAccess, Visitor};
 use serde_derive::Deserialize;
 use serde_json::Value;
@@ -10,16 +11,18 @@ use std::{borrow::Cow, fmt, mem};
 #[doc(hidden)]
 #[derive(Deserialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct VercelRequest<'a> {
-    pub(crate) host: Cow<'a, str>,
-    pub(crate) path: Cow<'a, str>,
+pub struct VercelRequest<'a> {
+    pub host: Cow<'a, str>,
+    pub path: Cow<'a, str>,
     #[serde(deserialize_with = "deserialize_method")]
-    pub(crate) method: Method,
+    pub method: Method,
     #[serde(deserialize_with = "deserialize_headers")]
-    pub(crate) headers: HeaderMap<HeaderValue>,
-    pub(crate) body: Option<Cow<'a, str>>,
-    pub(crate) encoding: Option<String>,
+    pub headers: HeaderMap<HeaderValue>,
+    pub body: Option<Cow<'a, str>>,
+    pub encoding: Option<String>,
 }
+
+pub type Event<'a> = LambdaEvent<VercelEvent<'a>>;
 
 #[doc(hidden)]
 #[derive(Deserialize, Debug, Default)]

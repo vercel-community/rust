@@ -1,9 +1,9 @@
 pub mod http;
-mod request;
-mod response;
+pub mod request;
+pub mod response;
 
-use lambda_runtime::LambdaEvent;
-use request::{VercelEvent, VercelRequest};
+use request::Event;
+use request::VercelRequest;
 use response::EventResponse;
 use std::future::Future;
 use tracing::{debug, error};
@@ -11,12 +11,9 @@ use tracing::{debug, error};
 pub use vercel_runtime_macro::bundled_api;
 pub use vercel_runtime_router::{Route, Router};
 
-pub type Event<'a> = LambdaEvent<VercelEvent<'a>>;
-
 pub use lambda_http::{
-    http::StatusCode,
-    RequestPayloadExt,
-    service_fn, tower::ServiceBuilder, Body, Error, Request, Response,
+    http::StatusCode, service_fn, tower::ServiceBuilder, Body, Error, Request, RequestPayloadExt,
+    Response,
 };
 pub use lambda_runtime::run as run_service;
 
