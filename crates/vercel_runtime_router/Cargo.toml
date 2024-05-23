@@ -11,11 +11,11 @@ repository = "https://github.com/vercel-community/rust"
 documentation = "https://docs.rs/vercel_lambda"
 
 [dependencies]
-glob = "0.3.1"
-quote = "1.0.33"
-regex = "1.9.5"
-syn = { version = "2.0.32", features = ["full", "parsing"] }
-lazy_static = "1.4.0"
+glob = "0.3"
+quote = "1.0"
+regex = "1.10"
+syn = { version = "2.0", features = ["full", "parsing"] }
+lazy_static = "1.4"
 
 [dev-dependencies]
-insta = { version = "1.31.0" }
+insta = { version = "1.39" }

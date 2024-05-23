@@ -13,11 +13,11 @@ include = ["src/*.rs", "Cargo.toml"]
 exclude = ["tests/*"]
 
 [dependencies]
-lambda_http = { version = "0.8.1", default-features = false, features = [
+lambda_http = { version = "0.11.1", default-features = false, features = [
   "apigw_http",
 ] }
-lambda_runtime = "0.8"
-tokio = { version = "1", features = ["macros"] }
+lambda_runtime = "0.11"
+tokio = { version = "1.37", features = ["macros"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = [
   "fmt",
@@ -25,9 +25,9 @@ tracing-subscriber = { version = "0.3", default-features = false, features = [
 serde = { version = "1.0.188", features = ["derive"] }
 serde_json = { version = "1.0.106", features = ["raw_value"] }
 serde_derive = "1.0.188"
-tower-http = { version = "0.4.4", features = ["cors"] }
+tower-http = { version = "0.5", features = ["cors"] }
 tower-service = "0.3.2"
-base64 = "0.21.4"
+base64 = "0.22"
 bytes = "1.5.0"
 async-trait = "0.1.73"
 vercel_runtime_router = "1.1.1"
