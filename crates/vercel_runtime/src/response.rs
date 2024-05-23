@@ -9,16 +9,16 @@ use serde_derive::Serialize;
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct EventResponse {
-    pub(crate) status_code: u16,
+    pub status_code: u16,
     #[serde(
         skip_serializing_if = "HeaderMap::is_empty",
         serialize_with = "serialize_headers"
     )]
-    pub(crate) headers: HeaderMap<HeaderValue>,
+    pub headers: HeaderMap<HeaderValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) body: Option<Body>,
+    pub body: Option<Body>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) encoding: Option<String>,
+    pub encoding: Option<String>,
 }
 
 impl Default for EventResponse {
