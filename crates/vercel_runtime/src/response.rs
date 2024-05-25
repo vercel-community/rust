@@ -4,7 +4,7 @@ use lambda_http::http::{
 };
 use lambda_http::Body;
 use serde::ser::{Error as SerError, SerializeMap, Serializer};
-use serde_derive::Serialize;
+use serde::Serialize;
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]

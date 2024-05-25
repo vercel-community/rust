@@ -244,7 +244,6 @@ version = "0.1.0"
 dependencies = [
  "rand",
  "serde",
- "serde_derive",
  "serde_json",
  "slack-morphism",
  "tokio",
@@ -913,7 +912,6 @@ version = "0.1.0"
 dependencies = [
  "rand",
  "serde",
- "serde_derive",
  "serde_json",
  "tokio",
  "tracing",
@@ -1534,7 +1532,6 @@ version = "0.1.0"
 dependencies = [
  "rand",
  "serde",
- "serde_derive",
  "serde_json",
  "tokio",
  "tracing",
@@ -2022,7 +2019,6 @@ dependencies = [
  "lambda_http",
  "lambda_runtime",
  "serde",
- "serde_derive",
  "serde_json",
  "tokio",
  "tower-http",
