@@ -29,8 +29,8 @@ pub type Event<'a> = LambdaEvent<VercelEvent<'a>>;
 pub struct VercelEvent<'a> {
     #[allow(dead_code)]
     #[serde(rename = "Action")]
-    action: Cow<'a, str>,
-    pub(crate) body: Cow<'a, str>,
+    pub action: Cow<'a, str>,
+    pub body: Cow<'a, str>,
 }
 
 fn deserialize_method<'de, D>(deserializer: D) -> Result<Method, D::Error>
