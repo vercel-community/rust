@@ -3,7 +3,7 @@ use lambda_http::http::{self, header::HeaderValue, HeaderMap, Method};
 use lambda_http::Body;
 use lambda_runtime::LambdaEvent;
 use serde::de::{Deserializer, Error as DeError, MapAccess, Visitor};
-use serde_derive::Deserialize;
+use serde::Deserialize;
 use serde_json::Value;
 use std::{borrow::Cow, fmt, mem};
 
