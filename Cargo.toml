@@ -4,6 +4,7 @@ members = [
     "crates/vercel_runtime",
     "crates/vercel_runtime_macro",
     "crates/vercel_runtime_router",
+    "crates/vercel_axum",
     "examples/cron",
     "examples/nextjs",
     "examples/simple",

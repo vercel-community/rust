@@ -1,0 +1,23 @@
+[package]
+name = "vercel_axum"
+version = "1.1.2"
+edition = "2021"
+authors = ["Vercel <support@vercel.com>"]
+description = "Vercel Rust Axum Adapter"
+keywords = ["Vercel", "Rust", "Serverless", "Functions", "Axum"]
+license = "MIT"
+homepage = "https://github.com/vercel-community/rust"
+repository = "https://github.com/vercel-community/rust"
+documentation = "https://docs.rs/vercel_lambda"
+include = ["src/*.rs", "Cargo.toml"]
+exclude = ["tests/*"]
+
+[dependencies]
+axum = "0.7"
+base64 = "0.22"
+http-body-util = "0.1"
+tower = "0.4"
+tower-service = "0.3"
+serde_json = "1.0"
+# vercel_runtime = "1.1.3"
+vercel_runtime = { version = "1.1.3", path = "../vercel_runtime" }
