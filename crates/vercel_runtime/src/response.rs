@@ -3,7 +3,6 @@ use lambda_http::http::{
     Response,
 };
 use lambda_http::Body;
-use serde::ser::{Error as SerError, SerializeMap, Serializer};
 use serde::Serialize;
 
 #[derive(Serialize, Debug)]
@@ -12,7 +11,7 @@ pub struct EventResponse {
     pub status_code: u16,
     #[serde(
         skip_serializing_if = "HeaderMap::is_empty",
-        serialize_with = "serialize_headers"
+        with = "http_serde::header_map"
     )]
     pub headers: HeaderMap<HeaderValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -30,18 +29,6 @@ impl Default for EventResponse {
             encoding: Default::default(),
         }
     }
-}
-
-fn serialize_headers<S>(headers: &HeaderMap<HeaderValue>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let mut map = serializer.serialize_map(Some(headers.keys_len()))?;
-    for key in headers.keys() {
-        let map_value = headers[key].to_str().map_err(S::Error::custom)?;
-        map.serialize_entry(key.as_str(), map_value)?;
-    }
-    map.end()
 }
 
 impl<T> From<Response<T>> for EventResponse
