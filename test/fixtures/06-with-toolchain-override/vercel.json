@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "dgls-test-vercel-dev-builder@0.0.7",
+      "runtime": "vercel-rust@4.0.7",
       "includeFiles": "static/**/*.txt"
     }
   }
