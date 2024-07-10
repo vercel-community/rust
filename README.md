@@ -28,7 +28,7 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 {
   "functions": {
     "api/**/*.rs": {
-      "runtime": "vercel-rust@4.0.7"
+      "runtime": "vercel-rust@4.0.8"
     }
   }
 }
@@ -174,7 +174,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {}
 {
   "functions": {
     "api/main.rs": {
-      "runtime": "vercel-rust@4.0.7"
+      "runtime": "vercel-rust@4.0.8"
     }
   }
 }
