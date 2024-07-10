@@ -1,5 +1,13 @@
 # vercel-rust changelog
 
+## 4.0.8
+
+- Use debug build for `vercel dev` [#168](https://github.com/vercel-community/rust/pull/168)
+
+## 4.0.7
+
+- Use correct provided runtime [#155](https://github.com/vercel-community/rust/pull/155)
+
 ## 4.0.6
 
 - Do not include main route when bundling functions [#117](https://github.com/vercel-community/rust/pull/117)
