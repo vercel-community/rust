@@ -71,7 +71,7 @@ async function buildHandler(
     await execa(
       'cargo',
       ['build', '--bin', binaryName].concat(
-        BUILDER_DEBUG ? ['--verbose'] : ['--quiet', '--release'],
+        BUILDER_DEBUG ? ['--verbose'] : ['--quiet'], meta?.isDev ? []:["--release"]
       ),
       {
         cwd: workPath,
