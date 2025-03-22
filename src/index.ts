@@ -93,9 +93,11 @@ async function buildHandler(
 
   targetDirectory = path.join(targetDirectory, buildTarget);
 
+  const buildVariant = (BUILDER_DEBUG || meta?.isDev) ? 'debug' : 'release'
+
   const bin = path.join(
     targetDirectory,
-    BUILDER_DEBUG ? 'debug' : 'release',
+    buildVariant,
     getExecutableName(binaryName),
   );
 
