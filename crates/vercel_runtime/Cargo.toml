@@ -1,6 +1,6 @@
 [package]
 name = "vercel_runtime"
-version = "1.1.4"
+version = "1.1.5"
 edition = "2021"
 authors = ["Vercel <support@vercel.com>"]
 description = "Vercel Rust Function Runtime"
@@ -13,24 +13,24 @@ include = ["src/*.rs", "Cargo.toml"]
 exclude = ["tests/*"]
 
 [dependencies]
-lambda_http = { version = "0.11.1", default-features = false, features = [
+lambda_http = { version = "0.15.1", default-features = false, features = [
   "apigw_http",
 ] }
-lambda_runtime = "0.11"
-tokio = { version = "1.37", features = ["macros"] }
-tracing = { version = "0.1", features = ["log"] }
+lambda_runtime = "0.14.2"
+tokio = { version = "1.45.1", features = ["macros"] }
+tracing = { version = "0.1.41", features = ["log"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = [
   "fmt",
 ] }
-serde = { version = "1.0.188", features = ["derive"] }
-serde_json = { version = "1.0.106", features = ["raw_value"] }
-tower-http = { version = "0.5", features = ["cors"] }
-tower-service = "0.3.2"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = { version = "1.0.140", features = ["raw_value"] }
+tower-http = { version = "0.6.6", features = ["cors"] }
+tower-service = "0.3.3"
 http-serde = "2.1.1"
 base64 = "0.22"
 bytes = "1.5.0"
-async-trait = "0.1.73"
-vercel_runtime_router = "1.1.4"
-vercel_runtime_macro = "1.1.4"
-# vercel_runtime_router = { version = "1.1.4", path = "../vercel_runtime_router" }
-# vercel_runtime_macro = { version = "1.1.4", path = "../vercel_runtime_macro" }
+async-trait = "0.1.88"
+vercel_runtime_router = "1.1.5"
+vercel_runtime_macro = "1.1.5"
+# vercel_runtime_router = { version = "1.1.5", path = "../vercel_runtime_router" }
+# vercel_runtime_macro = { version = "1.1.5", path = "../vercel_runtime_macro" }
