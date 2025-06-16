@@ -1,6 +1,6 @@
 [package]
 name = "vercel_axum"
-version = "1.1.4"
+version = "1.1.5"
 edition = "2021"
 authors = ["Vercel <support@vercel.com>"]
 description = "Vercel Rust Axum Adapter"
