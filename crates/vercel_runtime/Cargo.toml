@@ -30,7 +30,7 @@ http-serde = "2.1.1"
 base64 = "0.22"
 bytes = "1.5.0"
 async-trait = "0.1.88"
-vercel_runtime_router = "1.1.4"
-vercel_runtime_macro = "1.1.4"
-# vercel_runtime_router = { version = "1.1.4", path = "../vercel_runtime_router" }
-# vercel_runtime_macro = { version = "1.1.4", path = "../vercel_runtime_macro" }
+vercel_runtime_router = "1.1.5"
+vercel_runtime_macro = "1.1.5"
+# vercel_runtime_router = { version = "1.1.5", path = "../vercel_runtime_router" }
+# vercel_runtime_macro = { version = "1.1.5", path = "../vercel_runtime_macro" }

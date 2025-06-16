@@ -19,5 +19,5 @@ http-body-util = "0.1"
 tower = "0.4"
 tower-service = "0.3"
 serde_json = "1.0"
-vercel_runtime = "1.1.4"
-# vercel_runtime = { version = "1.1.4", path = "../vercel_runtime" }
+vercel_runtime = "1.1.5"
+# vercel_runtime = { version = "1.1.5", path = "../vercel_runtime" }
