@@ -1,6 +1,6 @@
 {
   "name": "vercel-rust",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "description": "Rust runtime for Vercel Functions.",
   "homepage": "https://github.com/vercel-community/rust",
   "repository": {
@@ -45,5 +45,6 @@
     "rimraf": "^4.1.1",
     "ts-jest": "^29.0.5",
     "vercel": "^28.16.15"
-  }
+  },
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
 }

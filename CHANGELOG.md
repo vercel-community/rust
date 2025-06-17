@@ -1,5 +1,9 @@
 # vercel-rust changelog
 
+## 4.0.9
+
+- Fix select binary correctly while vercel dev [#184](https://github.com/vercel-community/rust/pull/184)
+
 ## 4.0.8
 
 - Use debug build for `vercel dev` [#168](https://github.com/vercel-community/rust/pull/168)
