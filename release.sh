@@ -1,8 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -euo pipefail
 
-# Default values
 DRY_RUN=true
 VERSION_TYPE=""
 
@@ -30,7 +29,6 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Function to show usage
 usage() {
     cat << EOF
 Usage: $0 [OPTIONS]
@@ -50,7 +48,6 @@ EXAMPLES:
 EOF
 }
 
-# Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         --run-for-real)
@@ -73,7 +70,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validate required arguments
 if [[ -z "$VERSION_TYPE" ]]; then
     print_error "Version type is required. Use --version patch|minor|stable"
     usage
@@ -199,9 +195,14 @@ release_crate() {
             # Update dependencies in other crates
             update_dependencies_after_release "$crate_name" "$new_version"
             
-            # Run cargo update to refresh Cargo.lock
+            # Run cargo update to refresh Cargo.lock and commit changes
             print_status "Running cargo update to refresh Cargo.lock"
             cargo update
+            
+            # Commit the updated Cargo.lock to resolve dirty git state
+            print_status "Committing updated Cargo.lock"
+            git add .
+            git commit -m "chore: bump deps $crate_name"
             
         else
             popd > /dev/null
@@ -256,8 +257,9 @@ main() {
     for crate in "${CRATES[@]}"; do
         print_status "============================================"
         release_crate "$crate"
-        
-        # Add a small delay between releases to avoid rate limiting
+        # Add a small delay between releases 
+        # This avoids the next crate release to fail
+        # Because the previous crate's release may not yet be indexed
         if [[ "$DRY_RUN" == "false" ]]; then
             print_status "Waiting 10 seconds before next release..."
             sleep 10
