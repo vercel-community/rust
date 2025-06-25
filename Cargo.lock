@@ -2267,7 +2267,7 @@ dependencies = [
  "tower-service",
  "tracing",
  "tracing-subscriber",
- "vercel_runtime_macro 1.1.5",
+ "vercel_runtime_macro 1.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "vercel_runtime_router 1.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -2290,15 +2290,13 @@ dependencies = [
  "tower-service",
  "tracing",
  "tracing-subscriber",
- "vercel_runtime_macro 1.1.5",
+ "vercel_runtime_macro 1.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "vercel_runtime_router 1.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "vercel_runtime_macro"
-version = "1.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c428fe106762e22c8ada4ab5fa8fbc59f7d6f73fc9bd21d3720d6133b478afaa"
+version = "1.1.6"
 dependencies = [
  "glob",
  "quote",
@@ -2309,6 +2307,8 @@ dependencies = [
 [[package]]
 name = "vercel_runtime_macro"
 version = "1.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1aaa8d10230a06516f91f0b40088d59a7e1bd1058a5a5b710316f407a286e5c4"
 dependencies = [
  "glob",
  "quote",
