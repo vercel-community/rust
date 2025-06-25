@@ -17,5 +17,5 @@ proc-macro = true
 glob = "0.3.1"
 quote = "1.0"
 syn = { version = "1.0", features = ["full"] }
-vercel_runtime_router = "1.1.5"
-# vercel_runtime_router = { version = "1.1.5", path = "../vercel_runtime_router" }
+vercel_runtime_router = "1.1.6"
+# vercel_runtime_router = { version = "1.1.6", path = "../vercel_runtime_router" }
