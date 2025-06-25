@@ -123,8 +123,11 @@ async function buildHandler(
     debug(
       `experimental \`route-bundling\` detected - generating single entrypoint`,
     );
-    const handlerFiles = await glob('api/**/[!main]*.rs', workPath);
-    const routes = generateRoutes(Object.keys(handlerFiles));
+    const handlerFiles = await glob('api/**/*.rs', workPath);
+    const handlerKeysWithoutMain = Object.keys(handlerFiles).filter(
+      (filename) => !filename.endsWith("/main.rs")
+    );
+    const routes = generateRoutes(handlerKeysWithoutMain);
 
     return {
       output: routes.reduce<Record<string, Lambda>>((acc, route) => {
