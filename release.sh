@@ -12,6 +12,7 @@ NC='\033[0m' # No Color
 # Default values
 DRY_RUN=true
 VERSION_TYPE=""
+NO_CONFIRM=false
 
 # Function to print colored output
 print_info() {
@@ -33,18 +34,38 @@ print_error() {
 # Function to show help
 show_help() {
     cat << EOF
-Usage: $0 --version <VERSION_TYPE> [--run-for-real]
+Usage: $0 --version <VERSION_TYPE> [--run-for-real] [--no-confirm]
 
 Arguments:
   --version <VERSION_TYPE>  Version bump type (patch, minor, stable)
   --run-for-real           Run actual release (default: dry run)
+  --no-confirm             Skip confirmation prompts between steps
   --help                   Show this help message
 
 Example:
   $0 --version patch --run-for-real
   $0 --version minor
+  $0 --version patch --run-for-real --no-confirm
 
 EOF
+}
+
+# Function to ask for user confirmation
+confirm_step() {
+    local step_name="$1"
+    if [[ "$NO_CONFIRM" == "true" ]]; then
+        return 0
+    fi
+    
+    echo
+    print_warning "About to proceed with: $step_name"
+    read -p "Do you want to continue? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        print_info "Operation cancelled by user"
+        exit 0
+    fi
+    echo
 }
 
 # Parse command line arguments
@@ -57,6 +78,10 @@ while [[ $# -gt 0 ]]; do
         --version)
             VERSION_TYPE="$2"
             shift 2
+            ;;
+        --no-confirm)
+            NO_CONFIRM=true
+            shift
             ;;
         --help)
             show_help
@@ -167,6 +192,11 @@ get_new_version_after_release() {
 print_info "Starting cargo release process"
 print_info "Version type: $VERSION_TYPE"
 print_info "Dry run: $DRY_RUN"
+if [[ "$NO_CONFIRM" == "true" ]]; then
+    print_info "Confirmation prompts: DISABLED"
+else
+    print_info "Confirmation prompts: ENABLED (use --no-confirm to disable)"
+fi
 echo
 
 # Define crate paths and their order
@@ -181,6 +211,8 @@ ROUTER_CURRENT_VERSION=$(get_current_version "crates/vercel_runtime_router")
 ROUTER_NEW_VERSION=$(calculate_next_version "$ROUTER_CURRENT_VERSION" "$VERSION_TYPE")
 print_info "Current version: $ROUTER_CURRENT_VERSION -> New version: $ROUTER_NEW_VERSION"
 
+confirm_step "Step 1: Release vercel_runtime_router ($ROUTER_CURRENT_VERSION -> $ROUTER_NEW_VERSION)"
+
 run_cargo_release "crates/vercel_runtime_router" "$VERSION_TYPE" "$DRY_RUN"
 print_success "vercel_runtime_router release completed"
 echo
@@ -190,6 +222,9 @@ print_info "=== Step 2: Updating and releasing vercel_runtime_macro ==="
 MACRO_CURRENT_VERSION=$(get_current_version "crates/vercel_runtime_macro")
 MACRO_NEW_VERSION=$(calculate_next_version "$MACRO_CURRENT_VERSION" "$VERSION_TYPE")
 print_info "Current version: $MACRO_CURRENT_VERSION -> New version: $MACRO_NEW_VERSION"
+print_info "Will update vercel_runtime_router dependency to version $ROUTER_NEW_VERSION"
+
+confirm_step "Step 2: Update dependencies and release vercel_runtime_macro ($MACRO_CURRENT_VERSION -> $MACRO_NEW_VERSION)"
 
 # Update vercel_runtime_router dependency
 print_info "Updating vercel_runtime_router dependency to version $ROUTER_NEW_VERSION"
@@ -204,6 +239,10 @@ print_info "=== Step 3: Updating and releasing vercel_runtime ==="
 RUNTIME_CURRENT_VERSION=$(get_current_version "crates/vercel_runtime")
 RUNTIME_NEW_VERSION=$(calculate_next_version "$RUNTIME_CURRENT_VERSION" "$VERSION_TYPE")
 print_info "Current version: $RUNTIME_CURRENT_VERSION -> New version: $RUNTIME_NEW_VERSION"
+print_info "Will update vercel_runtime_router dependency to version $ROUTER_NEW_VERSION"
+print_info "Will update vercel_runtime_macro dependency to version $MACRO_NEW_VERSION"
+
+confirm_step "Step 3: Update dependencies and release vercel_runtime ($RUNTIME_CURRENT_VERSION -> $RUNTIME_NEW_VERSION)"
 
 # Update dependencies
 print_info "Updating vercel_runtime_router dependency to version $ROUTER_NEW_VERSION"
@@ -221,6 +260,9 @@ print_info "=== Step 4: Updating and releasing vercel_axum ==="
 AXUM_CURRENT_VERSION=$(get_current_version "crates/vercel_axum")
 AXUM_NEW_VERSION=$(calculate_next_version "$AXUM_CURRENT_VERSION" "$VERSION_TYPE")
 print_info "Current version: $AXUM_CURRENT_VERSION -> New version: $AXUM_NEW_VERSION"
+print_info "Will update vercel_runtime dependency to version $RUNTIME_NEW_VERSION"
+
+confirm_step "Step 4: Update dependencies and release vercel_axum ($AXUM_CURRENT_VERSION -> $AXUM_NEW_VERSION)"
 
 # Update vercel_runtime dependency
 print_info "Updating vercel_runtime dependency to version $RUNTIME_NEW_VERSION"
