@@ -3,7 +3,7 @@
     <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
     <h3 align="center">Rust</h3>
   </a>
-  <p align="center">[DEPRECATED] Rust Runtime for Vercel Functions.</p>
+  <p align="center">DEPRECATED - Rust Runtime for Vercel Functions.</p>
 </p>
 
 <div align="center">
@@ -19,10 +19,10 @@ Legacy community-maintained package to support using [Rust](https://www.rust-lan
 ## Deprecation Notice
 
 > [!IMPORTANT]  
-> **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation.
-> **New Builder Package**: https://github.com/vercel/vercel/tree/main/packages/rust
-> **New Runtime Crate**: https://github.com/vercel/vercel/tree/main/crates/vercel_runtime
-> **Legacy Builder** (this repository): Intended for use with `vercel_runtime` 1.x
+> **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation.\
+> **New Builder Package**: https://github.com/vercel/vercel/tree/main/packages/rust\
+> **New Runtime Crate**: https://github.com/vercel/vercel/tree/main/crates/vercel_runtime\
+> **Legacy Builder** (this repository): Intended for use with `vercel_runtime` 1.x\
 > **New Implementation**: Released with `vercel_runtime` 2.x onwards
 
 **Support Status:**
