@@ -16,19 +16,14 @@ Legacy community-maintained package to support using [Rust](https://www.rust-lan
 
 </div>
 
-## ⚠️ Deprecation Notice
+## Deprecation Notice
 
-**This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation.
-
-**Migration Information:**
-
-- **New Builder Package**: https://github.com/vercel/vercel/tree/main/packages/rust
-- **New Runtime Crate**: https://github.com/vercel/vercel/tree/main/crates/vercel_runtime
-
-**Version Compatibility:**
-
-- **Legacy Builder** (this repository): Intended for use with `vercel_runtime` 1.x
-- **New Implementation**: Released with `vercel_runtime` 2.x onwards
+> [!IMPORTANT]  
+> **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation.
+> **New Builder Package**: https://github.com/vercel/vercel/tree/main/packages/rust
+> **New Runtime Crate**: https://github.com/vercel/vercel/tree/main/crates/vercel_runtime
+> **Legacy Builder** (this repository): Intended for use with `vercel_runtime` 1.x
+> **New Implementation**: Released with `vercel_runtime` 2.x onwards
 
 **Support Status:**
 Deployments using this legacy builder and runtime will continue to function, but **will not receive support or updates anymore**. We recommend migrating to the new official runtime for continued support and new features.
