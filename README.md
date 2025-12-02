@@ -33,6 +33,9 @@ Community-maintained package to support using [Rust](https://www.rust-lang.org/)
 **Support Status:**
 Deployments using this legacy builder and runtime will continue to function, but **will not receive support or updates anymore**. We recommend migrating to the new official runtime for continued support and new features.
 
+<details>
+<summary>Legacy Documentation</summary>
+
 ## Getting Started
 
 > Please ensure [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and the Rust toolchain is already installed on your system. We recommended setting up Rust with [rustup](https://rustup.rs/).
@@ -257,3 +260,5 @@ The crate `vercel_runtime_router` contains routing logic that is injected for ou
 ## Legacy Runtime
 
 If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+
+</details>
