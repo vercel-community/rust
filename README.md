@@ -18,7 +18,8 @@ Legacy community-maintained package to support using [Rust](https://www.rust-lan
 ## Deprecation Notice
 
 > [!IMPORTANT]  
-> **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation.
+> **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation. \
+> **For new issues** please open them in the [Vercel CLI repository](https://github.com/vercel/vercel/issues).
 
 - **New Builder Package**: https://github.com/vercel/vercel/tree/main/packages/rust
 - **New Runtime Crate**: https://github.com/vercel/vercel/tree/main/crates/vercel_runtime
