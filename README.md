@@ -3,7 +3,6 @@
     <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
     <h3 align="center">Rust</h3>
   </a>
-  <p align="center">DEPRECATED - Rust Runtime for Vercel Functions.</p>
 </p>
 
 <div align="center">
