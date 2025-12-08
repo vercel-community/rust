@@ -21,10 +21,14 @@ Legacy community-maintained package to support using [Rust](https://www.rust-lan
 > **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation. \
 > **For new issues** please open them in the [Vercel CLI repository](https://github.com/vercel/vercel/issues).
 
-- **New Builder Package**: https://github.com/vercel/vercel/tree/main/packages/rust
-- **New Runtime Crate**: https://github.com/vercel/vercel/tree/main/crates/vercel_runtime
-- **Legacy Builder** (this repository): Intended for use with `vercel_runtime` 1.x
-- **New Implementation**: Released with `vercel_runtime` 2.x onwards
+- [Documentation](https://vercel.com/docs/functions/runtimes/rust): 
+- [Builder package](https://github.com/vercel/vercel/tree/main/packages/rust)
+- [Runtime crate](https://github.com/vercel/vercel/tree/main/crates/vercel_runtime): Released with `vercel_runtime` 2.x onwards
+- Legacy Builder (this repository): Intended for use with `vercel_runtime` 1.x
+
+**Templates:**
+- [Rust Hello World](https://vercel.com/templates/template/rust-hello-world)
+- [Rust Axum](https://vercel.com/templates/template/rust-axum)
 
 **Support Status:**
 Deployments using this legacy builder and runtime will continue to function, but **will not receive support or updates anymore**. We recommend migrating to the new official runtime for continued support and new features.
