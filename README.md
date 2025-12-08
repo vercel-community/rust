@@ -25,7 +25,7 @@ Legacy community-maintained package to support using [Rust](https://www.rust-lan
 - [Builder package](https://github.com/vercel/vercel/tree/main/packages/rust)
 
 The new [runtime crate](https://github.com/vercel/vercel/tree/main/crates/vercel_runtime) is released with 2.x onwards.
-This repositories legacy builder is intended for use with the legacy runtime 1.x.
+This repository's legacy builder is intended for use with the legacy runtime 1.x.
 
 **Templates:**
 - [Rust Hello World](https://vercel.com/templates/template/rust-hello-world)
