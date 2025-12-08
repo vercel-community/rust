@@ -3,7 +3,6 @@
     <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
     <h3 align="center">Rust</h3>
   </a>
-  <p align="center">Rust Runtime for Vercel Functions.</p>
 </p>
 
 <div align="center">
@@ -12,9 +11,31 @@
 <a href="https://www.npmjs.com/package/vercel-rust">![npm downloads](https://img.shields.io/npm/dm/vercel-rust.svg?label=npm%20downloads)</a>
 <a href="https://crates.io/crates/vercel_runtime">![crates.io downloads](https://img.shields.io/crates/d/vercel_runtime?color=yellow&label=crates.io)</a>
 
-Community-maintained package to support using [Rust](https://www.rust-lang.org/) inside [Vercel Functions](https://vercel.com/docs/serverless-functions/introduction) as a [Runtime](https://vercel.com/docs/runtimes).
+Legacy community-maintained package to support using [Rust](https://www.rust-lang.org/) inside [Vercel Functions](https://vercel.com/docs/serverless-functions/introduction) as a [Runtime](https://vercel.com/docs/runtimes).
 
 </div>
+
+## Deprecation Notice
+
+> [!IMPORTANT]  
+> **This community runtime is now deprecated** in favor of the official Vercel Rust runtime implementation. \
+> **For new issues** please open them in the [Vercel CLI repository](https://github.com/vercel/vercel/issues).
+
+- [New Documentation](https://vercel.com/docs/functions/runtimes/rust)
+- [New Builder package](https://github.com/vercel/vercel/tree/main/packages/rust)
+
+The new [runtime crate](https://github.com/vercel/vercel/tree/main/crates/vercel_runtime) is released with 2.x onwards.
+This repository's legacy builder is intended for use with the legacy runtime 1.x.
+
+**Templates**
+- [Rust Hello World](https://vercel.com/templates/template/rust-hello-world)
+- [Rust Axum](https://vercel.com/templates/template/rust-axum)
+
+**Support Status**
+Deployments using this legacy builder and runtime will continue to function, but **will not receive support or updates anymore**. We recommend migrating to the new official runtime for continued support and new features.
+
+<details>
+<summary>Legacy Documentation</summary>
 
 ## Getting Started
 
@@ -240,3 +261,5 @@ The crate `vercel_runtime_router` contains routing logic that is injected for ou
 ## Legacy Runtime
 
 If you are looking for the legacy runtime instructions using `vercel_lambda` see [tree/a9495a0](https://github.com/vercel-community/rust/tree/a9495a0f0d882a36ea165f1629fcc79c30bc3108).
+
+</details>
